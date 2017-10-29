@@ -182,6 +182,7 @@ return [
          */
         SleepingOwl\Admin\Providers\SleepingOwlServiceProvider::class,
         Zizaco\Entrust\EntrustServiceProvider::class,
+        Telegram\Bot\Laravel\TelegramServiceProvider::class
     ],
 
     /*
@@ -231,6 +232,7 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'Entrust'   => Zizaco\Entrust\EntrustFacade::class,
+        'Telegram'  => Telegram\Bot\Laravel\Facades\Telegram::class
     ],
 
 ];
