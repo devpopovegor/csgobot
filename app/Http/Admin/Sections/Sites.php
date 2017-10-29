@@ -54,7 +54,7 @@ class Sites extends Section implements Initializable
 			                   AdminColumn::text('id', '#')->setWidth('30px'),
 			                   AdminColumn::link('url', 'Ссылка'),
 			                   AdminColumn::text('get_data', 'Ссылка получения данных'),
-			                   AdminColumn::checkbox('active', 'Активность')
+			                   AdminColumn::text('active', 'Активность')
 		                   )->paginate(20);
 	}
 
