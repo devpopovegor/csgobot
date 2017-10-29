@@ -68,7 +68,7 @@ class Sites extends Section implements Initializable
 		return AdminForm::panel()->addBody([
 			AdminFormElement::text('url', 'Ссылка'),
 			AdminFormElement::text('get_data', 'Ссылка получения данных'),
-			AdminFormElement::text('active', 'Активность'),
+			AdminFormElement::checkbox('active', 'Активность'),
 		]);
 	}
 
