@@ -54,7 +54,7 @@ class Sites extends Section implements Initializable
 			                   AdminColumn::text('id', '#')->setWidth('30px'),
 			                   AdminColumn::link('url', 'Ссылка'),
 			                   AdminColumn::text('get_data', 'Ссылка получения данных'),
-			                   AdminColumn::text('command', 'Команда')
+			                   AdminColumn::checkbox('active', 'Активность')
 		                   )->paginate(20);
 	}
 
@@ -68,7 +68,7 @@ class Sites extends Section implements Initializable
 		return AdminForm::panel()->addBody([
 			AdminFormElement::text('url', 'Ссылка'),
 			AdminFormElement::text('get_data', 'Ссылка получения данных'),
-			AdminFormElement::text('command', 'Команда'),
+			AdminFormElement::text('active', 'Активность'),
 		]);
 	}
 
