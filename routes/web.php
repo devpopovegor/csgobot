@@ -15,7 +15,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/handle', 'TelegramController@handle');
+Route::post('/handle', 'TelegramController@handle');
 
 Auth::routes();
 
