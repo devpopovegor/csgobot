@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Middleware;
 
 use App\User;
@@ -28,7 +27,7 @@ class AdminAuthenticate
             }
         }
 
-        if (! $auth->user()->isAdmin()) {
+        if (!$auth->user()->hasRole('admin') && !$auth->user()->hasRole('manager')) {
             return response('Access denied.', 401);
         }
 
