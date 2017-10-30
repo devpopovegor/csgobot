@@ -76,6 +76,9 @@ class SearchCommand extends Command {
                             curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
                             $curl_response = json_decode(curl_exec($curl));
 
+                            $this->replyWithChatAction( [ 'action' => Actions::TYPING ] );
+                            $this->replyWithMessage( [ 'text' => $obj->full_name ] );
+
                             switch ($mSite->id){
                                 case 7:
                                     $this->check_csmoney($obj, $curl_response);
