@@ -8,6 +8,7 @@ use App\Item;
 use App\Site;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Log;
 use Telegram\Bot\Actions;
 use Telegram\Bot\Commands\Command;
 use Telegram\Bot\Laravel\Facades\Telegram;
@@ -58,7 +59,9 @@ class SearchCommand extends Command {
 						    $this->replyWithMessage( [ 'text' => 'Неверный float' ] );
                         }
                     }
-
+                    Log::info($count_params);
+                    Log::info($phase);
+                    Log::info($float);
 					if ( $mSite = Site::find( $site ) ) {
 						$mItem = ! $phase ? Item::where( 'name', '=', "{$item}" )->first() : Item::where( [
 							[ 'name', '=', "{$item}" ],
