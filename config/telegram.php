@@ -59,5 +59,6 @@ return [
         Telegram\Bot\Commands\HelpCommand::class,
         \App\Commands\StartCommand::class,
         \App\Commands\SitesListCommand::class,
+        \App\Commands\SearchCommand::class,
     ],
 ];
