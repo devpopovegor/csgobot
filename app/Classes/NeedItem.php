@@ -20,6 +20,7 @@ class NeedItem
     public function __construct($name, $url, $chat_id, $phase = null, $float = null)
     {
         $this->name = $name;
+        $this->full_name = $name;
         if ($this->phase) {
             if (strpos($this->name, '(') !== false) {
                 $parts_name = explode('(', $this->name);
