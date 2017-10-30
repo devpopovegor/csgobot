@@ -42,7 +42,7 @@ class SearchCommand extends Command {
 					$site  = trim( explode( ',', $arguments )[0] );
 					$item  = trim( explode( ',', $arguments )[1] );
 					$phase = false;
-                    $float = 0;
+                    $float = false;
                     if ($count_params == 3){
 					    if (is_numeric(trim($str_request[2]))){
 					        $float = trim($str_request[2]);

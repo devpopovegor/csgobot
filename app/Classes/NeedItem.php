@@ -17,7 +17,7 @@ class NeedItem
     public $phase;
     public $float;
 
-    public function __construct($name, $url, $chat_id, $phase = null, $float = null)
+    public function __construct($name, $url, $chat_id, $phase, $float)
     {
         $this->name = $name;
         $this->full_name = $name;
