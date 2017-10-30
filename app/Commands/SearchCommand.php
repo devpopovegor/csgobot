@@ -59,9 +59,9 @@ class SearchCommand extends Command {
 						    $this->replyWithMessage( [ 'text' => 'Неверный float' ] );
                         }
                     }
-                    Log::info($count_params);
-                    Log::info($phase);
-                    Log::info($float);
+//                    Log::info($count_params);
+//                    Log::info($phase);
+//                    Log::info($float);
 					if ( $mSite = Site::find( $site ) ) {
 						$mItem = ! $phase ? Item::where( 'name', '=', "{$item}" )->first() : Item::where( [
 							[ 'name', '=', "{$item}" ],
