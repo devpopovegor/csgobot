@@ -23,7 +23,7 @@ class SitesListCommand extends Command
 
 	public function handle($arguments)
 	{
-		set_time_limit(150000);
+		set_time_limit(0);
 		$updades = Telegram::getWebhookUpdates();
 		$message = $updades->getMessage();
 		$user = $message->getFrom();
@@ -40,7 +40,7 @@ class SitesListCommand extends Command
 				$this->replyWithChatAction( [ 'action' => Actions::TYPING ] );
 				$this->replyWithMessage( [ 'text' => 'Продлите подписку' ] );
 			} else {
-				$message = $this->getListSites( Site::where( 'command', '<>', '' )->get() );
+				$message = $this->getListSites( Site::where( 'active', '=', 1 )->get() );
 			}
 		} else {
 			$message = 'Купи подписку у @ska4an';
@@ -58,6 +58,5 @@ class SitesListCommand extends Command
 		}
 		return $str;
 	}
-
 
 }
