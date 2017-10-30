@@ -11,7 +11,6 @@ class TelegramController extends Controller
     public function handle()
     {
         set_time_limit(0);
-        Log::info(123);
         Telegram::commandsHandler(true);
     }
 }

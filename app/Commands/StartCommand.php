@@ -21,31 +21,31 @@ class StartCommand extends Command
 		$this->replyWithMessage(['text' => "123"]);
 
 
-//		$updades = Telegram::getWebhookUpdates();
-//		$message = $updades->getMessage();
-//		$user = $message->getFrom();
+		$updades = Telegram::getWebhookUpdates();
+		$message = $updades->getMessage();
+		$user = $message->getFrom();
+
+		$message = '';
+
+		$dealer = Dealer::where('username', '=', $user->getUsername())->where('subscription', '=',1)->first();
 //
-//		$message = '';
-//
-//		$dealer = Dealer::where('username', '=', $user->getUsername())->where('subscription', '=',1)->first();
-//
-//		if ($dealer){
-//			$now = Carbon::now()->format('Y-m-d');
-//			$end = $dealer->end_subscription;
-//			if ($now >= $end){
-//				$dealer->subscription = 0;
-//				$dealer->save();
-//				$this->replyWithChatAction( [ 'action' => Actions::TYPING ] );
-//				$this->replyWithMessage( [ 'text' => 'Продлите подписку' ] );
-//			} else {
-//				$message = "Привет, {$user->getFirstName()}.\r\nДля просмотра списка комманд введи комманду /help";
-//			}
-//		} else {
-//			$message = 'Купи подписку у @ska4an';
-//		}
-//
-//
-//		$this->replyWithChatAction(['action' => Actions::TYPING]);
-//		$this->replyWithMessage(['text' => $message]);
+		if ($dealer){
+			$now = Carbon::now()->format('Y-m-d');
+			$end = $dealer->end_subscription;
+			if ($now >= $end){
+				$dealer->subscription = 0;
+				$dealer->save();
+				$this->replyWithChatAction( [ 'action' => Actions::TYPING ] );
+				$this->replyWithMessage( [ 'text' => 'Продлите подписку' ] );
+			} else {
+				$message = "Привет, {$user->getFirstName()}.\r\nДля просмотра списка комманд введи комманду /help";
+			}
+		} else {
+			$message = 'Купи подписку у @ska4an';
+		}
+
+
+		$this->replyWithChatAction(['action' => Actions::TYPING]);
+		$this->replyWithMessage(['text' => $message]);
 	}
 }
