@@ -59,9 +59,7 @@ class SearchCommand extends Command {
 						    $this->replyWithMessage( [ 'text' => 'Неверный float' ] );
                         }
                     }
-//                    Log::info($count_params);
-//                    Log::info($phase);
-//                    Log::info($float);
+
 					if ( $mSite = Site::find( $site ) ) {
 						$mItem = ! $phase ? Item::where( 'name', '=', "{$item}" )->first() : Item::where( [
 							[ 'name', '=', "{$item}" ],
@@ -78,9 +76,6 @@ class SearchCommand extends Command {
                             curl_setopt($curl, CURLOPT_URL, $mSite->get_data);
                             curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
                             $curl_response = json_decode(curl_exec($curl));
-
-                            $this->replyWithChatAction( [ 'action' => Actions::TYPING ] );
-                            $this->replyWithMessage( [ 'text' => $obj->full_name ] );
 
                             switch ($mSite->id){
                                 case 7:
