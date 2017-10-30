@@ -2,6 +2,7 @@
 
 namespace App\Commands;
 
+use App\Classes\NeedItem;
 use App\Dealer;
 use App\Item;
 use App\Site;
@@ -69,8 +70,20 @@ class SearchCommand extends Command {
 							$this->replyWithMessage( [ 'text' => $message ] );
 
 							//Логика поиска
-                            $this->replyWithChatAction( [ 'action' => Actions::TYPING ] );
-                            $this->replyWithMessage( [ 'text' => "Типа поиск)))" ] );
+                            $obj = new NeedItem($mItem->name, $mSite->url, $oMessage->getChat()->getId(), $phase, $float);
+                            $curl = curl_init();
+                            curl_setopt($curl, CURLOPT_URL, $mSite->get_data);
+                            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+                            $curl_response = json_decode(curl_exec($curl));
+
+                            switch ($mSite->id){
+                                case 7:
+                                    $this->check_csmoney($obj, $curl_response);
+                                    break;
+                            }
+
+                            curl_close($curl);
+                            //---------------------------
 
 						} else {
 							$message = "Предмет {$item} не существует.";
@@ -95,5 +108,49 @@ class SearchCommand extends Command {
 		}
 
 	}
+
+	private function check_csmoney($obj, $curl_response)
+    {
+        $statuses = ['FN' => '(Factory New)', 'MW' => '(Minimal Wear)', 'FT' => '(Field-Tested)',
+            'BS' => '(Battle-Scarred)', 'WW' => '(Well-Worn)'];
+
+        $find = false;
+        if ($obj->float) {
+            foreach ($curl_response as $item) {
+                $item_name = '';
+                try {
+                    $item_name = $item->m . " {$statuses[$item->e]}";
+                } catch (\Exception $exception) {
+                    $item_name = $item->m;
+                }
+                if ($item_name == $obj->full_name && $item->f[0] <= $obj->float) {
+                    $this->replyWithChatAction( [ 'action' => Actions::TYPING ] );
+                    $this->replyWithMessage( [ 'text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}\r\n{$obj->float}" ] );
+                    $find = true;
+                    break;
+                }
+            }
+        } else {
+            foreach ($curl_response as $item) {
+                $item_name = '';
+                try {
+                    $item_name = $item->m . " {$statuses[$item->e]}";
+                } catch (\Exception $exception) {
+                    $item_name = $item->m;
+                }
+                if ($item_name == $obj->full_name) {
+                    $this->replyWithChatAction( [ 'action' => Actions::TYPING ] );
+                    $this->replyWithMessage( [ 'text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}" ] );
+                    $find = true;
+                    break;
+                }
+            }
+        }
+
+        if (!$find){
+            $this->replyWithChatAction( [ 'action' => Actions::TYPING ] );
+            $this->replyWithMessage( [ 'text' => "Не найдено" ] );
+        }
+    }
 
 }
