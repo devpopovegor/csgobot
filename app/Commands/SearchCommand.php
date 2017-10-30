@@ -2,7 +2,6 @@
 
 namespace App\Commands;
 
-use App\Classes\FindObject;
 use App\Dealer;
 use App\Item;
 use App\Site;
@@ -69,16 +68,9 @@ class SearchCommand extends Command {
 							$this->replyWithChatAction( [ 'action' => Actions::TYPING ] );
 							$this->replyWithMessage( [ 'text' => $message ] );
 
-							$object = new FindObject( $item, $mSite->get_data, $oMessage->getChat()->getId(), '', $float);
-							if ( $phase ) {
-								$object->phase = $phase;
-							}
-
-//						$this->replyWithChatAction( [ 'action' => Actions::TYPING ] );
-//						$this->replyWithMessage( [ 'text' => '2' ] );
-
-							fastcgi_finish_request();
-							Artisan::call( $mSite->command, [ 'object' => $object ] );
+							//Логика поиска
+                            $this->replyWithChatAction( [ 'action' => Actions::TYPING ] );
+                            $this->replyWithMessage( [ 'text' => "Типа поиск)))" ] );
 
 						} else {
 							$message = "Предмет {$item} не существует.";
