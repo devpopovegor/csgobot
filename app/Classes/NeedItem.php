@@ -21,7 +21,7 @@ class NeedItem
     {
         $this->name = $name;
         $this->full_name = $name;
-        if ($this->phase) {
+        if ($phase) {
             if (strpos($this->name, '(') !== false) {
                 $parts_name = explode('(', $this->name);
                 $this->full_name = $parts_name[0];
