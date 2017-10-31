@@ -38,6 +38,7 @@ class ItemFullName extends Command
      */
     public function handle()
     {
+        echo "Setting start...";
         Item::chunk(500, function ($items) {
             foreach ($items as $item) {
                 $full_name = '';
@@ -53,5 +54,6 @@ class ItemFullName extends Command
                 $item->update(['full_name' => $full_name]);
             }
         });
+        echo "End";
     }
 }
