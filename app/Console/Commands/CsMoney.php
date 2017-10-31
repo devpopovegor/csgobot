@@ -61,14 +61,16 @@ class CsMoney extends Command
             }
 
             $db_item = $db_items->where('full_name', '=', $item_name)->first();
-            $tasks = Task::where('item_id', '=', $db_item->id)->where('site_id', '=', 7)->get();
-            foreach ($tasks as $task) {
-                if ($item->f[0] <= $task->float || !$task->float) {
-                    Telegram::sendMessage([
-                        'chat_id' => $task->chat_id,
-                        'text' => "{$db_item->name}\r\n{$csmoney->url}\r\n{$db_item->phase}\r\n{$item->f[0]}"
-                    ]);
-                    $task->delete();
+            if ($db_item) {
+                $tasks = Task::where('item_id', '=', $db_item->id)->where('site_id', '=', 7)->get();
+                foreach ($tasks as $task) {
+                    if ($item->f[0] <= $task->float || !$task->float) {
+                        Telegram::sendMessage([
+                            'chat_id' => $task->chat_id,
+                            'text' => "{$db_item->name}\r\n{$csmoney->url}\r\n{$db_item->phase}\r\n{$item->f[0]}"
+                        ]);
+                        $task->delete();
+                    }
                 }
             }
         }
