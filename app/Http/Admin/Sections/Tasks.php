@@ -54,8 +54,8 @@ class Tasks extends Section implements Initializable
             ->setHtmlAttribute('class', 'table-primary')
             ->setColumns(
 //			                   AdminColumn::text('id', '#')->setWidth('30px'),
-                AdminColumn::text('id_item', 'ID предмета'),
-                AdminColumn::text('id_site', 'ID сайта'),
+                AdminColumn::text('item_id', 'ID предмета'),
+                AdminColumn::text('site_id', 'ID сайта'),
                 AdminColumn::text('float', 'Float')
             )->paginate(100);
     }
@@ -68,8 +68,8 @@ class Tasks extends Section implements Initializable
     public function onEdit($id)
     {
         return AdminForm::panel()->addBody([
-            AdminFormElement::text('id_item', 'ID предмета'),
-            AdminFormElement::text('id_site', 'ID сайта'),
+            AdminFormElement::text('item_id', 'ID предмета'),
+            AdminFormElement::text('site_id', 'ID сайта'),
             AdminFormElement::text('float', 'Float')
         ]);
     }

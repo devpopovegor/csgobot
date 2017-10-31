@@ -84,7 +84,7 @@ class SearchCommand extends Command {
                                     break;
                             }
                             curl_close($curl);
-                            if (!$response) Task::create(['id_item' => $mItem->id, 'id_site' => $mSite->id, 'float' => $float]);
+                            if (!$response) Task::create(['item_id' => $mItem->id, 'site_id' => $mSite->id, 'float' => $float]);
                             //---------------------------
 
 						} else {
