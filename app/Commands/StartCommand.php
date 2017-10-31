@@ -17,9 +17,6 @@ class StartCommand extends Command
 	public function handle($arguments)
 	{
 		set_time_limit(0);
-        $this->replyWithChatAction(['action' => Actions::TYPING]);
-		$this->replyWithMessage(['text' => "123"]);
-
 
 		$updades = Telegram::getWebhookUpdates();
 		$message = $updades->getMessage();

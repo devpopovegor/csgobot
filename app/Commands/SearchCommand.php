@@ -6,6 +6,7 @@ use App\Classes\NeedItem;
 use App\Dealer;
 use App\Item;
 use App\Site;
+use App\Task;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Log;
@@ -43,7 +44,7 @@ class SearchCommand extends Command {
 					$site  = trim( explode( ',', $arguments )[0] );
 					$item  = trim( explode( ',', $arguments )[1] );
 					$phase = false;
-                    $float = false;
+                    $float = null;
                     if ($count_params == 3){
 					    if (is_numeric(trim($str_request[2]))){
 					        $float = trim($str_request[2]);
@@ -76,14 +77,14 @@ class SearchCommand extends Command {
                             curl_setopt($curl, CURLOPT_URL, $mSite->get_data);
                             curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
                             $curl_response = json_decode(curl_exec($curl));
-
+                            $response = false;
                             switch ($mSite->id){
                                 case 7:
-                                    $this->check_csmoney($obj, $curl_response);
+                                    $response = $this->check_csmoney($obj, $curl_response);
                                     break;
                             }
-
                             curl_close($curl);
+                            if (!$response) Task::create(['id_item' => $mItem->id, 'id_site' => $mSite->id, 'float' => $float]);
                             //---------------------------
 
 						} else {
@@ -148,10 +149,7 @@ class SearchCommand extends Command {
             }
         }
 
-        if (!$find){
-            $this->replyWithChatAction( [ 'action' => Actions::TYPING ] );
-            $this->replyWithMessage( [ 'text' => "Не найдено" ] );
-        }
+        return $find;
     }
 
 }
