@@ -57,7 +57,7 @@ class Tasks extends Section implements Initializable
                 AdminColumn::text('id_item', 'ID предмета'),
                 AdminColumn::text('id_site', 'ID сайта'),
                 AdminColumn::text('float', 'Float')
-            )->setDisplaySearch(true)->paginate(100);
+            )->paginate(100);
     }
 
     /**
@@ -67,7 +67,11 @@ class Tasks extends Section implements Initializable
      */
     public function onEdit($id)
     {
-        return false;
+        return AdminForm::panel()->addBody([
+            AdminFormElement::text('id_item', 'ID предмета'),
+            AdminFormElement::text('id_site', 'ID сайта'),
+            AdminFormElement::text('float', 'Float')
+        ]);
     }
 
     /**
