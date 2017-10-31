@@ -2,7 +2,9 @@
 
 namespace App\Console;
 
+use App\Console\Commands\CsMoney;
 use App\Console\Commands\FillItemsCommand;
+use App\Console\Commands\ItemFullName;
 use App\Console\Commands\TestCommand;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
@@ -16,7 +18,9 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         FillItemsCommand::class,
-        TestCommand::class
+        TestCommand::class,
+        CsMoney::class,
+        ItemFullName::class,
     ];
 
     /**
