@@ -54,7 +54,8 @@ class Items extends Section implements Initializable
 		                   ->setColumns(
 //			                   AdminColumn::text('id', '#')->setWidth('30px'),
 			                   AdminColumn::link('name', 'Название'),
-			                   AdminColumn::text('phase', 'Фаза')
+			                   AdminColumn::text('phase', 'Фаза'),
+			                   AdminColumn::text('full_name', 'Полное название')
 		                   )->setDisplaySearch(true)->paginate(100);
 	}
 
