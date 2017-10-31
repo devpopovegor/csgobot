@@ -20,3 +20,4 @@ Route::post('/handle', 'TelegramController@handle');
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/test', 'TelegramController@test')->name('test');
