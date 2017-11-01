@@ -54,6 +54,7 @@ class CsMoney extends Command
             'BS' => '(Battle-Scarred)', 'WW' => '(Well-Worn)'];
 
         $db_items = Item::all();
+        $all_tasks = Task::where('site_id', '=', 7)->get();
 
         foreach ($curl_response as $item) {
             $item_name = '';
@@ -62,15 +63,22 @@ class CsMoney extends Command
             } catch (\Exception $exception) {
                 $item_name = $item->m;
             }
-
             $db_item = $db_items->where('full_name', '=', $item_name)->first();
             if ($db_item) {
-                $tasks = Task::where('item_id', '=', $db_item->id)->where('site_id', '=', 7)->get();
+                $tasks = $all_tasks->where('item_id', '=', $db_item->id)->get();
                 foreach ($tasks as $task) {
-                    if ($item->f[0] <= $task->float || !$task->float) {
+                    if ($task->float){
+                        if ($item->f[0] <= $task->float) {
+                            Telegram::sendMessage([
+                                'chat_id' => $task->chat_id,
+                                'text' => "{$db_item->name}\r\n{$csmoney->url}\r\n{$db_item->phase}\r\n{$item->f[0]}"
+                            ]);
+                            $task->delete();
+                        }
+                    } else {
                         Telegram::sendMessage([
                             'chat_id' => $task->chat_id,
-                            'text' => "{$db_item->name}\r\n{$csmoney->url}\r\n{$db_item->phase}\r\n{$item->f[0]}"
+                            'text' => "{$db_item->name}\r\n{$csmoney->url}\r\n{$db_item->phase}}"
                         ]);
                         $task->delete();
                     }
