@@ -7,4 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class Item extends Model
 {
 	protected $fillable = ['name', 'phase', 'id', 'full_name'];
+
+	public function tasks(){
+        return $this->hasMany(Task::class);
+    }
 }

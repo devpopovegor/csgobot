@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Item;
+use App\Site;
 use App\Task;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -17,10 +18,18 @@ class TelegramController extends Controller
     }
 
     public function test(){
-//        $db_item = Item::where('full_name','=', 'ads')->first();
-//        $tasks = Task::where('item_id', '=', 1)->where('site_id', '=', 7)->get();
-//        foreach ($tasks as $task) var_dump(123);
-        var_dump(123);
+
+        $name = explode(" (", "★ Bayonet | Autotronic (Battle-Scarred)");
+        dd($name);
+
+        $csmoney = Site::find(8);
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, $csmoney->get_data);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        $curl_response = collect(json_decode(curl_exec($curl)));
+
+        dd($curl_response->where('m', '=', '★ M9 Bayonet | Crimson Web')
+            ->where('f.0', '<=', '0.07')->first());
     }
 
 }

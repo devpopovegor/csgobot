@@ -48,43 +48,34 @@ class CsMoney extends Command
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, $csmoney->get_data);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        $curl_response = json_decode(curl_exec($curl));
-        echo "csmoney items" . count($curl_response) . "\r\n";
-        $statuses = ['FN' => '(Factory New)', 'MW' => '(Minimal Wear)', 'FT' => '(Field-Tested)',
-            'BS' => '(Battle-Scarred)', 'WW' => '(Well-Worn)'];
+        $csmoney_items = collect(json_decode(curl_exec($curl)));
+        echo "csmoney items" . count($csmoney_items) . "\r\n";
+        $statuses = ['Factory New' => 'FN', 'Minimal Wear' => 'MW', 'Field-Tested' => 'FT',
+            'Battle-Scarred' => 'BS', 'Well-Worn' => 'WW'];
 
-        $db_items = Item::all();
-        $all_tasks = Task::where('site_id', '=', 7)->get();
+        $tasks = Task::with('item')->where('site_id', '=', 7)->get();
+        foreach ($tasks as $task){
+            $name_parts = explode(' (', $task->item->name);
+            $name = $name_parts[0];
+            $status = count($name_parts) > 1 ? $statuses[str_replace(')','',$name_parts[1])] : null;
 
-        foreach ($curl_response as $item) {
-            $item_name = '';
-            try {
-                $item_name = $item->m . " {$statuses[$item->e]}";
-            } catch (\Exception $exception) {
-                $item_name = $item->m;
+            $item = null;
+            if ($task->float){
+                if ($status) $item = $csmoney_items->where('m', '=', $name)->where('e', '=', $status)->where('f.0', '<=', $task->float)->first();
+                else $item = $csmoney_items->where('m', '=', $name)->where('f.0', '<=', $task->float)->first();
+            } else {
+                if ($status) $item = $csmoney_items->where('m', '=', $name)->where('e', '=', $status)->first();
+                else $item = $csmoney_items->where('m', '=', $name)->first();
             }
-            $db_item = $db_items->where('full_name', '=', $item_name)->first();
-            if ($db_item) {
-                $tasks = $all_tasks->where('item_id', '=', $db_item->id)->get();
-                foreach ($tasks as $task) {
-                    if ($task->float){
-                        if ($item->f[0] <= $task->float) {
-                            Telegram::sendMessage([
-                                'chat_id' => $task->chat_id,
-                                'text' => "{$db_item->name}\r\n{$csmoney->url}\r\n{$db_item->phase}\r\n{$item->f[0]}"
-                            ]);
-                            $task->delete();
-                        }
-                    } else {
-                        Telegram::sendMessage([
-                            'chat_id' => $task->chat_id,
-                            'text' => "{$db_item->name}\r\n{$csmoney->url}\r\n{$db_item->phase}}"
-                        ]);
-                        $task->delete();
-                    }
-                }
+
+            if ($item){
+                Telegram::sendMessage([
+                    'chat_id' => $task->chat_id,
+                    'text' => "{$task->item->name}\r\n{$csmoney->url}\r\n{$task->item->phase}\r\n{$task->float}"
+                ]);
             }
         }
+
         echo "end check csmoney\r\n";
         Log::info('end check csmoney');
 
