@@ -43,13 +43,12 @@ class CsMoney extends Command
     public function handle()
     {
         Log::info('csmoney check');
-        echo "csmoney check\r\n";
         $csmoney = Site::find(7);
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, $csmoney->get_data);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         $csmoney_items = collect(json_decode(curl_exec($curl)));
-        echo "csmoney items" . count($csmoney_items) . "\r\n";
+        Log::info(count($csmoney_items));
         $statuses = ['Factory New' => 'FN', 'Minimal Wear' => 'MW', 'Field-Tested' => 'FT',
             'Battle-Scarred' => 'BS', 'Well-Worn' => 'WW'];
 
