@@ -75,7 +75,6 @@ class CsMoney extends Command
             }
         }
 
-        echo "end check csmoney\r\n";
         Log::info('end check csmoney');
 
     }
