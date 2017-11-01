@@ -77,5 +77,7 @@ class CsMoney extends Command
             }
         }
 
+        Log::info('end check csmoney');
+
     }
 }
