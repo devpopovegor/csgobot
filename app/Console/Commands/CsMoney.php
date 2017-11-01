@@ -6,6 +6,7 @@ use App\Item;
 use App\Site;
 use App\Task;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 use Telegram\Bot\Laravel\Facades\Telegram;
 
 class CsMoney extends Command
@@ -41,6 +42,7 @@ class CsMoney extends Command
      */
     public function handle()
     {
+        Log::info('csmoney check');
         $csmoney = Site::find(7);
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, $csmoney->get_data);
