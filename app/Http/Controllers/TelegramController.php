@@ -19,17 +19,16 @@ class TelegramController extends Controller
 
     public function test(){
 
-        $name = explode(" (", "★ Bayonet | Autotronic (Battle-Scarred)");
-        dd($name);
+//        $name = explode(" (", "★ Bayonet | Autotronic (Battle-Scarred)");
+//        dd($name);
 
-        $csmoney = Site::find(8);
+        $csmoney = Site::find(2);
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, $csmoney->get_data);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        $curl_response = collect(json_decode(curl_exec($curl)));
+        $curl_response = json_decode(curl_exec($curl));
 
-        dd($curl_response->where('m', '=', '★ M9 Bayonet | Crimson Web')
-            ->where('f.0', '<=', '0.07')->first());
+        dd($curl_response->response);
     }
 
 }

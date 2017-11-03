@@ -79,8 +79,32 @@ class SearchCommand extends Command {
                             $curl_response = json_decode(curl_exec($curl));
                             $response = false;
                             switch ($mSite->id){
+                                case 1:
+                                    $response = $this->check_raffletrades($obj, $curl_response);
+                                    break;
+                                case 2:
+                                    $response = $this->check_raffletrades($obj, $curl_response);
+                                    break;
+                                case 3:
+                                    $response = $this->check_raffletrades($obj, $curl_response);
+                                    break;
+                                case 4:
+                                    $response = $this->check_cstradegg($obj, $curl_response);
+                                    break;
+                                case 5:
+                                    $response = $this->check_skintrade($obj, $curl_response);
+                                    break;
                                 case 7:
                                     $response = $this->check_csmoney($obj, $curl_response);
+                                    break;
+                                case 8:
+                                    $response = $this->check_csgosum($obj, $curl_response);
+                                    break;
+                                case 9:
+                                    $response = $this->check_skinsjar($obj, $curl_response);
+                                    break;
+                                case 9:
+                                    $response = $this->check_lootfarm($obj, $curl_response);
                                     break;
                             }
                             curl_close($curl);
@@ -127,7 +151,7 @@ class SearchCommand extends Command {
                 }
                 if ($item_name == $obj->full_name && $item->f[0] <= $obj->float) {
                     $this->replyWithChatAction( [ 'action' => Actions::TYPING ] );
-                    $this->replyWithMessage( [ 'text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}\r\n{$obj->float}" ] );
+                    $this->replyWithMessage( [ 'text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}\r\n{$item->f[0]}" ] );
                     $find = true;
                     break;
                 }
@@ -146,6 +170,167 @@ class SearchCommand extends Command {
                     $find = true;
                     break;
                 }
+            }
+        }
+
+        return $find;
+    }
+
+    private function check_raffletrades($obj, $curl_response)
+    {
+        $curl_response = $curl_response->response;
+
+        $find = false;
+        if (!$obj->phase) {
+            if ($obj->float) {
+                foreach ($curl_response as $item) {
+                    if ($item->market_name == $obj->name && $item->float <= $obj->float) {
+                        $this->replyWithChatAction( [ 'action' => Actions::TYPING ] );
+                        $this->replyWithMessage( [ 'text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}\r\n{$item->float}" ] );
+                        $find = true;
+                        break;
+                    }
+                }
+            } else {
+                foreach ($curl_response as $item) {
+                    if ($item->market_name == $obj->name) {
+                        $this->replyWithChatAction( [ 'action' => Actions::TYPING ] );
+                        $this->replyWithMessage( [ 'text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}" ] );
+                        $find = true;
+                        break;
+                    }
+                }
+            }
+        }
+        else {
+            if ($obj->float) {
+                foreach ($curl_response as $item) {
+                    if ($item->market_name == $obj->name && $item->item_phase == $obj->phase && $item->float <= $obj->name) {
+                        $this->replyWithChatAction( [ 'action' => Actions::TYPING ] );
+                        $this->replyWithMessage( [ 'text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}\r\n{$item->float}" ] );
+                        $find = true;
+                        break;
+                    }
+                }
+            } else {
+                foreach ($curl_response as $item) {
+                    if ($item->market_name == $obj->name && $item->item_phase == $obj->phase) {
+                        $this->replyWithChatAction( [ 'action' => Actions::TYPING ] );
+                        $this->replyWithMessage( [ 'text' => "{$obj->name}\r\n{$obj->url}" ] );
+                        $find = true;
+                        break;
+                    }
+                }
+            }
+        }
+
+        return $find;
+
+    }
+
+    private function check_cstradegg($obj, $curl_response)
+    {
+        $curl_response = $curl_response->inventory;
+
+        $find = false;
+        foreach ($curl_response as $item) {
+            if ($obj->float) {
+                if ($item->market_hash_name == $obj->name && $item->wear <= $obj->float) {
+                    $this->replyWithChatAction( [ 'action' => Actions::TYPING ] );
+                    $this->replyWithMessage( [ 'text' => "{$obj->name}\r\n{$obj->url}\r\n{$item->float}\r\n{$obj->phase}" ] );
+                    $find = true;
+                    break;
+                }
+            } else {
+                if ($item->market_hash_name == $obj->name) {
+                    $this->replyWithChatAction( [ 'action' => Actions::TYPING ] );
+                    $this->replyWithMessage( [ 'text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}" ] );
+                    $find = true;
+                    break;
+                }
+            }
+        }
+
+        return $find;
+    }
+
+    private function check_skintrade($obj, $curl_response)
+    {
+        $curl_response = array_merge($curl_response->cooler613, $curl_response->peter6364, $curl_response->para6350,
+            $curl_response->erikli74,
+            $curl_response->etipuf257, $curl_response->adobe1470, $curl_response->baron1578, $curl_response->katkat750);
+        $find = false;
+        if ($obj->float) {
+            foreach ($curl_response as $item) {
+                if ($item->m == $obj->name && $item->f <= $obj->float) {
+                    $this->replyWithChatAction( [ 'action' => Actions::TYPING ] );
+                    $this->replyWithMessage( [ 'text' => "{$obj->name}\r\n{$obj->url}\r\n{$item->float}\r\n{$obj->phase}" ] );
+                    $find = true;
+                    break;
+                }
+            }
+        } else {
+            foreach ($curl_response as $item) {
+                if ($item->m == $obj->name) {
+                    $this->replyWithChatAction( [ 'action' => Actions::TYPING ] );
+                    $this->replyWithMessage( [ 'text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}" ] );
+                    $find = true;
+                    break;
+                }
+            }
+        }
+        return $find;
+    }
+
+    private function check_csgosum($obj, $curl_response)
+    {
+        $curl_response = $curl_response[0]->response;
+
+        $find = false;
+        foreach ($curl_response as $item) {
+            if ($item->name == $obj->name && $item->current > 0) {
+                $this->replyWithChatAction( [ 'action' => Actions::TYPING ] );
+                $this->replyWithMessage( [ 'text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}" ] );
+                $find = true;
+                break;
+            }
+        }
+
+        return $find;
+    }
+
+    private  function check_skinsjar($obj, $curl_response)
+    {
+        $find = false;
+        if ($obj->float) {
+            foreach ($curl_response as $item) {
+                if ($item->name == $obj->name && $item->floatMax <= $obj->float) {
+                    $this->replyWithChatAction( [ 'action' => Actions::TYPING ] );
+                    $this->replyWithMessage( [ 'text' => "{$obj->name}\r\n{$obj->url}\r\n{$item->floatMax}\r\n{$obj->phase}" ] );
+                    $find = true;
+                }
+            }
+        } else {
+            foreach ($curl_response as $item) {
+                if ($item->name == $obj->name) {
+                    $this->replyWithChatAction( [ 'action' => Actions::TYPING ] );
+                    $this->replyWithMessage( [ 'text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}" ] );
+                    $find = true;
+                }
+            }
+        }
+
+        return $find;
+    }
+
+    private function check_lootfarm($obj, $curl_response)
+    {
+        $find = false;
+        foreach ($curl_response as $item) {
+            if ($item->name == $obj->name) {
+                $this->replyWithChatAction( [ 'action' => Actions::TYPING ] );
+                $this->replyWithMessage( [ 'text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}" ] );
+                $find = true;
             }
         }
 
