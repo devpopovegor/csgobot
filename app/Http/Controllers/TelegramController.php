@@ -22,12 +22,11 @@ class TelegramController extends Controller
 //        $name = explode(" (", "★ Bayonet | Autotronic (Battle-Scarred)");
 //        dd($name);
 
-        $csmoney = Site::find(2);
+//        $csmoney = Site::find(2);
         $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL, $csmoney->get_data);
+        curl_setopt($curl, CURLOPT_URL,"https://api.raffletrades.com/v1/inventory/");
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         $curl_response = json_decode(curl_exec($curl));
-
         dd($curl_response->response);
     }
 

@@ -48,7 +48,7 @@ class ItemFullName extends Command
                     $full_name .= $item->phase . ' (';
                     $full_name .= $parts_name[1];
                 } else {
-                    $full_name .= " {$item->phase}";
+                    $full_name .= "{$item->name} {$item->phase}";
                 }
                 // might be more logic here
                 $item->update(['full_name' => $full_name]);

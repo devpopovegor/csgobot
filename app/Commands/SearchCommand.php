@@ -74,7 +74,8 @@ class SearchCommand extends Command {
 							//Логика поиска
                             $obj = new NeedItem($mItem->name, $mSite->url, $oMessage->getChat()->getId(), $phase, $float);
                             $curl = curl_init();
-                            curl_setopt($curl, CURLOPT_URL, $mSite->get_data);
+                            $url = $mSite->id == 8 ? $mSite->get_data . str_replace(' ', '', $obj->full_name) : $mSite->get_data;
+                            curl_setopt($curl, CURLOPT_URL, $url);
                             curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
                             $curl_response = json_decode(curl_exec($curl));
                             $response = false;
@@ -235,14 +236,14 @@ class SearchCommand extends Command {
         $find = false;
         foreach ($curl_response as $item) {
             if ($obj->float) {
-                if ($item->market_hash_name == $obj->name && $item->wear <= $obj->float) {
+                if ($item->market_hash_name == $obj->full_name && $item->wear <= $obj->float) {
                     $this->replyWithChatAction( [ 'action' => Actions::TYPING ] );
                     $this->replyWithMessage( [ 'text' => "{$obj->name}\r\n{$obj->url}\r\n{$item->float}\r\n{$obj->phase}" ] );
                     $find = true;
                     break;
                 }
             } else {
-                if ($item->market_hash_name == $obj->name) {
+                if ($item->market_hash_name == $obj->full_name) {
                     $this->replyWithChatAction( [ 'action' => Actions::TYPING ] );
                     $this->replyWithMessage( [ 'text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}" ] );
                     $find = true;
@@ -262,7 +263,7 @@ class SearchCommand extends Command {
         $find = false;
         if ($obj->float) {
             foreach ($curl_response as $item) {
-                if ($item->m == $obj->name && $item->f <= $obj->float) {
+                if ($item->m == $obj->full_name && $item->f <= $obj->float) {
                     $this->replyWithChatAction( [ 'action' => Actions::TYPING ] );
                     $this->replyWithMessage( [ 'text' => "{$obj->name}\r\n{$obj->url}\r\n{$item->float}\r\n{$obj->phase}" ] );
                     $find = true;
@@ -271,7 +272,7 @@ class SearchCommand extends Command {
             }
         } else {
             foreach ($curl_response as $item) {
-                if ($item->m == $obj->name) {
+                if ($item->m == $obj->full_name) {
                     $this->replyWithChatAction( [ 'action' => Actions::TYPING ] );
                     $this->replyWithMessage( [ 'text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}" ] );
                     $find = true;
@@ -288,7 +289,7 @@ class SearchCommand extends Command {
 
         $find = false;
         foreach ($curl_response as $item) {
-            if ($item->name == $obj->name && $item->current > 0) {
+            if ($item->name == $obj->full_name && $item->current > 0) {
                 $this->replyWithChatAction( [ 'action' => Actions::TYPING ] );
                 $this->replyWithMessage( [ 'text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}" ] );
                 $find = true;
@@ -304,7 +305,7 @@ class SearchCommand extends Command {
         $find = false;
         if ($obj->float) {
             foreach ($curl_response as $item) {
-                if ($item->name == $obj->name && $item->floatMax <= $obj->float) {
+                if ($item->name == $obj->full_name && $item->floatMax <= $obj->float) {
                     $this->replyWithChatAction( [ 'action' => Actions::TYPING ] );
                     $this->replyWithMessage( [ 'text' => "{$obj->name}\r\n{$obj->url}\r\n{$item->floatMax}\r\n{$obj->phase}" ] );
                     $find = true;
@@ -312,7 +313,7 @@ class SearchCommand extends Command {
             }
         } else {
             foreach ($curl_response as $item) {
-                if ($item->name == $obj->name) {
+                if ($item->name == $obj->full_name) {
                     $this->replyWithChatAction( [ 'action' => Actions::TYPING ] );
                     $this->replyWithMessage( [ 'text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}" ] );
                     $find = true;
@@ -327,7 +328,7 @@ class SearchCommand extends Command {
     {
         $find = false;
         foreach ($curl_response as $item) {
-            if ($item->name == $obj->name) {
+            if ($item->name == $obj->full_name) {
                 $this->replyWithChatAction( [ 'action' => Actions::TYPING ] );
                 $this->replyWithMessage( [ 'text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}" ] );
                 $find = true;
