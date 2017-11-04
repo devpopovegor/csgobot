@@ -62,7 +62,7 @@ class Cstrade extends Command
             if ($item){
                 Telegram::sendMessage([
                     'chat_id' => $task->chat_id,
-                    'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$task->float}"
+                    'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$item->wear}"
                 ]);
             }
         }
