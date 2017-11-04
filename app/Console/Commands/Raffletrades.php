@@ -15,7 +15,7 @@ class Raffletrades extends Command
      *
      * @var string
      */
-    protected $signature = 'raffle:check';
+    protected $signature = 'raffle:check {site_id}';
 
     /**
      * The console command description.
@@ -41,8 +41,9 @@ class Raffletrades extends Command
      */
     public function handle()
     {
+        $site_id = $this->argument('site_id');
         Log::info('raffle check');
-        $site = Site::find(1);
+        $site = Site::find($site_id);
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, $site->get_data);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -50,7 +51,7 @@ class Raffletrades extends Command
         $items = collect($items->response);
         Log::info(count($items));
 
-        $tasks = Task::with('item')->where('site_id', '=', 1)->get();
+        $tasks = Task::with('item')->where('site_id', '=', $site_id)->get();
         foreach ($tasks as $task){
             $item = null;
             if ($task->float){

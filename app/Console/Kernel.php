@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Console\Commands\Check;
 use App\Console\Commands\Csgosum;
 use App\Console\Commands\CsMoney;
 use App\Console\Commands\Cstrade;
@@ -30,7 +31,8 @@ class Kernel extends ConsoleKernel
         Cstrade::class,
         Lootfarm::class,
         Skinsjar::class,
-        Raffletrades::class
+        Raffletrades::class,
+        Check::class
     ];
 
     /**
