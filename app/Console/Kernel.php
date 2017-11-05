@@ -11,6 +11,7 @@ use App\Console\Commands\ItemFullName;
 use App\Console\Commands\Lootfarm;
 use App\Console\Commands\Raffletrades;
 use App\Console\Commands\Skinsjar;
+use App\Console\Commands\Skintrade;
 use App\Console\Commands\TestCommand;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
@@ -31,6 +32,7 @@ class Kernel extends ConsoleKernel
         Cstrade::class,
         Lootfarm::class,
         Skinsjar::class,
+        Skintrade::class,
         Raffletrades::class,
         Check::class
     ];
