@@ -60,5 +60,6 @@ return [
         \App\Commands\StartCommand::class,
         \App\Commands\SitesListCommand::class,
         \App\Commands\SearchCommand::class,
+        \App\Commands\StopSearching::class,
     ],
 ];
