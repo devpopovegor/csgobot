@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Site;
 use App\Task;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
