@@ -79,7 +79,7 @@ class SearchCommand extends Command {
                             curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
                             $curl_response = json_decode(curl_exec($curl));
                             $response = false;
-                            /* switch ($mSite->id){
+                            switch ($mSite->id){
                                 case 1:
                                     $response = $this->check_raffletrades($obj, $curl_response);
                                     break;
@@ -107,7 +107,7 @@ class SearchCommand extends Command {
                                 case 10:
                                     $response = $this->check_lootfarm($obj, $curl_response);
                                     break;
-                            } */
+                            }
                             curl_close($curl);
                             if (!$response) Task::create(['item_id' => $mItem->id, 'site_id' => $mSite->id, 'float' => $float, 'chat_id' => $oMessage->getChat()->getId()]);
                             //---------------------------
