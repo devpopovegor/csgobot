@@ -285,19 +285,22 @@ class SearchCommand extends Command {
 
     private function check_csgosum($obj, $curl_response)
     {
-        $curl_response = $curl_response[0]->response;
 
-        $find = false;
-        foreach ($curl_response as $item) {
-            if ($item->name == $obj->full_name && $item->current > 0) {
-                $this->replyWithChatAction( [ 'action' => Actions::TYPING ] );
-                $this->replyWithMessage( [ 'text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}" ] );
-                $find = true;
-                break;
+        try {
+            $curl_response = $curl_response[0]->response;
+            foreach ($curl_response as $item) {
+                if ($item->name == $obj->full_name && $item->current > 0) {
+                    $this->replyWithChatAction(['action' => Actions::TYPING]);
+                    $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}"]);
+                    $find = true;
+                    break;
+                }
             }
+            $find = false;
+            return $find;
+        } catch (\Exception $exception){
+            return false;
         }
-
-        return $find;
     }
 
     private  function check_skinsjar($obj, $curl_response)

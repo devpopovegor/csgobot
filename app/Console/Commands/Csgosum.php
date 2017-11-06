@@ -51,17 +51,21 @@ class Csgosum extends Command
         foreach ($tasks as $task) {
             curl_setopt($curl, CURLOPT_URL, $csgosum->get_data . str_replace(' ', '', $task->item->full_name));
             $csgosum_items = json_decode(curl_exec($curl));
-            $csgosum_items = $csgosum_items[0]->response;
+            try {
+                $csgosum_items = $csgosum_items[0]->response;
 
-            foreach ($csgosum_items as $item) {
-                if ($item->name == $task->item->full_name && $item->current > 0) {
-                    Telegram::sendMessage([
-                        'chat_id' => $task->chat_id,
-                        'text' => "{$task->item->name}\r\n{$csgosum->url}\r\n{$task->item->phase}"
-                    ]);
-                    $task->delete();
-                    break;
+                foreach ($csgosum_items as $item) {
+                    if ($item->name == $task->item->full_name && $item->current > 0) {
+                        Telegram::sendMessage([
+                            'chat_id' => $task->chat_id,
+                            'text' => "{$task->item->name}\r\n{$csgosum->url}\r\n{$task->item->phase}"
+                        ]);
+                        $task->delete();
+                        break;
+                    }
                 }
+            } catch (\Exception $exception){
+                continue;
             }
         }
         Log::info('end check csgosum');

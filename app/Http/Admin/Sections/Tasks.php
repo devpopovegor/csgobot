@@ -84,8 +84,8 @@ class Tasks extends Section implements Initializable
 
     public function isDeletable(\Illuminate\Database\Eloquent\Model $model)
     {
-
-        return false;
+        if (Auth::user()->hasRole('admin')) return true;
+        else return false;
     }
 
     public function isEditable(\Illuminate\Database\Eloquent\Model $model)
