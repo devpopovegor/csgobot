@@ -302,6 +302,7 @@ class SearchCommand extends Command {
 
     private  function check_skinsjar($obj, $curl_response)
     {
+        $curl_response = $curl_response->items;
         $find = false;
         if ($obj->float) {
             foreach ($curl_response as $item) {
