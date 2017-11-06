@@ -58,6 +58,7 @@ class Lootfarm extends Command
                     'chat_id' => $task->chat_id,
                     'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}"
                 ]);
+                $task->delete();
             }
         }
 

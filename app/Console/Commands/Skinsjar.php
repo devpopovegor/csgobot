@@ -66,6 +66,7 @@ class Skinsjar extends Command
                         'chat_id' => $task->chat_id,
                         'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$item->floatMin}"
                     ]);
+                    $task->delete();
                 }
             }
         }catch (\Exception $exception){

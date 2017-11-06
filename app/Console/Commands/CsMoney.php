@@ -74,6 +74,7 @@ class CsMoney extends Command
                         'chat_id' => $task->chat_id,
                         'text' => "{$task->item->name}\r\n{$csmoney->url}\r\n{$task->item->phase}\r\n{$item->f[0]}"
                     ]);
+                    $task->delete();
                 }
             }
         }

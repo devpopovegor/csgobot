@@ -68,6 +68,7 @@ class Skintrade extends Command
                     'chat_id' => $task->chat_id,
                     'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$item->f}"
                 ]);
+                $task->delete();
             }
         }
 
