@@ -84,6 +84,7 @@ class Tasks extends Section implements Initializable
 
     public function isDeletable(\Illuminate\Database\Eloquent\Model $model)
     {
+
         return false;
     }
 
