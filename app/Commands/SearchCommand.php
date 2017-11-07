@@ -305,29 +305,36 @@ class SearchCommand extends Command {
 
     private  function check_skinsjar($obj, $curl_response)
     {
-        $curl_response = $curl_response->items;
-        $find = false;
+        $curl_response = collect($curl_response->items);
+        $find_obj = null;
         if ($obj->float) {
-            foreach ($curl_response as $item) {
-                if ($item->name == $obj->full_name && $item->floatMax <= $obj->float) {
-                    $this->replyWithChatAction( [ 'action' => Actions::TYPING ] );
-                    $this->replyWithMessage( [ 'text' => "{$obj->name}\r\n{$obj->url}\r\n{$item->floatMax}\r\n{$obj->phase}" ] );
-                    $find = true;
-                    break;
-                }
-            }
+            $find_obj = $curl_response->where('name', '=', $obj->full_name)->where('floatMax', '<=', $obj->float)->first();
+//            foreach ($curl_response as $item) {
+//                if ($item->name == $obj->full_name && $item->floatMax <= $obj->float) {
+//                    $this->replyWithChatAction( [ 'action' => Actions::TYPING ] );
+//                    $this->replyWithMessage( [ 'text' => "{$obj->name}\r\n{$obj->url}\r\n{$item->floatMax}\r\n{$obj->phase}" ] );
+//                    $find = true;
+//                    break;
+//                }
+//            }
         } else {
-            foreach ($curl_response as $item) {
-                if ($item->name == $obj->full_name) {
-                    $this->replyWithChatAction( [ 'action' => Actions::TYPING ] );
-                    $this->replyWithMessage( [ 'text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}" ] );
-                    $find = true;
-                    break;
-                }
-            }
-        }
+            $find_obj = $curl_response->where('name', '=', $obj->full_name)->first();
 
-        return $find;
+//            foreach ($curl_response as $item) {
+//                if ($item->name == $obj->full_name) {
+//                    $this->replyWithChatAction( [ 'action' => Actions::TYPING ] );
+//                    $this->replyWithMessage( [ 'text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}" ] );
+//                    $find = true;
+//                    break;
+//                }
+//            }
+        }
+        if ($find_obj) {
+            $this->replyWithChatAction( [ 'action' => Actions::TYPING ] );
+            $this->replyWithMessage( [ 'text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}\r\n{$obj->float}" ] );
+            return true;
+        }
+        return false;
     }
 
     private function check_lootfarm($obj, $curl_response)
