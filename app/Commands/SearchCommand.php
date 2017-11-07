@@ -313,6 +313,7 @@ class SearchCommand extends Command {
                     $this->replyWithChatAction( [ 'action' => Actions::TYPING ] );
                     $this->replyWithMessage( [ 'text' => "{$obj->name}\r\n{$obj->url}\r\n{$item->floatMax}\r\n{$obj->phase}" ] );
                     $find = true;
+                    break;
                 }
             }
         } else {
@@ -321,6 +322,7 @@ class SearchCommand extends Command {
                     $this->replyWithChatAction( [ 'action' => Actions::TYPING ] );
                     $this->replyWithMessage( [ 'text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}" ] );
                     $find = true;
+                    break;
                 }
             }
         }

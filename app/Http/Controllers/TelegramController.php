@@ -24,7 +24,7 @@ class TelegramController extends Controller
 
 //        $csmoney = Site::find(2);
         $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL,"https://www.csgosum.com/api/status?search=StatTrak™AK-47|FireSerpent(Factory New)");
+        curl_setopt($curl, CURLOPT_URL,"https://api.raffletrades.com/v1/inventory/");
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 //        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
 //        curl_setopt( $curl, CURLOPT_HEADER, true );
