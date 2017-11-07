@@ -287,6 +287,7 @@ class SearchCommand extends Command {
     {
 
         try {
+            $find = false;
             $curl_response = $curl_response[0]->response;
             foreach ($curl_response as $item) {
                 if ($item->name == $obj->full_name && $item->current > 0) {
@@ -296,7 +297,6 @@ class SearchCommand extends Command {
                     break;
                 }
             }
-            $find = false;
             return $find;
         } catch (\Exception $exception){
             return false;
