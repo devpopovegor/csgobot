@@ -24,8 +24,8 @@ class TelegramController extends Controller
 
 //        $csmoney = Site::find(2);
         $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL,"https://metjm.net/shared/screenshots-v5.php?cmd=request_new_link&inspect_link=steam://rungame/730/12315378472/+csgo_econ_action_preview%2520S76561198405089848A12315378472D17197033293580350551");
-//        curl_setopt($curl, CURLOPT_URL,"https://skinsjar.com/api/v3/load/bots?refresh=0&v=0");
+        curl_setopt($curl, CURLOPT_URL,"https://metjm.net/shared/screenshots-v5.php?cmd=request_new_link&inspect_link=steam://rungame/730/76561202255233023/+csgo_econ_action_preview%20S76561198360517576A12592785808D4801592215145461771");
+//        curl_setopt($curl, CURLOPT_URL,"https://api.raffletrades.com/v1/inventory/");
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 //        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
 //        curl_setopt( $curl, CURLOPT_HEADER, true );
