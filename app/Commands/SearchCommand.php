@@ -309,29 +309,12 @@ class SearchCommand extends Command {
         $find_obj = null;
         if ($obj->float) {
             $find_obj = $curl_response->where('name', '=', $obj->full_name)->where('floatMax', '<=', $obj->float)->first();
-//            foreach ($curl_response as $item) {
-//                if ($item->name == $obj->full_name && $item->floatMax <= $obj->float) {
-//                    $this->replyWithChatAction( [ 'action' => Actions::TYPING ] );
-//                    $this->replyWithMessage( [ 'text' => "{$obj->name}\r\n{$obj->url}\r\n{$item->floatMax}\r\n{$obj->phase}" ] );
-//                    $find = true;
-//                    break;
-//                }
-//            }
         } else {
             $find_obj = $curl_response->where('name', '=', $obj->full_name)->first();
-
-//            foreach ($curl_response as $item) {
-//                if ($item->name == $obj->full_name) {
-//                    $this->replyWithChatAction( [ 'action' => Actions::TYPING ] );
-//                    $this->replyWithMessage( [ 'text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}" ] );
-//                    $find = true;
-//                    break;
-//                }
-//            }
         }
         if ($find_obj) {
             $this->replyWithChatAction( [ 'action' => Actions::TYPING ] );
-            $this->replyWithMessage( [ 'text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}\r\n{$obj->float}" ] );
+            $this->replyWithMessage( [ 'text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}\r\n{$find_obj->floatMax}" ] );
             return true;
         }
         return false;
