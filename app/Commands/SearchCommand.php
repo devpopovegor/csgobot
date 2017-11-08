@@ -304,7 +304,7 @@ class SearchCommand extends Command
             foreach ($curl_response as $item) {
                 if ($item->m == $obj->full_name && $item->f <= $obj->float) {
                     $this->replyWithChatAction(['action' => Actions::TYPING]);
-                    $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$item->float}\r\n{$obj->phase}"]);
+                    $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$item->f}\r\n{$obj->phase}\r\nhttps://metjm.net/csgo/#{$item->i}"]);
                     $find = true;
                     break;
                 }
@@ -313,7 +313,7 @@ class SearchCommand extends Command
             foreach ($curl_response as $item) {
                 if ($item->m == $obj->full_name) {
                     $this->replyWithChatAction(['action' => Actions::TYPING]);
-                    $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}"]);
+                    $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}\r\nhttps://metjm.net/csgo/#{$item->i}"]);
                     $find = true;
                     break;
                 }
