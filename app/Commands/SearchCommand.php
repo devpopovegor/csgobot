@@ -78,8 +78,51 @@ class SearchCommand extends Command
                             $curl = curl_init();
                             $url = $mSite->id == 8 ? $mSite->get_data . str_replace(' ', '', $obj->full_name) : $mSite->get_data;
                             curl_setopt($curl, CURLOPT_URL, $url);
-                            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-                            $curl_response = json_decode(curl_exec($curl));
+	                        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+	                        $curl_response = null;
+	                        if ($mSite->id == 11){
+	                            curl_setopt($curl, CURLOPT_POST, true);
+	                            curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+		                            "Origin: https://ru.cs.deals",
+		                            "Referer: https://ru.cs.deals/",
+		                            "Connection: keep-alive",
+		                            "Content-Length: 0",
+		                            "Origin: https://ru.cs.deals",
+		                            "X-Requested-With: XMLHttpRequest",
+		                            "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36",
+		                            "Referer: https://ru.cs.deals/",
+		                            "Accept: application/json, text/javascript, */*; q=0.01",
+		                            "Accept-Language: ru-RU,ru;q=0.8,en-US;q=0.6,en;q=0.4",
+		                            "Authority: ru.cs.deals",
+		                            "Method: POST",
+		                            "Path: /ajax/botsinventory",
+		                            "Scheme: https"
+	                            ));
+		                        $curl_response = curl_exec($curl);
+		                        $curl_response = json_decode(utf8_decode($curl_response))->response;
+                            }
+                            elseif ($mSite->id == 11){
+	                            curl_setopt($curl, CURLOPT_POST, true);
+	                            curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+		                            "Origin: https://ru.tradeskinsfast.com",
+		                            "Referer: https://ru.tradeskinsfast.com/",
+		                            "Connection: keep-alive",
+		                            "Content-Length: 0",
+		                            "X-Requested-With: XMLHttpRequest",
+		                            "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36",
+		                            "Accept: application/json, text/javascript, */*; q=0.01",
+		                            "Accept-Language: ru-RU,ru;q=0.8,en-US;q=0.6,en;q=0.4",
+		                            "Authority: ru.tradeskinsfast.com",
+		                            "Method: POST",
+		                            "Path: /ajax/botsinventory",
+		                            "Scheme: https"
+	                            ));
+	                            $curl_response = curl_exec($curl);
+	                            $curl_response = json_decode(utf8_decode($curl_response))->response;
+                            }
+                            else {
+		                        $curl_response = json_decode(curl_exec($curl));
+	                        }
                             $response = false;
                             switch ($mSite->id) {
                                 case 1:
@@ -109,6 +152,12 @@ class SearchCommand extends Command
                                 case 10:
                                     $response = $this->check_lootfarm($obj, $curl_response);
                                     break;
+	                            case 11:
+		                            $response = $this->check_csdeals($obj, $curl_response);
+		                            break;
+	                            case 12:
+		                            $response = $this->check_csdeals($obj, $curl_response);
+		                            break;
                             }
                             curl_close($curl);
                             if (!$response) Task::create(['item_id' => $mItem->id, 'site_id' => $mSite->id, 'float' => $float, 'chat_id' => $oMessage->getChat()->getId()]);
@@ -386,6 +435,34 @@ class SearchCommand extends Command
         }
 
         return $find;
+    }
+
+    private function check_csdeals($obj, $curl_response)
+    {
+	    $find = null;
+	    foreach ($curl_response as $item){
+	    	$item_name = $item->m;
+	    	if (is_numeric($item_name)) $item_name = $curl_response[$item_name]->m;
+	    	if ($obj->float){
+	    		if ($item_name == $obj->full_name && $item->k < $obj->float){
+	    			$obj->float = $item->k;
+	    			$find = $obj;
+				    break;
+			    }
+		    } else {
+			    if ($item_name == $obj->full_name){
+				    $find = $obj;
+				    break;
+			    }
+		    }
+	    }
+
+	    if ($find) {
+		    $this->replyWithChatAction( [ 'action' => Actions::TYPING ] );
+		    $this->replyWithMessage( [ 'text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}\r\n{$obj->float}" ] );
+	    }
+
+	    return $find;
     }
 
 }

@@ -47,5 +47,7 @@ class Check extends Command
         $this->call( 'skintrade:check');
         $this->call( 'csgosum:check');
         $this->call( 'lootfarm:check');
+	    $this->call( 'csdeals:check', [ 'site_id' => 11 ] );
+	    $this->call( 'csdeals:check', [ 'site_id' => 12 ] );
     }
 }
