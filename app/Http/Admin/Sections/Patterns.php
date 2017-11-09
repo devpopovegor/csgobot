@@ -135,7 +135,7 @@ class Patterns extends Section implements Initializable
 
     public function getTitle()
     {
-        return 'Предметы';
+        return 'Паттерны';
     }
 
     public function getCreateTitle()
