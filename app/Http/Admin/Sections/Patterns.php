@@ -54,7 +54,7 @@ class Patterns extends Section implements Initializable
             ->setHtmlAttribute('class', 'table-primary')
             ->setColumns(
                 AdminColumn::text('id', '#')->setWidth('30px'),
-                AdminColumn::link('user_id', 'Номер предмета'),
+                AdminColumn::link('item_id', 'Номер предмета'),
                 AdminColumn::text('name', 'Название'),
                 AdminColumn::text('value', 'Паттерн')
             )->setDisplaySearch(true)->paginate(100);
@@ -68,7 +68,7 @@ class Patterns extends Section implements Initializable
     public function onEdit($id)
     {
         return AdminForm::panel()->addBody([
-            AdminFormElement::text('user_id', 'Номер предмета'),
+            AdminFormElement::text('item_id', 'Номер предмета'),
             AdminFormElement::text('name', 'Название'),
             AdminFormElement::text('value', 'Паттерн')
         ]);
