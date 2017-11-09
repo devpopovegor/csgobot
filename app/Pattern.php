@@ -6,6 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Pattern extends Model
 {
-    protected $fillable = ['name', 'user_id', 'value'];
+    protected $fillable = ['name', 'item_id', 'value'];
 
 }
