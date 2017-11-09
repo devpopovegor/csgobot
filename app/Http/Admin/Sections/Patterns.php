@@ -53,7 +53,7 @@ class Patterns extends Section implements Initializable
         return AdminDisplay::datatables()
             ->setHtmlAttribute('class', 'table-primary')
             ->setColumns(
-//			                   AdminColumn::text('id', '#')->setWidth('30px'),
+                AdminColumn::text('id', '#')->setWidth('30px'),
                 AdminColumn::link('user_id', 'Номер предмета'),
                 AdminColumn::text('name', 'Название'),
                 AdminColumn::text('value', 'Паттерн')
