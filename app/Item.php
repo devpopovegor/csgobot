@@ -11,4 +11,8 @@ class Item extends Model
 	public function tasks(){
         return $this->hasMany(Task::class);
     }
+
+    public function patterns(){
+        return $this->hasMany(Pattern::class);
+    }
 }
