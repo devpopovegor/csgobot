@@ -62,6 +62,7 @@ class CsMoney extends Command
                 $status = count($name_parts) > 1 ? $statuses[str_replace(')', '', $name_parts[1])] : null;
 	            Log::info('name  = ' . $name);
 	            Log::info('status  = ' . $status);
+	            Log::info('chat  = ' . $task->chat_id);
 
 	            $item = null;
                 if ($task->float) {
