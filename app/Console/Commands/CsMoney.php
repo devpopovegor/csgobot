@@ -69,6 +69,7 @@ class CsMoney extends Command
                     if ($status) $item = $csmoney_items->where('m', '=', $name)->where('e', '=', $status)->where('f.0', '<=', $task->float)->first();
                     else $item = $csmoney_items->where('m', '=', $name)->where('f.0', '<=', $task->float)->first();
                 } else {
+	                Log::info('none float');
                     if ($status) $item = $csmoney_items->where('m', '=', $name)->where('e', '=', $status)->first();
                     else $item = $csmoney_items->where('m', '=', $name)->first();
                 }
