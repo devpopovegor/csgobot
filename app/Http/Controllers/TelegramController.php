@@ -47,7 +47,9 @@ class TelegramController extends Controller
 //        curl_setopt ($curl, CURLOPT_USERAGENT, "Mozilla/5.0");
         $curl_response = curl_exec($curl);
 //        $curl_response = json_decode($curl_response);
-        dd(json_decode($curl_response)[14]);
+	    $csmoney_items = collect(json_decode($curl_response));
+	    $item = $csmoney_items->where('m', '=', 'M4A4 | Howl')->where('e', '=', 'MW')->first();
+	    dd($item);
         $code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
 //        dd($code);

@@ -76,6 +76,7 @@ class CsMoney extends Command
                 }
 
                 if ($item) {
+	                Log::info('нашел ' . $item->m);
                     Telegram::sendMessage([
                         'chat_id' => $task->chat_id,
                         'text' => "{$task->item->name}\r\n{$csmoney->url}\r\n{$task->item->phase}\r\n{$item->f[0]}"
