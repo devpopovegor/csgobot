@@ -16,8 +16,9 @@ class NeedItem
     public $chat_id;
     public $phase;
     public $float;
+    public $pattern;
 
-    public function __construct($name, $url, $chat_id, $phase, $float)
+    public function __construct($name, $url, $chat_id, $phase, $float, $pattern)
     {
         $this->name = $name;
         $this->full_name = $name;
@@ -35,5 +36,6 @@ class NeedItem
         $this->chat_id = $chat_id;
         $this->phase = $phase;
         $this->float = $float;
+        $this->pattern = $pattern;
     }
 }

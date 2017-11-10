@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Item;
+use App\Pattern;
 use App\Site;
 use App\Task;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Telegram\Bot\Laravel\Facades\Telegram;
 
@@ -18,6 +20,10 @@ class TelegramController extends Controller
     }
 
     public function test(){
+
+        $pattern_names = DB::select('select distinct items.name from items, patterns where items.id = patterns.item_id');
+        dd(collect($pattern_names)->where('name', '=', '★ Bayonet | Autotronic (Battle-Scarred)ads'));
+
 
 //        $name = explode(" (", "★ Bayonet | Autotronic (Battle-Scarred)");
 //        dd($name);
