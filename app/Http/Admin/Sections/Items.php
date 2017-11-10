@@ -52,7 +52,7 @@ class Items extends Section implements Initializable
 		return AdminDisplay::datatables()
 		                   ->setHtmlAttribute('class', 'table-primary')
 		                   ->setColumns(
-//			                   AdminColumn::text('id', '#')->setWidth('30px'),
+			                   AdminColumn::text('id', '#')->setWidth('30px'),
 			                   AdminColumn::link('name', 'Название'),
 			                   AdminColumn::text('phase', 'Фаза'),
 			                   AdminColumn::text('full_name', 'Полное название')
