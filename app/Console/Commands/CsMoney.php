@@ -56,13 +56,9 @@ class CsMoney extends Command
 
             $tasks = Task::with('item')->where('site_id', '=', 7)->get();
             foreach ($tasks as $task) {
-            	Log::info($task->item->full_name);
                 $name_parts = explode(' (', $task->item->full_name);
                 $name = trim($name_parts[0]);
                 $status = count($name_parts) > 1 ? trim($statuses[str_replace(')', '', $name_parts[1])]) : null;
-	            Log::info('name  = ' . $name);
-	            Log::info('status  = ' . $status);
-	            Log::info('chat  = ' . $task->chat_id);
 
 	            $item = null;
                 if ($task->float) {
@@ -71,16 +67,11 @@ class CsMoney extends Command
                     else $item = $csmoney_items->where('m', '=', $name)->where('f.0', '<=', $task->float)->first();
                 }
                 else {
-	                Log::info('none float');
-                    if ($status) {
-                        Log::info('HAVE STATUS');
-                        $item = $csmoney_items->where('m', '=', $name)->where('e', '=', $status)->first();
-                    }
+                    if ($status) $item = $csmoney_items->where('m', '=', $name)->where('e', '=', $status)->first();
                     else $item = $csmoney_items->where('m', '=', $name)->first();
                 }
 
                 if ($item) {
-	                Log::info('нашел ' . $item->m);
                     Telegram::sendMessage([
                         'chat_id' => $task->chat_id,
                         'text' => "{$task->item->name}\r\n{$csmoney->url}\r\n{$task->item->phase}\r\n{$item->f[0]}"
