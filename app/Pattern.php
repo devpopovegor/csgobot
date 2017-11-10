@@ -8,4 +8,8 @@ class Pattern extends Model
 {
     protected $fillable = ['name', 'item_id', 'value'];
 
+    public function item(){
+        return $this->belongsTo(Item::class);
+    }
+
 }

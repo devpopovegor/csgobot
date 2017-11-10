@@ -54,7 +54,7 @@ class Patterns extends Section implements Initializable
             ->setHtmlAttribute('class', 'table-primary')
             ->setColumns(
                 AdminColumn::text('id', '#')->setWidth('30px'),
-                AdminColumn::link('item_id', 'Номер предмета'),
+                AdminColumn::relatedLink('item.full_name', 'Номер предмета'),
                 AdminColumn::text('name', 'Название'),
                 AdminColumn::text('value', 'Паттерн')
             )->setDisplaySearch(true)->paginate(100);
