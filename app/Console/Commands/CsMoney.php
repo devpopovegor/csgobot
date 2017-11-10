@@ -60,8 +60,10 @@ class CsMoney extends Command
                 $name_parts = explode(' (', $task->item->full_name);
                 $name = $name_parts[0];
                 $status = count($name_parts) > 1 ? $statuses[str_replace(')', '', $name_parts[1])] : null;
+	            Log::info('name  = ' . $name);
+	            Log::info('status  = ' . $status);
 
-                $item = null;
+	            $item = null;
                 if ($task->float) {
                     if ($status) $item = $csmoney_items->where('m', '=', $name)->where('e', '=', $status)->where('f.0', '<=', $task->float)->first();
                     else $item = $csmoney_items->where('m', '=', $name)->where('f.0', '<=', $task->float)->first();
