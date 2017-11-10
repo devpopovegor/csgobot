@@ -56,6 +56,7 @@ class CsMoney extends Command
 
             $tasks = Task::with('item')->where('site_id', '=', 7)->get();
             foreach ($tasks as $task) {
+            	Log::info($task->item->full_name);
                 $name_parts = explode(' (', $task->item->full_name);
                 $name = $name_parts[0];
                 $status = count($name_parts) > 1 ? $statuses[str_replace(')', '', $name_parts[1])] : null;

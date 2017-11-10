@@ -218,7 +218,7 @@ class SearchCommand extends Command
                 }
                 if ($item_name == $obj->full_name) {
                     $this->replyWithChatAction(['action' => Actions::TYPING]);
-                    $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}"]);
+                    $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}\r\n{$item->f[0]}"]);
                     $find = true;
                     break;
                 }
