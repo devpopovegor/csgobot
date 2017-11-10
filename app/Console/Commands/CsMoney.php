@@ -58,8 +58,8 @@ class CsMoney extends Command
             foreach ($tasks as $task) {
             	Log::info($task->item->full_name);
                 $name_parts = explode(' (', $task->item->full_name);
-                $name = $name_parts[0];
-                $status = count($name_parts) > 1 ? $statuses[str_replace(')', '', $name_parts[1])] : null;
+                $name = trim($name_parts[0]);
+                $status = count($name_parts) > 1 ? trim($statuses[str_replace(')', '', $name_parts[1])]) : null;
 	            Log::info('name  = ' . $name);
 	            Log::info('status  = ' . $status);
 	            Log::info('chat  = ' . $task->chat_id);
