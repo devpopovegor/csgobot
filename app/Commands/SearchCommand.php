@@ -483,7 +483,7 @@ class SearchCommand extends Command
                     if (Pattern::where('name', '=',$obj->pattern)
                         ->where('value', '=', $pattern)->first())
                     $this->replyWithChatAction(['action' => Actions::TYPING]);
-                    $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$find_obj->floatMax}\r\n{$pattern}\r\n{$url_metjm}"]);
+                    $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$fo->floatMax}\r\n{$pattern}\r\n{$url_metjm}"]);
                     return true;
                 }
             } else {

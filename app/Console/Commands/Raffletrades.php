@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Pattern;
 use App\Site;
 use App\Task;
 use Illuminate\Console\Command;
@@ -56,33 +57,63 @@ class Raffletrades extends Command
             $item = null;
             if ($task->float){
                 $item = $items->where('custom_market_name', '=', $task->item->full_name)
-                    ->where('float', '<=', $task->float)->first();
+                    ->where('float', '<=', $task->float);
             } else {
-                $item = $items->where('custom_market_name', '=', $task->item->full_name)->first();
+                $item = $items->where('custom_market_name', '=', $task->item->full_name);
             }
 
-            if ($item){
+            if (count($item)) {
 
-                $url = "https://metjm.net/shared/screenshots-v5.php?cmd=request_new_link&inspect_link={$item->inspect_link}";
-                $inspectUrl = explode('%20', $item->inspect_link)[1];
-                $curl = curl_init();
-                curl_setopt($curl, CURLOPT_URL, $url);
-                curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-                $response = curl_exec($curl);
-                curl_close($curl);
-                $response = json_decode($response);
-                $pattern = null;
-                $url_metjm = '';
-                if ($response->success) {
-                    $pattern = $response->result->item_paintseed;
-                    $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
+                if (!$task->pattern) {
+                    $item = $item->first();
+                    $url = "https://metjm.net/shared/screenshots-v5.php?cmd=request_new_link&inspect_link={$item->inspect_link}";
+                    $inspectUrl = explode('%20', $item->inspect_link)[1];
+                    $curl = curl_init();
+                    curl_setopt($curl, CURLOPT_URL, $url);
+                    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+                    $response = curl_exec($curl);
+                    curl_close($curl);
+                    $response = json_decode($response);
+                    $pattern = null;
+                    $url_metjm = '';
+                    if ($response->success) {
+                        $pattern = $response->result->item_paintseed;
+                        $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
+                    }
+
+                    Telegram::sendMessage([
+                        'chat_id' => $task->chat_id,
+                        'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$item->float}\r\npattern index = {$pattern}\r\n{$url_metjm}"
+                    ]);
+                    $task->delete();
                 }
-
-                Telegram::sendMessage([
-                    'chat_id' => $task->chat_id,
-                    'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$item->float}\r\npattern index = {$pattern}\r\n{$url_metjm}"
-                ]);
-                $task->delete();
+                else {
+                    foreach ($item as $obj) {
+                        $url = "https://metjm.net/shared/screenshots-v5.php?cmd=request_new_link&inspect_link={$obj->inspect_link}";
+                        $inspectUrl = explode('%20', $obj->inspect_link)[1];
+                        $curl = curl_init();
+                        curl_setopt($curl, CURLOPT_URL, $url);
+                        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+                        $response = curl_exec($curl);
+                        curl_close($curl);
+                        $response = json_decode($response);
+                        $pattern = null;
+                        $url_metjm = '';
+                        if ($response->success) {
+                            $pattern = $response->result->item_paintseed;
+                            $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
+                        }
+                        if (Pattern::where('name', '=',$task->pattern)
+                            ->where('value', '=', $pattern)->first()) {
+                            Telegram::sendMessage([
+                                'chat_id' => $task->chat_id,
+                                'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$obj->float}\r\n{$pattern}\r\n{$url_metjm}"
+                            ]);
+                            $task->delete();
+                            break;
+                        }
+                    }
+                }
             }
         }
 
