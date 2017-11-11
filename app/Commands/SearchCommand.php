@@ -278,7 +278,8 @@ class SearchCommand extends Command
 
                     if (!$obj->pattern) {
                         $this->replyWithChatAction(['action' => Actions::TYPING]);
-                        $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}\r\n{$item->f[0]}\r\npattern index = {$pattern}\r\n<a href='$url_metjm'>Ебаный сайт</a>"]);
+                        $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}\r\n{$item->f[0]}\r\npattern index = {$pattern}\r\n<a href='$url_metjm'>Ебаный сайт</a>",
+                            'parse_mode' => 'HTML']);
                         $find = true;
                         break;
                     }
