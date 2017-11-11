@@ -236,7 +236,8 @@ class SearchCommand extends Command
 
                     if (!$obj->pattern) {
                         $this->replyWithChatAction(['action' => Actions::TYPING]);
-                        $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}\r\n{$item->f[0]}\r\npattern index = {$pattern}\r\n$url_metjm"]);
+                        $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}\r\n{$item->f[0]}\r\npattern index = {$pattern}\r\n<a href='$url_metjm'>metjm</a>",
+                            'parse_mode' => 'HTML']);
                         $find = true;
                         break;
                     }
@@ -244,7 +245,8 @@ class SearchCommand extends Command
                         if (Pattern::where('name', '=',$obj->pattern)
                             ->where('value', '=', $pattern)->first()){
                             $this->replyWithChatAction(['action' => Actions::TYPING]);
-                            $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$item->float}\r\n{$obj->pattern}\r\n{$url_metjm}"]);
+                            $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$item->float}\r\n{$obj->pattern}\r\n<a href='$url_metjm'>metjm</a>",
+                            'parse_mode' => 'HTML']);
                             $find = true;
                             break;
                         }
@@ -278,7 +280,7 @@ class SearchCommand extends Command
 
                     if (!$obj->pattern) {
                         $this->replyWithChatAction(['action' => Actions::TYPING]);
-                        $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}\r\n{$item->f[0]}\r\npattern index = {$pattern}\r\n<a href='$url_metjm'>Ебаный сайт</a>",
+                        $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}\r\n{$item->f[0]}\r\npattern index = {$pattern}\r\n<a href='$url_metjm'>metjm</a>",
                             'parse_mode' => 'HTML']);
                         $find = true;
                         break;
@@ -287,7 +289,8 @@ class SearchCommand extends Command
                         if (Pattern::where('name', '=',$obj->pattern)
                             ->where('value', '=', $pattern)->first()){
                             $this->replyWithChatAction(['action' => Actions::TYPING]);
-                            $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$item->float}\r\n{$obj->pattern}\r\n{$url_metjm}"]);
+                            $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$item->float}\r\n{$obj->pattern}\r\n<a href='$url_metjm'>metjm</a>{$url_metjm}",
+                                'parse_mode' => 'HTML']);
                             $find = true;
                             break;
                         }
@@ -327,14 +330,16 @@ class SearchCommand extends Command
                         if (Pattern::where('name', '=',$obj->pattern)
                             ->where('value', '=', $pattern)->first()){
                             $this->replyWithChatAction(['action' => Actions::TYPING]);
-                            $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$item->float}\r\n{$obj->pattern}\r\n{$url_metjm}"]);
+                            $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$item->float}\r\n{$obj->pattern}\r\n<a href='$url_metjm'>metjm</a>",
+                                'parse_mode' => 'HTML']);
                             $find = true;
                             break;
                         }
                     }
                     else {
                         $this->replyWithChatAction(['action' => Actions::TYPING]);
-                        $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}\r\n{$item->float}\r\npattern index = {$pattern}\r\n{$url_metjm}"]);
+                        $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}\r\n{$item->float}\r\npattern index = {$pattern}\r\n<a href='$url_metjm'>metjm</a>",
+                            'parse_mode' => 'HTML']);
                         $find = true;
                         break;
                     }
@@ -362,14 +367,16 @@ class SearchCommand extends Command
                         if (Pattern::where('name', '=',$obj->pattern)
                             ->where('value', '=', $pattern)->first()){
                             $this->replyWithChatAction(['action' => Actions::TYPING]);
-                            $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$item->float}\r\n{$obj->pattern}\r\n{$url_metjm}"]);
+                            $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$item->float}\r\n{$obj->pattern}\r\n<a href='$url_metjm'>metjm</a>",
+                                'parse_mode' => 'HTML']);
                             $find = true;
                             break;
                         }
                     }
                     else {
                         $this->replyWithChatAction(['action' => Actions::TYPING]);
-                        $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}\r\n{$item->float}\r\npattern index = {$pattern}\r\n{$url_metjm}"]);
+                        $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}\r\n{$item->float}\r\npattern index = {$pattern}\r\n<a href='$url_metjm'>metjm</a>",
+                            'parse_mode' => 'HTML']);
                         $find = true;
                         break;
                     }
@@ -441,14 +448,16 @@ class SearchCommand extends Command
                         if (Pattern::where('name', '=',$obj->pattern)
                             ->where('value', '=', $pattern)->first()){
                             $this->replyWithChatAction(['action' => Actions::TYPING]);
-                            $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$item->wear}\r\n{$obj->pattern}\r\n{$url_metjm}"]);
+                            $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$item->wear}\r\n{$obj->pattern}\r\n<a href='$url_metjm'>metjm</a>",
+                                'parse_mode' => 'HTML']);
                             $find = true;
                             break;
                         }
                     }
                     else {
                         $this->replyWithChatAction(['action' => Actions::TYPING]);
-                        $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}\r\n{$item->wear}\r\npattern index = {$pattern}\r\n{$url_metjm}"]);
+                        $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}\r\n{$item->wear}\r\npattern index = {$pattern}\r\n<a href='$url_metjm'>metjm</a>",
+                            'parse_mode' => 'HTML']);
                         $find = true;
                         break;
                     }
@@ -469,7 +478,8 @@ class SearchCommand extends Command
             foreach ($curl_response as $item) {
                 if ($item->m == $obj->full_name && $item->f <= $obj->float) {
                     $this->replyWithChatAction(['action' => Actions::TYPING]);
-                    $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$item->f}\r\n{$obj->phase}\r\nhttps://metjm.net/csgo/#{$item->i}"]);
+                    $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$item->f}\r\n{$obj->phase}\r\n<a href='https://metjm.net/csgo/#{$item->i}'>metjm</a>",
+                        'parse_mode' => 'HTML']);
                     $find = true;
                     break;
                 }
@@ -479,7 +489,8 @@ class SearchCommand extends Command
             foreach ($curl_response as $item) {
                 if ($item->m == $obj->full_name) {
                     $this->replyWithChatAction(['action' => Actions::TYPING]);
-                    $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}\r\nhttps://metjm.net/csgo/#{$item->i}"]);
+                    $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$item->f}\r\n{$obj->phase}\r\n<a href='https://metjm.net/csgo/#{$item->i}'>metjm</a>",
+                        'parse_mode' => 'HTML']);
                     $find = true;
                     break;
                 }
@@ -539,7 +550,8 @@ class SearchCommand extends Command
                     if (Pattern::where('name', '=',$obj->pattern)
                         ->where('value', '=', $pattern)->first())
                     $this->replyWithChatAction(['action' => Actions::TYPING]);
-                    $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$fo->floatMax}\r\n{$pattern}\r\n{$url_metjm}"]);
+                    $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$fo->floatMax}\r\n{$pattern}\r\n<a href='{$url_metjm}'>metjm</a>",
+                        'parse_mode' => 'HTML']);
                     return true;
                 }
             } else {
@@ -560,7 +572,8 @@ class SearchCommand extends Command
                     $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
                 }
                 $this->replyWithChatAction(['action' => Actions::TYPING]);
-                $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}\r\n{$find_obj->floatMax}\r\npattern index = {$pattern}\r\n{$url_metjm}"]);
+                $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}\r\n{$find_obj->floatMax}\r\npattern index = {$pattern}\r\n<a href='{$url_metjm}'>metjm</a>",
+                    'parse_mode' => 'HTML']);
                 return true;
             }
         }
