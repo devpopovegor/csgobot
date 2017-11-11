@@ -303,7 +303,7 @@ class SearchCommand extends Command
         $items = $curl_response->where('custom_market_name', '=', $obj->full_name);
         if ($obj->float) $items = $items->where('float', '<=', $obj->float);
         $this->replyWithChatAction(['action' => Actions::TYPING]);
-        $this->replyWithMessage(['text' => count($items),
+        $this->replyWithMessage(['text' => count($items) . "\r\nfloat = {$obj->float}",
             'parse_mode' => 'HTML']);
         if (count($items)){
             if ($obj->pattern){
@@ -318,9 +318,6 @@ class SearchCommand extends Command
                     $response = json_decode($response);
                     $pattern = $response->result->item_paintseed;
                     $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
-                    $this->replyWithChatAction(['action' => Actions::TYPING]);
-                    $this->replyWithMessage(['text' => "{$pattern}",
-                        'parse_mode' => 'HTML']);
                     if (Pattern::where('name', '=', $obj->pattern)
                         ->where('value', '=', $pattern)->first()) {
                         $this->replyWithChatAction(['action' => Actions::TYPING]);
