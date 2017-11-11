@@ -299,84 +299,60 @@ class SearchCommand extends Command
 
     private function check_raffletrades($obj, $curl_response)
     {
-        $curl_response = $curl_response->response;
-
+        $curl_response = collect($curl_response->response);
+        $items = $curl_response->where('market_name', '=', $obj->name);
+        if ($obj->phase) $items = $items->where('item_phase', '=', $obj->phase);
         $find = false;
-        if ($obj->float) {
-            foreach ($curl_response as $item) {
-                if ($item->custom_market_name == $obj->full_name && $item->float <= $obj->float) {
+        foreach ($items as $item){
 
-                    $url = "https://metjm.net/shared/screenshots-v5.php?cmd=request_new_link&inspect_link={$item->inspect_link}";
-                    $inspectUrl = explode('%20', $item->inspect_link)[1];
-                    $curl = curl_init();
-                    curl_setopt($curl, CURLOPT_URL, $url);
-                    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-                    $response = curl_exec($curl);
-                    curl_close($curl);
-                    $response = json_decode($response);
-                    $pattern = null;
-                    $url_metjm = '';
-                    if ($response->success) {
-                        $pattern = $response->result->item_paintseed;
-                        $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
-                    }
+            $url = "https://metjm.net/shared/screenshots-v5.php?cmd=request_new_link&inspect_link={$item->inspect_link}";
+            $inspectUrl = explode('%20', $item->inspect_link)[1];
+            $curl = curl_init();
+            curl_setopt($curl, CURLOPT_URL, $url);
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+            $response = curl_exec($curl);
+            curl_close($curl);
+            $response = json_decode($response);
+            $pattern = null;
+            $url_metjm = '';
+            $float = null;
+            if ($response->success) {
+                $pattern = $response->result->item_paintseed;
+                $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
+                $float = $response->result->item_floatvalue;
+            }
 
+            if ($obj->float){
+                if ($float < $obj->float){
                     if ($obj->pattern) {
                         if (Pattern::where('name', '=', $obj->pattern)
                             ->where('value', '=', $pattern)->first()) {
-                            $this->replyWithChatAction(['action' => Actions::TYPING]);
-                            $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$item->float}\r\n{$obj->pattern}\r\n<a href='$url_metjm'>metjm</a>",
-                                'parse_mode' => 'HTML']);
                             $find = true;
-                            break;
                         }
-                    } else {
-                        $this->replyWithChatAction(['action' => Actions::TYPING]);
-                        $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}\r\n{$item->float}\r\npattern index = {$pattern}\r\n<a href='$url_metjm'>metjm</a>",
-                            'parse_mode' => 'HTML']);
-                        $find = true;
-                        break;
                     }
+                    else $find = true;
                 }
             }
-        } else {
-            foreach ($curl_response as $item) {
-                if ($item->custom_market_name == $obj->full_name) {
-                    $url = "https://metjm.net/shared/screenshots-v5.php?cmd=request_new_link&inspect_link={$item->inspect_link}";
-                    $inspectUrl = explode('%20', $item->inspect_link)[1];
-                    $curl = curl_init();
-                    curl_setopt($curl, CURLOPT_URL, $url);
-                    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-                    $response = curl_exec($curl);
-                    curl_close($curl);
-                    $response = json_decode($response);
-                    $pattern = null;
-                    $url_metjm = '';
-                    if ($response->success) {
-                        $pattern = $response->result->item_paintseed;
-                        $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
-                    }
-                    if ($obj->pattern) {
-                        if (Pattern::where('name', '=', $obj->pattern)
-                            ->where('value', '=', $pattern)->first()) {
-                            $this->replyWithChatAction(['action' => Actions::TYPING]);
-                            $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$item->float}\r\n{$obj->pattern}\r\n<a href='$url_metjm'>metjm</a>",
-                                'parse_mode' => 'HTML']);
-                            $find = true;
-                            break;
-                        }
-                    } else {
-                        $this->replyWithChatAction(['action' => Actions::TYPING]);
-                        $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}\r\n{$item->float}\r\npattern index = {$pattern}\r\n<a href='$url_metjm'>metjm</a>",
-                            'parse_mode' => 'HTML']);
+            else {
+                if ($obj->pattern) {
+                    if (Pattern::where('name', '=', $obj->pattern)
+                        ->where('value', '=', $pattern)->first()) {
                         $find = true;
-                        break;
                     }
                 }
+                else $find = true;
             }
+
+            if ($find){
+                $this->replyWithChatAction(['action' => Actions::TYPING]);
+                $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$float}\r\n{$obj->pattern}\r\n<a href='$url_metjm'>metjm</a>",
+                    'parse_mode' => 'HTML']);
+                return true;
+            }
+
+            return false;
+
         }
-
-        return $find;
     }
 
     private function check_cstradegg($obj, $curl_response)
