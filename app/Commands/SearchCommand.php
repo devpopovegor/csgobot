@@ -386,15 +386,14 @@ class SearchCommand extends Command
                         if (Pattern::where('name', '=',$obj->pattern)
                             ->where('value', '=', $pattern)->first()){
                             $this->replyWithChatAction(['action' => Actions::TYPING]);
-                            $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$item->float}\r\n{$obj->pattern}\r\n{$url_metjm}"]);
+                            $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$item->wear}\r\n{$obj->pattern}\r\n{$url_metjm}"]);
                             $find = true;
                             break;
                         }
                     }
                     else {
-                        Log::info('Поиск без флоата и паттерна');
                         $this->replyWithChatAction(['action' => Actions::TYPING]);
-                        $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}\r\n{$item->float}\r\npattern index = {$pattern}\r\n{$url_metjm}"]);
+                        $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}\r\n{$item->wear}\r\npattern index = {$pattern}\r\n{$url_metjm}"]);
                         $find = true;
                         break;
                     }
