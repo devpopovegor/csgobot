@@ -27,7 +27,7 @@ class TelegramController extends Controller
 //        $csmoney = Site::find(2);
         $curl = curl_init();
 //        curl_setopt($curl, CURLOPT_URL,"https://metjm.net/shared/screenshots-v5.php?cmd=request_new_link&inspect_link=steam://rungame/730/76561202255233023/+csgo_econ_action_preview%20S76561198360517576A12592785808D4801592215145461771");
-        curl_setopt($curl, CURLOPT_URL,"https://api.raffletrades.com/v1/inventory/");
+        curl_setopt($curl, CURLOPT_URL,"https://metjm.net/shared/screenshots-v5.php?cmd=request_new_link&inspect_link=steam://rungame/730/76561202255233023/+csgo_econ_action_preview%20S76561198411521589A12626714687D2882553008240068273");
 //	    curl_setopt($curl, CURLOPT_POST, true);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 //	    curl_setopt($curl, CURLOPT_HTTPHEADER, array(
@@ -49,7 +49,7 @@ class TelegramController extends Controller
 //        curl_setopt ($curl, CURLOPT_USERAGENT, "Mozilla/5.0");
         $curl_response = curl_exec($curl);
 //        $curl_response = json_decode($curl_response);
-	    $csmoney_items = collect(json_decode($curl_response)->response);
+	    $csmoney_items = json_decode($curl_response);
 //	    $csmoney_items = $csmoney_items->where('custom_market_name', '=', '★ Karambit | Doppler (Factory New)');
         dd($csmoney_items);
 
