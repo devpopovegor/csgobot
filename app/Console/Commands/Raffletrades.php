@@ -55,7 +55,6 @@ class Raffletrades extends Command
         $tasks = Task::with('item')->where('site_id', '=', $site_id)->get();
         foreach ($tasks as $task){
             $itemss = $items->where('custom_market_name', '=', $task->item->full_name);
-            Log::info(count($itemss) . "\r\n{$task->item->full_name}");
             if ($task->float) $itemss = $itemss->where('float','<=', $task->float);
 
             if (count($itemss)){
@@ -79,7 +78,7 @@ class Raffletrades extends Command
                             ->where('value', '=', $pattern)->first()) {
                             Telegram::sendMessage([
                                 'chat_id' => $task->chat_id,
-                                'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$item->float}\r\n{$pattern}\r\n<a href='$url_metjm'>metjm</a>",
+                                'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->pattern}\r\n{$item->float}\r\n{$pattern}\r\n<a href='$url_metjm'>metjm</a>",
                                 'parse_mode' => 'HTML'
                             ]);
                             $task->delete();
