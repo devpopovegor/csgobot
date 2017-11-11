@@ -218,13 +218,41 @@ class SearchCommand extends Command
                     $item_name = $item->m;
                 }
                 if ($item_name == $obj->full_name && $item->f[0] <= $obj->float) {
-                    $this->replyWithChatAction(['action' => Actions::TYPING]);
-                    $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}\r\n{$item->f[0]}"]);
-                    $find = true;
-                    break;
+
+                    $url = "https://metjm.net/shared/screenshots-v5.php?cmd=request_new_link&inspect_link=steam://rungame/730/{$item->b[0]}/+csgo_econ_action_preview%20S{$item->b[0]}A{$item->id[0]}D{$item->l[0]}";
+                    $inspectUrl = "S{$item->b[0]}A{$item->id[0]}D{$item->l[0]}";
+                    $curl = curl_init();
+                    curl_setopt($curl, CURLOPT_URL, $url);
+                    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+                    $response = curl_exec($curl);
+                    curl_close($curl);
+                    $response = json_decode($response);
+                    $pattern = null;
+                    $url_metjm = '';
+                    if ($response->success) {
+                        $pattern = $response->result->item_paintseed;
+                        $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
+                    }
+
+                    if (!$obj->pattern) {
+                        $this->replyWithChatAction(['action' => Actions::TYPING]);
+                        $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}\r\n{$item->f[0]}\r\npattern index = {$pattern}\r\n$url_metjm"]);
+                        $find = true;
+                        break;
+                    }
+                    else {
+                        if (Pattern::where('name', '=',$obj->pattern)
+                            ->where('value', '=', $pattern)->first()){
+                            $this->replyWithChatAction(['action' => Actions::TYPING]);
+                            $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$item->float}\r\n{$obj->pattern}\r\n{$url_metjm}"]);
+                            $find = true;
+                            break;
+                        }
+                    }
                 }
             }
-        } else {
+        }
+        else {
             foreach ($curl_response as $item) {
                 $item_name = '';
                 try {
