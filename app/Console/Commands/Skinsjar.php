@@ -56,32 +56,60 @@ class Skinsjar extends Command
                 $item = null;
                 if ($task->float) {
                     $item = $items->where('name', '=', $task->item->full_name)
-                        ->where('floatMin', '<=', $task->float)->first();
+                        ->where('floatMin', '<=', $task->float);
                 } else {
-                    $item = $items->where('name', '=', $task->item->full_name)->first();
+                    $item = $items->where('name', '=', $task->item->full_name);
                 }
 
-                if ($item) {
-                    $id = $item->items[0]->id;
-                    $inspectUrl = $item->items[0]->inspectUrl;
-                    $url = "https://metjm.net/shared/screenshots-v5.php?cmd=request_new_link&inspect_link=steam://rungame/730/{$id}/+csgo_econ_action_preview%25{$inspectUrl}";
-                    $curl = curl_init();
-                    curl_setopt($curl, CURLOPT_URL, $url);
-                    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-                    $response = curl_exec($curl);
-                    curl_close($curl);
-                    $response = json_decode($response);
-                    $pattern = null;
-                    $url_metjm = '';
-                    if ($response->success){
-                        $pattern = $response->result->item_paintseed;
-                        $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
+                if (count($item)) {
+                    if (!$task->pattern){
+                        $item = $item->first();
+                        $id = $item->items[0]->id;
+                        $inspectUrl = $item->items[0]->inspectUrl;
+                        $url = "https://metjm.net/shared/screenshots-v5.php?cmd=request_new_link&inspect_link=steam://rungame/730/{$id}/+csgo_econ_action_preview%25{$inspectUrl}";
+                        $curl = curl_init();
+                        curl_setopt($curl, CURLOPT_URL, $url);
+                        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+                        $response = curl_exec($curl);
+                        curl_close($curl);
+                        $response = json_decode($response);
+                        $pattern = null;
+                        $url_metjm = '';
+                        if ($response->success){
+                            $pattern = $response->result->item_paintseed;
+                            $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
+                        }
+                        Telegram::sendMessage([
+                            'chat_id' => $task->chat_id,
+                            'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$item->floatMin}\r\npattern index = {$pattern}\r\n{$url_metjm}"
+                        ]);
+                        $task->delete();
                     }
-                    Telegram::sendMessage([
-                        'chat_id' => $task->chat_id,
-                        'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$item->floatMin}\r\npattern index = {$pattern}\r\n{$url_metjm}"
-                    ]);
-                    $task->delete();
+                    else {
+                        foreach ($item as $obj){
+                            $id = $obj->items[0]->id;
+                            $inspectUrl = $obj->items[0]->inspectUrl;
+                            $url = "https://metjm.net/shared/screenshots-v5.php?cmd=request_new_link&inspect_link=steam://rungame/730/{$id}/+csgo_econ_action_preview%25{$inspectUrl}";
+                            $curl = curl_init();
+                            curl_setopt($curl, CURLOPT_URL, $url);
+                            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+                            $response = curl_exec($curl);
+                            curl_close($curl);
+                            $response = json_decode($response);
+                            $pattern = null;
+                            $url_metjm = '';
+                            if ($response->success){
+                                $pattern = $response->result->item_paintseed;
+                                $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
+                            }
+                            Telegram::sendMessage([
+                                'chat_id' => $task->chat_id,
+                                'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$obj->floatMin}\r\n{$pattern}\r\n{$url_metjm}"
+                            ]);
+                            $task->delete();
+                            break;
+                        }
+                    }
                 }
             }
         }catch (\Exception $exception){
