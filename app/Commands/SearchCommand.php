@@ -77,11 +77,10 @@ class SearchCommand extends Command
                             ['phase', '=', "{$phase}"]
                         ])->first();
                         if ($mItem) {
-                            if ($pattern && !count($pattern_items->where('name','=', $mItem->name))){
+                            if ($pattern && !count($pattern_items->where('name', '=', $mItem->name))) {
                                 $this->replyWithChatAction(['action' => Actions::TYPING]);
                                 $this->replyWithMessage(['text' => 'Поиск по паттерну для данного предмета невозможен']);
-                            }
-                            else {
+                            } else {
                                 $message = "Поиск {$item} на сайте {$mSite->url} начался";
                                 $this->replyWithChatAction(['action' => Actions::TYPING]);
                                 $this->replyWithMessage(['text' => $message]);
@@ -113,8 +112,7 @@ class SearchCommand extends Command
                                     ));
                                     $curl_response = curl_exec($curl);
                                     $curl_response = json_decode(utf8_decode($curl_response))->response;
-                                }
-                                elseif ($mSite->id == 12) {
+                                } elseif ($mSite->id == 12) {
                                     curl_setopt($curl, CURLOPT_POST, true);
                                     curl_setopt($curl, CURLOPT_HTTPHEADER, array(
                                         "Origin: https://ru.tradeskinsfast.com",
@@ -132,8 +130,7 @@ class SearchCommand extends Command
                                     ));
                                     $curl_response = curl_exec($curl);
                                     $curl_response = json_decode(utf8_decode($curl_response))->response;
-                                }
-                                else {
+                                } else {
                                     $curl_response = json_decode(curl_exec($curl));
                                 }
                                 $response = false;
@@ -177,14 +174,12 @@ class SearchCommand extends Command
                                     'float' => $float, 'chat_id' => $oMessage->getChat()->getId(), 'pattern' => $pattern]);
                                 //---------------------------
                             }
-                        }
-                        else {
+                        } else {
                             $message = "Предмет {$item} не существует.";
                             $this->replyWithChatAction(['action' => Actions::TYPING]);
                             $this->replyWithMessage(['text' => $message]);
                         }
-                    }
-                    else {
+                    } else {
                         $message = "Сайт {$site} не существует.";
                         $this->replyWithChatAction(['action' => Actions::TYPING]);
                         $this->replyWithMessage(['text' => $message]);
@@ -240,21 +235,19 @@ class SearchCommand extends Command
                             'parse_mode' => 'HTML']);
                         $find = true;
                         break;
-                    }
-                    else {
-                        if (Pattern::where('name', '=',$obj->pattern)
-                            ->where('value', '=', $pattern)->first()){
+                    } else {
+                        if (Pattern::where('name', '=', $obj->pattern)
+                            ->where('value', '=', $pattern)->first()) {
                             $this->replyWithChatAction(['action' => Actions::TYPING]);
                             $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$item->float}\r\n{$obj->pattern}\r\n<a href='$url_metjm'>metjm</a>",
-                            'parse_mode' => 'HTML']);
+                                'parse_mode' => 'HTML']);
                             $find = true;
                             break;
                         }
                     }
                 }
             }
-        }
-        else {
+        } else {
             foreach ($curl_response as $item) {
                 $item_name = '';
                 try {
@@ -284,13 +277,12 @@ class SearchCommand extends Command
                             'parse_mode' => 'HTML']);
                         $find = true;
                         break;
-                    }
-                    else {
+                    } else {
 //                        $this->replyWithChatAction(['action' => Actions::TYPING]);
 //                        $this->replyWithMessage(['text' => "ЗАШЛО",
 //                            'parse_mode' => 'HTML']);
-                        if (Pattern::where('name', '=',$obj->pattern)
-                            ->where('value', '=', $pattern)->first()){
+                        if (Pattern::where('name', '=', $obj->pattern)
+                            ->where('value', '=', $pattern)->first()) {
                             $this->replyWithChatAction(['action' => Actions::TYPING]);
                             $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$item->f[0]}\r\n{$obj->pattern}\r\n<a href='$url_metjm'>metjm</a>",
                                 'parse_mode' => 'HTML']);
@@ -329,17 +321,16 @@ class SearchCommand extends Command
                         $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
                     }
 
-                    if ($obj->pattern){
-                        if (Pattern::where('name', '=',$obj->pattern)
-                            ->where('value', '=', $pattern)->first()){
+                    if ($obj->pattern) {
+                        if (Pattern::where('name', '=', $obj->pattern)
+                            ->where('value', '=', $pattern)->first()) {
                             $this->replyWithChatAction(['action' => Actions::TYPING]);
                             $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$item->float}\r\n{$obj->pattern}\r\n<a href='$url_metjm'>metjm</a>",
                                 'parse_mode' => 'HTML']);
                             $find = true;
                             break;
                         }
-                    }
-                    else {
+                    } else {
                         $this->replyWithChatAction(['action' => Actions::TYPING]);
                         $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}\r\n{$item->float}\r\npattern index = {$pattern}\r\n<a href='$url_metjm'>metjm</a>",
                             'parse_mode' => 'HTML']);
@@ -348,8 +339,7 @@ class SearchCommand extends Command
                     }
                 }
             }
-        }
-        else {
+        } else {
             foreach ($curl_response as $item) {
                 if ($item->custom_market_name == $obj->full_name) {
                     $url = "https://metjm.net/shared/screenshots-v5.php?cmd=request_new_link&inspect_link={$item->inspect_link}";
@@ -366,17 +356,16 @@ class SearchCommand extends Command
                         $pattern = $response->result->item_paintseed;
                         $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
                     }
-                    if ($obj->pattern){
-                        if (Pattern::where('name', '=',$obj->pattern)
-                            ->where('value', '=', $pattern)->first()){
+                    if ($obj->pattern) {
+                        if (Pattern::where('name', '=', $obj->pattern)
+                            ->where('value', '=', $pattern)->first()) {
                             $this->replyWithChatAction(['action' => Actions::TYPING]);
                             $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$item->float}\r\n{$obj->pattern}\r\n<a href='$url_metjm'>metjm</a>",
                                 'parse_mode' => 'HTML']);
                             $find = true;
                             break;
                         }
-                    }
-                    else {
+                    } else {
                         $this->replyWithChatAction(['action' => Actions::TYPING]);
                         $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}\r\n{$item->float}\r\npattern index = {$pattern}\r\n<a href='$url_metjm'>metjm</a>",
                             'parse_mode' => 'HTML']);
@@ -413,24 +402,22 @@ class SearchCommand extends Command
                         $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
                     }
 
-                    if ($obj->pattern){
-                        if (Pattern::where('name', '=',$obj->pattern)
-                            ->where('value', '=', $pattern)->first()){
+                    if ($obj->pattern) {
+                        if (Pattern::where('name', '=', $obj->pattern)
+                            ->where('value', '=', $pattern)->first()) {
                             $this->replyWithChatAction(['action' => Actions::TYPING]);
                             $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$item->float}\r\n{$obj->pattern}\r\n{$url_metjm}"]);
                             $find = true;
                             break;
                         }
-                    }
-                    else {
+                    } else {
                         $this->replyWithChatAction(['action' => Actions::TYPING]);
                         $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}\r\n{$item->float}\r\npattern index = {$pattern}\r\n{$url_metjm}"]);
                         $find = true;
                         break;
                     }
                 }
-            }
-            else {
+            } else {
                 if ($item->market_hash_name == $obj->full_name) {
                     $url = "https://metjm.net/shared/screenshots-v5.php?cmd=request_new_link&inspect_link={$item->inspect_link}";
                     $inspectUrl = explode('%20', $item->inspect_link)[1];
@@ -447,17 +434,16 @@ class SearchCommand extends Command
                         $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
                     }
 
-                    if ($obj->pattern){
-                        if (Pattern::where('name', '=',$obj->pattern)
-                            ->where('value', '=', $pattern)->first()){
+                    if ($obj->pattern) {
+                        if (Pattern::where('name', '=', $obj->pattern)
+                            ->where('value', '=', $pattern)->first()) {
                             $this->replyWithChatAction(['action' => Actions::TYPING]);
                             $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$item->wear}\r\n{$obj->pattern}\r\n<a href='$url_metjm'>metjm</a>",
                                 'parse_mode' => 'HTML']);
                             $find = true;
                             break;
                         }
-                    }
-                    else {
+                    } else {
                         $this->replyWithChatAction(['action' => Actions::TYPING]);
                         $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}\r\n{$item->wear}\r\npattern index = {$pattern}\r\n<a href='$url_metjm'>metjm</a>",
                             'parse_mode' => 'HTML']);
@@ -487,8 +473,7 @@ class SearchCommand extends Command
                     break;
                 }
             }
-        }
-        else {
+        } else {
             foreach ($curl_response as $item) {
                 if ($item->m == $obj->full_name) {
                     $this->replyWithChatAction(['action' => Actions::TYPING]);
@@ -525,16 +510,12 @@ class SearchCommand extends Command
     private function check_skinsjar($obj, $curl_response)
     {
         $curl_response = collect($curl_response->items);
-        $find_obj = null;
-        if ($obj->float) {
-            $find_obj = $curl_response->where('name', '=', $obj->full_name)->where('floatMax', '<=', $obj->float);
-        }
-        else {
-            $find_obj = $curl_response->where('name', '=', $obj->full_name);
-        }
-        if (count($find_obj)) {
-            if ($obj->pattern){
-                foreach ($find_obj as $fo){
+        $find_objs = null;
+        $find_objs = $curl_response->where('name', '=', $obj->full_name);
+
+        if (count($find_objs)) {
+            if ($obj->pattern) {
+                foreach ($find_objs as $fo) {
                     $id = $fo->items[0]->id;
                     $inspectUrl = $fo->items[0]->inspectUrl;
                     $url = "https://metjm.net/shared/screenshots-v5.php?cmd=request_new_link&inspect_link=steam://rungame/730/{$id}/+csgo_econ_action_preview%25{$inspectUrl}";
@@ -546,39 +527,63 @@ class SearchCommand extends Command
                     $response = json_decode($response);
                     $pattern = null;
                     $url_metjm = '';
+                    $float = null;
                     if ($response->success) {
                         $pattern = $response->result->item_paintseed;
                         $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
+                        $float = $response->result->item_floatvalue;
                     }
-                    if (Pattern::where('name', '=',$obj->pattern)
-                        ->where('value', '=', $pattern)->first())
+
+                    if ($obj->float) {
+                        if ($float <= $obj->float) {
+                            if (Pattern::where('name', '=', $obj->pattern)
+                                ->where('value', '=', $pattern)->first()) {
+                                $this->replyWithChatAction(['action' => Actions::TYPING]);
+                                $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$float}\r\n{$pattern}\r\n<a href='{$url_metjm}'>metjm</a>",
+                                    'parse_mode' => 'HTML']);
+                                return true;
+                            }
+                        }
+                    } else {
+                        if (Pattern::where('name', '=', $obj->pattern)
+                            ->where('value', '=', $pattern)->first()) {
+                            $this->replyWithChatAction(['action' => Actions::TYPING]);
+                            $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$float}\r\n{$pattern}\r\n<a href='{$url_metjm}'>metjm</a>",
+                                'parse_mode' => 'HTML']);
+                            return true;
+                        }
+                    }
+
+
+                }
+            } else {
+                foreach ($find_objs as $fo) {
+                    $id = $fo->items[0]->id;
+                    $inspectUrl = $fo->items[0]->inspectUrl;
+                    $url = "https://metjm.net/shared/screenshots-v5.php?cmd=request_new_link&inspect_link=steam://rungame/730/{$id}/+csgo_econ_action_preview%25{$inspectUrl}";
+                    $curl = curl_init();
+                    curl_setopt($curl, CURLOPT_URL, $url);
+                    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+                    $response = curl_exec($curl);
+                    curl_close($curl);
+                    $response = json_decode($response);
+                    $pattern = null;
+                    $url_metjm = '';
+                    $float = null;
+                    if ($response->success) {
+                        $pattern = $response->result->item_paintseed;
+                        $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
+                        $float = $response->result->item_floatvalue;
+                    }
+
+
                     $this->replyWithChatAction(['action' => Actions::TYPING]);
-                    $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$fo->floatMax}\r\n{$pattern}\r\n<a href='{$url_metjm}'>metjm</a>",
+                    $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$float}\r\n{$pattern}\r\n<a href='{$url_metjm}'>metjm</a>",
                         'parse_mode' => 'HTML']);
                     return true;
+
+
                 }
-            }
-            else {
-                $find_obj = $find_obj->first();
-//                $id = $find_obj->items[0]->id;
-//                $inspectUrl = $find_obj->items[0]->inspectUrl;
-//                $url = "https://metjm.net/shared/screenshots-v5.php?cmd=request_new_link&inspect_link=steam://rungame/730/{$id}/+csgo_econ_action_preview%25{$inspectUrl}";
-//                $curl = curl_init();
-//                curl_setopt($curl, CURLOPT_URL, $url);
-//                curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-//                $response = curl_exec($curl);
-//                curl_close($curl);
-//                $response = json_decode($response);
-                $pattern = null;
-                $url_metjm = '';
-//                if ($response->success) {
-//                    $pattern = $response->result->item_paintseed;
-//                    $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
-//                }
-                $this->replyWithChatAction(['action' => Actions::TYPING]);
-                $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}\r\n{$find_obj->floatMax}\r\n pattern index = {$pattern}\r\n<a href='{$url_metjm}'>metjm</a>",
-                    'parse_mode' => 'HTML']);
-                return true;
             }
         }
         return false;
