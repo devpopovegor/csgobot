@@ -302,7 +302,6 @@ class SearchCommand extends Command
         $curl_response = collect($curl_response->response);
         $items = $curl_response->where('custom_market_name', '=', $obj->full_name);
         if ($obj->float) $items = $items->where('float', '<=', $obj->float);
-//        $item = $items->first();
 
         if (count($items)){
             if ($obj->pattern){
@@ -315,12 +314,11 @@ class SearchCommand extends Command
                     $response = curl_exec($curl);
                     curl_close($curl);
                     $response = json_decode($response);
-                    $pattern = null;
-                    $url_metjm = '';
-                    if ($response->success) {
-                        $pattern = $response->result->item_paintseed;
-                        $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
-                    }
+                    $pattern = $response->result->item_paintseed;
+                    $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
+                    $this->replyWithChatAction(['action' => Actions::TYPING]);
+                    $this->replyWithMessage(['text' => "{$pattern}",
+                        'parse_mode' => 'HTML']);
                     if (Pattern::where('name', '=', $obj->pattern)
                         ->where('value', '=', $pattern)->first()) {
                         $this->replyWithChatAction(['action' => Actions::TYPING]);
@@ -329,7 +327,8 @@ class SearchCommand extends Command
                         return true;
                     }
                 }
-            } else {
+            }
+            else {
                 $item = $items->first();
                 $url = "https://metjm.net/shared/screenshots-v5.php?cmd=request_new_link&inspect_link={$item->inspect_link}";
                 $inspectUrl = explode('%20', $item->inspect_link)[1];
