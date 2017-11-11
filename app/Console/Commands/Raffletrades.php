@@ -54,12 +54,13 @@ class Raffletrades extends Command
 
         $tasks = Task::with('item')->where('site_id', '=', $site_id)->get();
         foreach ($tasks as $task){
-            $items = $items->where('custom_market_name', '=', $task->item->full_name);
-            if ($task->float) $items = $items->where('float','<=', $task->float);
+            $itemss = $items->where('custom_market_name', '=', $task->item->full_name);
+            Log::info(count($itemss));
+            if ($task->float) $itemss = $itemss->where('float','<=', $task->float);
 
-            if (count($items)){
+            if (count($itemss)){
                 if ($task->pattern){
-                    foreach ($items as $item){
+                    foreach ($itemss as $item){
                         $url = "https://metjm.net/shared/screenshots-v5.php?cmd=request_new_link&inspect_link={$item->inspect_link}";
                         $inspectUrl = explode('%20', $item->inspect_link)[1];
                         $curl = curl_init();
