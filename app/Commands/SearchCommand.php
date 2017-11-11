@@ -286,17 +286,17 @@ class SearchCommand extends Command
                         break;
                     }
                     else {
-                        $this->replyWithChatAction(['action' => Actions::TYPING]);
-                        $this->replyWithMessage(['text' => "ЗАШЛО",
-                            'parse_mode' => 'HTML']);
-//                        if (Pattern::where('name', '=',$obj->pattern)
-//                            ->where('value', '=', $pattern)->first()){
-//                            $this->replyWithChatAction(['action' => Actions::TYPING]);
-//                            $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$item->float}\r\n{$obj->pattern}\r\n<a href='$url_metjm'>metjm</a>{$url_metjm}",
-//                                'parse_mode' => 'HTML']);
-//                            $find = true;
-//                            break;
-//                        }
+//                        $this->replyWithChatAction(['action' => Actions::TYPING]);
+//                        $this->replyWithMessage(['text' => "ЗАШЛО",
+//                            'parse_mode' => 'HTML']);
+                        if (Pattern::where('name', '=',$obj->pattern)
+                            ->where('value', '=', $pattern)->first()){
+                            $this->replyWithChatAction(['action' => Actions::TYPING]);
+                            $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$item->f[0]}\r\n{$obj->pattern}\r\n<a href='$url_metjm'>metjm</a>",
+                                'parse_mode' => 'HTML']);
+                            $find = true;
+                            break;
+                        }
                     }
                 }
             }
