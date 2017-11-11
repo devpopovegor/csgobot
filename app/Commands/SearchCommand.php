@@ -302,32 +302,49 @@ class SearchCommand extends Command
         $curl_response = collect($curl_response->response);
         $items = $curl_response->where('custom_market_name', '=', $obj->full_name);
         if ($obj->float) $items = $items->where('float', '<=', $obj->float);
-        $item = $items->first();
+//        $item = $items->first();
 
-        if ($item){
-            $url = "https://metjm.net/shared/screenshots-v5.php?cmd=request_new_link&inspect_link={$item->inspect_link}";
-            $inspectUrl = explode('%20', $item->inspect_link)[1];
-            $curl = curl_init();
-            curl_setopt($curl, CURLOPT_URL, $url);
-            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-            $response = curl_exec($curl);
-            curl_close($curl);
-            $response = json_decode($response);
-            $pattern = null;
-            $url_metjm = '';
-            if ($response->success) {
-                $pattern = $response->result->item_paintseed;
-                $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
-            }
+        if (count($items)){
             if ($obj->pattern){
-                if (Pattern::where('name', '=', $obj->pattern)
-                    ->where('value', '=', $pattern)->first()) {
-                    $this->replyWithChatAction(['action' => Actions::TYPING]);
-                    $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}\r\n{$item->float}\r\n{$obj->pattern}\r\n<a href='$url_metjm'>metjm</a>",
-                        'parse_mode' => 'HTML']);
-                    return true;
+                foreach ($items as $item){
+                    $url = "https://metjm.net/shared/screenshots-v5.php?cmd=request_new_link&inspect_link={$item->inspect_link}";
+                    $inspectUrl = explode('%20', $item->inspect_link)[1];
+                    $curl = curl_init();
+                    curl_setopt($curl, CURLOPT_URL, $url);
+                    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+                    $response = curl_exec($curl);
+                    curl_close($curl);
+                    $response = json_decode($response);
+                    $pattern = null;
+                    $url_metjm = '';
+                    if ($response->success) {
+                        $pattern = $response->result->item_paintseed;
+                        $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
+                    }
+                    if (Pattern::where('name', '=', $obj->pattern)
+                        ->where('value', '=', $pattern)->first()) {
+                        $this->replyWithChatAction(['action' => Actions::TYPING]);
+                        $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}\r\n{$item->float}\r\n{$obj->pattern}\r\n<a href='$url_metjm'>metjm</a>",
+                            'parse_mode' => 'HTML']);
+                        return true;
+                    }
                 }
             } else {
+                $item = $items->first();
+                $url = "https://metjm.net/shared/screenshots-v5.php?cmd=request_new_link&inspect_link={$item->inspect_link}";
+                $inspectUrl = explode('%20', $item->inspect_link)[1];
+                $curl = curl_init();
+                curl_setopt($curl, CURLOPT_URL, $url);
+                curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+                $response = curl_exec($curl);
+                curl_close($curl);
+                $response = json_decode($response);
+                $pattern = null;
+                $url_metjm = '';
+                if ($response->success) {
+                    $pattern = $response->result->item_paintseed;
+                    $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
+                }
                 $this->replyWithChatAction(['action' => Actions::TYPING]);
                 $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}\r\n{$item->float}\r\n<a href='$url_metjm'>metjm</a>",
                     'parse_mode' => 'HTML']);

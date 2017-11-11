@@ -54,8 +54,63 @@ class Raffletrades extends Command
 
         $tasks = Task::with('item')->where('site_id', '=', $site_id)->get();
         foreach ($tasks as $task){
-            $items = $items->where('market_name', '=', $task->item->name);
-            if ($task->item->phase) $items->where('item_phase','=', $task->item->phase);
+            $items = $items->where('custom_market_name', '=', $task->item->full_name);
+            if ($task->float) $items = $items->where('float','<=', $task->float);
+
+            if (count($items)){
+                if ($task->pattern){
+                    foreach ($items as $item){
+                        $url = "https://metjm.net/shared/screenshots-v5.php?cmd=request_new_link&inspect_link={$item->inspect_link}";
+                        $inspectUrl = explode('%20', $item->inspect_link)[1];
+                        $curl = curl_init();
+                        curl_setopt($curl, CURLOPT_URL, $url);
+                        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+                        $response = curl_exec($curl);
+                        curl_close($curl);
+                        $response = json_decode($response);
+                        $pattern = null;
+                        $url_metjm = '';
+                        if ($response->success) {
+                            $pattern = $response->result->item_paintseed;
+                            $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
+                        }
+                        if (Pattern::where('name', '=', $task->pattern)
+                            ->where('value', '=', $pattern)->first()) {
+                            Telegram::sendMessage([
+                                'chat_id' => $task->chat_id,
+                                'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$item->float}\r\n{$pattern}\r\n<a href='$url_metjm'>metjm</a>",
+                                'parse_mode' => 'HTML'
+                            ]);
+                            $task->delete();
+                            break;
+                        }
+                    }
+                }
+                else {
+                    $item = $items->first();
+                    $url = "https://metjm.net/shared/screenshots-v5.php?cmd=request_new_link&inspect_link={$item->inspect_link}";
+                    $inspectUrl = explode('%20', $item->inspect_link)[1];
+                    $curl = curl_init();
+                    curl_setopt($curl, CURLOPT_URL, $url);
+                    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+                    $response = curl_exec($curl);
+                    curl_close($curl);
+                    $response = json_decode($response);
+                    $pattern = null;
+                    $url_metjm = '';
+                    if ($response->success) {
+                        $pattern = $response->result->item_paintseed;
+                        $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
+                    }
+                    Telegram::sendMessage([
+                        'chat_id' => $task->chat_id,
+                        'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$item->float}\r\n{$pattern}\r\n<a href='$url_metjm'>metjm</a>",
+                        'parse_mode' => 'HTML'
+                    ]);
+                    $task->delete();
+                    break;
+                }
+            }
 
             if (count($items)){
                 foreach ($items as $item){
