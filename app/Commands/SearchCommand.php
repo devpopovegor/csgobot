@@ -364,7 +364,8 @@ class SearchCommand extends Command
                         break;
                     }
                 }
-            } else {
+            }
+            else {
                 if ($item->market_hash_name == $obj->full_name) {
                     $url = "https://metjm.net/shared/screenshots-v5.php?cmd=request_new_link&inspect_link={$item->inspect_link}";
                     $inspectUrl = explode('%20', $item->inspect_link)[1];
@@ -391,6 +392,7 @@ class SearchCommand extends Command
                         }
                     }
                     else {
+                        Log::info('Поиск без флоата и паттерна');
                         $this->replyWithChatAction(['action' => Actions::TYPING]);
                         $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}\r\n{$item->float}\r\npattern index = {$pattern}\r\n{$url_metjm}"]);
                         $find = true;
