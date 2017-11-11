@@ -21,10 +21,6 @@ class TelegramController extends Controller
 
     public function test(){
 
-        $pattern_names = DB::select('select distinct items.name from items, patterns where items.id = patterns.item_id');
-        dd(collect($pattern_names)->where('name', '=', '★ Bayonet | Autotronic (Battle-Scarred)ads'));
-
-
 //        $name = explode(" (", "★ Bayonet | Autotronic (Battle-Scarred)");
 //        dd($name);
 
@@ -53,9 +49,8 @@ class TelegramController extends Controller
 //        curl_setopt ($curl, CURLOPT_USERAGENT, "Mozilla/5.0");
         $curl_response = curl_exec($curl);
 //        $curl_response = json_decode($curl_response);
-	    $csmoney_items = collect(json_decode($curl_response));
-	    $item = $csmoney_items->where('m', '=', 'M4A4 | Howl')->where('e', '=', 'MW')->first();
-	    dd($item);
+	    $csmoney_items = json_decode($curl_response);
+	    dd($csmoney_items[3]);
         $code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
 //        dd($code);

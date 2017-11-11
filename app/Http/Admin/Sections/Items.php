@@ -68,7 +68,8 @@ class Items extends Section implements Initializable
 	{
 		return AdminForm::panel()->addBody([
 			AdminFormElement::text('name', 'Название'),
-			AdminFormElement::text('phase', 'Фаза')
+			AdminFormElement::text('phase', 'Фаза'),
+			AdminFormElement::text('full_name', 'Полное название')
 		]);
 	}
 
