@@ -62,12 +62,13 @@ class CsMoney extends Command
 
 	            $item = null;
                 if ($task->float) {
-                    if ($status) $item = $csmoney_items->where('m', '=', $name)->where('e', '=', $status)->where('f.0', '<=', $task->float)->first();
+                    if ($status) $item = $csmoney_items->where('m', '=', $name)
+                        ->where('e', '=', $status)->where('f.0', '<=', $task->float);
                     else $item = $csmoney_items->where('m', '=', $name)
                         ->where('f.0', '<=', $task->float);
                 }
                 else {
-                    if ($status) $item = $csmoney_items->where('m', '=', $name)->where('e', '=', $status)->first();
+                    if ($status) $item = $csmoney_items->where('m', '=', $name)->where('e', '=', $status);
                     else $item = $csmoney_items->where('m', '=', $name);
                 }
 
