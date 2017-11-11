@@ -42,13 +42,13 @@ class ItemFullName extends Command
         Item::chunk(500, function ($items) {
             foreach ($items as $item) {
                 $full_name = '';
-                if (strpos($item->name, '(') !== false) {
-                    $parts_name = explode('(', $item->name);
+                if (strpos($item->name, ' (') !== false) {
+                    $parts_name = explode(' (', $item->name);
                     $full_name = $parts_name[0];
                     $full_name .= $item->phase . ' (';
                     $full_name .= $parts_name[1];
                 } else {
-                    $full_name .= "{$item->name} {$item->phase}";
+                    $full_name = "{$item->name} {$item->phase}";
                 }
                 // might be more logic here
                 $item->update(['full_name' => $full_name]);
