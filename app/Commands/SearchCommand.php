@@ -556,7 +556,8 @@ class SearchCommand extends Command
 
 
                 }
-            } else {
+            }
+            else {
                 foreach ($find_objs as $fo) {
                     $id = $fo->items[0]->id;
                     $inspectUrl = $fo->items[0]->inspectUrl;
@@ -576,11 +577,19 @@ class SearchCommand extends Command
                         $float = $response->result->item_floatvalue;
                     }
 
-
-                    $this->replyWithChatAction(['action' => Actions::TYPING]);
-                    $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$float}\r\n{$pattern}\r\n<a href='{$url_metjm}'>metjm</a>",
-                        'parse_mode' => 'HTML']);
-                    return true;
+                    if ($obj->float) {
+                        if ($float <= $obj->float) {
+                                $this->replyWithChatAction(['action' => Actions::TYPING]);
+                                $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$float}\r\n{$pattern}\r\n<a href='{$url_metjm}'>metjm</a>",
+                                    'parse_mode' => 'HTML']);
+                                return true;
+                        }
+                    } else {
+                        $this->replyWithChatAction(['action' => Actions::TYPING]);
+                        $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$float}\r\n{$pattern}\r\n<a href='{$url_metjm}'>metjm</a>",
+                            'parse_mode' => 'HTML']);
+                        return true;
+                    }
 
 
                 }
