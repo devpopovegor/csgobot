@@ -300,7 +300,7 @@ class SearchCommand extends Command
     private function check_raffletrades($obj, $curl_response)
     {
         $curl_response = collect($curl_response->response);
-        $items = $curl_response->where('custom_market_name', '=', $obj->full_name);
+        $items = $curl_response->where('custom_market_name', '=', trim($obj->full_name));
         if ($obj->float) $items = $items->where('float', '<=', $obj->float);
         $this->replyWithChatAction(['action' => Actions::TYPING]);
         $this->replyWithMessage(['text' => count($items) . "\r\nfloat = {$obj->float}",
