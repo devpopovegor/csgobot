@@ -2,10 +2,12 @@
 
 namespace App\Console\Commands;
 
+use App\Pattern;
 use App\Site;
 use App\Task;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
+use Telegram\Bot\Actions;
 use Telegram\Bot\Laravel\Facades\Telegram;
 
 class Skinsjar extends Command
@@ -54,12 +56,8 @@ class Skinsjar extends Command
             $tasks = Task::with('item')->where('site_id', '=', 9)->get();
             foreach ($tasks as $task) {
                 $item = null;
-                if ($task->float) {
-                    $item = $items->where('name', '=', $task->item->full_name)
-                        ->where('floatMin', '<=', $task->float);
-                } else {
-                    $item = $items->where('name', '=', $task->item->full_name);
-                }
+                $item = $items->where('name', '=', $task->item->full_name);
+
 
                 if (count($item)) {
                     if (!$task->pattern){
@@ -75,15 +73,38 @@ class Skinsjar extends Command
                         $response = json_decode($response);
                         $pattern = null;
                         $url_metjm = '';
+                        $float = null;
                         if ($response->success){
                             $pattern = $response->result->item_paintseed;
                             $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
+                            $float = $response->result->item_floatvalue;
                         }
-                        Telegram::sendMessage([
-                            'chat_id' => $task->chat_id,
-                            'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$item->floatMin}\r\npattern index = {$pattern}\r\n{$url_metjm}"
-                        ]);
-                        $task->delete();
+
+                        if ($task->float) {
+                            if ($float <= $task->float) {
+                                if (Pattern::where('name', '=', $task->pattern)
+                                    ->where('value', '=', $pattern)->first()) {
+                                    Telegram::sendMessage([
+                                        'chat_id' => $task->chat_id,
+                                        'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$float}\r\n{$pattern}\r\n<a href='{$url_metjm}'>metjm</a>",
+                                        'parse_mode' => 'HTML'
+                                    ]);
+                                    $task->delete();
+                                    break;
+                                }
+                            }
+                        } else {
+                            if (Pattern::where('name', '=', $task->pattern)
+                                ->where('value', '=', $pattern)->first()) {
+                                Telegram::sendMessage([
+                                    'chat_id' => $task->chat_id,
+                                    'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$float}\r\n{$pattern}\r\n<a href='{$url_metjm}'>metjm</a>",
+                                    'parse_mode' => 'HTML'
+                                ]);
+                                $task->delete();
+                                break;
+                            }
+                        }
                     }
                     else {
                         foreach ($item as $obj){
@@ -98,16 +119,33 @@ class Skinsjar extends Command
                             $response = json_decode($response);
                             $pattern = null;
                             $url_metjm = '';
+                            $float = null;
                             if ($response->success){
                                 $pattern = $response->result->item_paintseed;
                                 $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
+                                $float = $response->result->item_floatvalue;
                             }
-                            Telegram::sendMessage([
-                                'chat_id' => $task->chat_id,
-                                'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$obj->floatMin}\r\n{$pattern}\r\n{$url_metjm}"
-                            ]);
-                            $task->delete();
-                            break;
+
+                            if ($task->float){
+                                if ($float <= $task->float){
+                                    Telegram::sendMessage([
+                                        'chat_id' => $task->chat_id,
+                                        'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$float}\r\n{$pattern}\r\n<a href='{$url_metjm}'>metjm</a>",
+                                        'parse_mode' => 'HTML'
+                                    ]);
+                                    $task->delete();
+                                    break;
+                                }
+                            }
+                            else {
+                                Telegram::sendMessage([
+                                    'chat_id' => $task->chat_id,
+                                    'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$float}\r\n{$pattern}\r\n<a href='{$url_metjm}'>metjm</a>",
+                                    'parse_mode' => 'HTML'
+                                ]);
+                                $task->delete();
+                                break;
+                            }
                         }
                     }
                 }
