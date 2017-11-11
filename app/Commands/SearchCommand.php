@@ -540,6 +540,7 @@ class SearchCommand extends Command
                 }
             } else {
                 if ($item_name == $obj->full_name) {
+                    $obj->float = $item->k;
                     $find = $obj;
                     break;
                 }
