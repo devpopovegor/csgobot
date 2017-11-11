@@ -63,19 +63,65 @@ class CsMoney extends Command
 	            $item = null;
                 if ($task->float) {
                     if ($status) $item = $csmoney_items->where('m', '=', $name)->where('e', '=', $status)->where('f.0', '<=', $task->float)->first();
-                    else $item = $csmoney_items->where('m', '=', $name)->where('f.0', '<=', $task->float)->first();
+                    else $item = $csmoney_items->where('m', '=', $name)
+                        ->where('f.0', '<=', $task->float);
                 }
                 else {
                     if ($status) $item = $csmoney_items->where('m', '=', $name)->where('e', '=', $status)->first();
-                    else $item = $csmoney_items->where('m', '=', $name)->first();
+                    else $item = $csmoney_items->where('m', '=', $name);
                 }
 
-                if ($item) {
-                    Telegram::sendMessage([
-                        'chat_id' => $task->chat_id,
-                        'text' => "{$task->item->name}\r\n{$csmoney->url}\r\n{$task->item->phase}\r\n{$item->f[0]}"
-                    ]);
-                    $task->delete();
+                if (count($item)) {
+                    if (!$task->pattern) {
+                        $item = $item->first();
+
+                        $url = "https://metjm.net/shared/screenshots-v5.php?cmd=request_new_link&inspect_link=steam://rungame/730/{$item->b[0]}/+csgo_econ_action_preview%20S{$item->b[0]}A{$item->id[0]}D{$item->l[0]}";
+                        $inspectUrl = "S{$item->b[0]}A{$item->id[0]}D{$item->l[0]}";
+                        $curl = curl_init();
+                        curl_setopt($curl, CURLOPT_URL, $url);
+                        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+                        $response = curl_exec($curl);
+                        curl_close($curl);
+                        $response = json_decode($response);
+                        $pattern = null;
+                        $url_metjm = '';
+                        if ($response->success) {
+                            $pattern = $response->result->item_paintseed;
+                            $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
+                        }
+
+                        Telegram::sendMessage([
+                            'chat_id' => $task->chat_id,
+                            'text' => "{$task->item->name}\r\n{$csmoney->url}\r\n{$task->item->phase}\r\n{$item->f[0]}\r\n<a href='$url_metjm'>metjm</a>",
+                            'parse_mode' => 'HTML'
+                        ]);
+                        $task->delete();
+                    }
+                    else {
+                        foreach ($item as $obj){
+                            $url = "https://metjm.net/shared/screenshots-v5.php?cmd=request_new_link&inspect_link=steam://rungame/730/{$obj->b[0]}/+csgo_econ_action_preview%20S{$obj->b[0]}A{$obj->id[0]}D{$obj->l[0]}";
+                            $inspectUrl = "S{$obj->b[0]}A{$obj->id[0]}D{$obj->l[0]}";
+                            $curl = curl_init();
+                            curl_setopt($curl, CURLOPT_URL, $url);
+                            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+                            $response = curl_exec($curl);
+                            curl_close($curl);
+                            $response = json_decode($response);
+                            $pattern = null;
+                            $url_metjm = '';
+                            if ($response->success) {
+                                $pattern = $response->result->item_paintseed;
+                                $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
+                            }
+
+                            Telegram::sendMessage([
+                                'chat_id' => $task->chat_id,
+                                'text' => "{$task->item->name}\r\n{$csmoney->url}\r\n{$task->item->phase}\r\n{$obj->f[0]}\r\n<a href='$url_metjm'>metjm</a>",
+                                'parse_mode' => 'HTML'
+                            ]);
+                            $task->delete();
+                        }
+                    }
                 }
             }
         }
