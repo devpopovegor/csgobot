@@ -86,7 +86,7 @@ class SearchCommand extends Command
                                 $this->replyWithMessage(['text' => $message]);
 
                                 //Логика поиска
-                                $obj = new NeedItem($mItem->name, $mSite->url, $oMessage->getChat()->getId(), $phase, $float, $pattern);
+                                $obj = new NeedItem($mItem->name, $mSite->url, $oMessage->getChat()->getId(), $phase, $float, $pattern, $mItem->full_name);
                                 $curl = curl_init();
                                 $url = $mSite->id == 8 ? $mSite->get_data . str_replace(' ', '', $obj->full_name) : $mSite->get_data;
                                 curl_setopt($curl, CURLOPT_URL, $url);
