@@ -115,12 +115,16 @@ class CsMoney extends Command
                                 $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
                             }
 
-                            Telegram::sendMessage([
-                                'chat_id' => $task->chat_id,
-                                'text' => "{$task->item->name}\r\n{$csmoney->url}\r\n{$task->item->phase}\r\n{$obj->f[0]}\r\n<a href='$url_metjm'>metjm</a>",
-                                'parse_mode' => 'HTML'
-                            ]);
-                            $task->delete();
+                            if (Pattern::where('name', '=',$obj->pattern)
+                                ->where('value', '=', $pattern)->first()) {
+                                Telegram::sendMessage([
+                                    'chat_id' => $task->chat_id,
+                                    'text' => "{$task->item->name}\r\n{$csmoney->url}\r\n{$task->item->phase}\r\n{$obj->f[0]}\r\n<a href='$url_metjm'>metjm</a>",
+                                    'parse_mode' => 'HTML'
+                                ]);
+                                $task->delete();
+                                break;
+                            }
                         }
                     }
                 }
