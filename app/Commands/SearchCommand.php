@@ -557,25 +557,26 @@ class SearchCommand extends Command
                         'parse_mode' => 'HTML']);
                     return true;
                 }
-            } else {
+            }
+            else {
                 $find_obj = $find_obj->first();
-                $id = $find_obj->items[0]->id;
-                $inspectUrl = $find_obj->items[0]->inspectUrl;
-                $url = "https://metjm.net/shared/screenshots-v5.php?cmd=request_new_link&inspect_link=steam://rungame/730/{$id}/+csgo_econ_action_preview%25{$inspectUrl}";
-                $curl = curl_init();
-                curl_setopt($curl, CURLOPT_URL, $url);
-                curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-                $response = curl_exec($curl);
-                curl_close($curl);
-                $response = json_decode($response);
+//                $id = $find_obj->items[0]->id;
+//                $inspectUrl = $find_obj->items[0]->inspectUrl;
+//                $url = "https://metjm.net/shared/screenshots-v5.php?cmd=request_new_link&inspect_link=steam://rungame/730/{$id}/+csgo_econ_action_preview%25{$inspectUrl}";
+//                $curl = curl_init();
+//                curl_setopt($curl, CURLOPT_URL, $url);
+//                curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+//                $response = curl_exec($curl);
+//                curl_close($curl);
+//                $response = json_decode($response);
                 $pattern = null;
                 $url_metjm = '';
-                if ($response->success) {
-                    $pattern = $response->result->item_paintseed;
-                    $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
-                }
+//                if ($response->success) {
+//                    $pattern = $response->result->item_paintseed;
+//                    $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
+//                }
                 $this->replyWithChatAction(['action' => Actions::TYPING]);
-                $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}\r\n{$find_obj->floatMax}\r\npattern index = {$pattern}\r\n<a href='{$url_metjm}'>metjm</a>",
+                $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}\r\n{$find_obj->floatMax}\r\n pattern index = {$pattern}\r\n<a href='{$url_metjm}'>metjm</a>",
                     'parse_mode' => 'HTML']);
                 return true;
             }
