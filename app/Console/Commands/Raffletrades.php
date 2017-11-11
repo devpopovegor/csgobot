@@ -108,60 +108,6 @@ class Raffletrades extends Command
                         'parse_mode' => 'HTML'
                     ]);
                     $task->delete();
-                    break;
-                }
-            }
-
-            if (count($items)){
-                foreach ($items as $item){
-                    $find = false;
-                    $url = "https://metjm.net/shared/screenshots-v5.php?cmd=request_new_link&inspect_link={$item->inspect_link}";
-                    $inspectUrl = explode('%20', $item->inspect_link)[1];
-                    $curl = curl_init();
-                    curl_setopt($curl, CURLOPT_URL, $url);
-                    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-                    $response = curl_exec($curl);
-                    curl_close($curl);
-                    $response = json_decode($response);
-                    $pattern = null;
-                    $url_metjm = '';
-                    $float = null;
-                    if ($response->success) {
-                        $pattern = $response->result->item_paintseed;
-                        $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
-                        $float = $response->result->item_floatvalue;
-                    }
-
-                    if ($task->float){
-                        if ($float < $task->float){
-                            if ($task->pattern) {
-                                if (Pattern::where('name', '=', $task->pattern)
-                                    ->where('value', '=', $pattern)->first()) {
-                                    $find = true;
-                                }
-                            }
-                            else $find = true;
-                        }
-                    }
-                    else {
-                        if ($task->pattern) {
-                            if (Pattern::where('name', '=', $task->pattern)
-                                ->where('value', '=', $pattern)->first()) {
-                                $find = true;
-                            }
-                        }
-                        else $find = true;
-                    }
-
-                    if ($find){
-                        Telegram::sendMessage([
-                            'chat_id' => $task->chat_id,
-                            'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$float}\r\n{$pattern}\r\n<a href='$url_metjm'>metjm</a>",
-                            'parse_mode' => 'HTML'
-                        ]);
-                        $task->delete();
-                        break;
-                    }
                 }
             }
         }
