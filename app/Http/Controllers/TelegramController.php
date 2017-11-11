@@ -26,7 +26,7 @@ class TelegramController extends Controller
 
         $curl_response = curl_exec($curl);
 	    $csmoney_items = collect(json_decode($curl_response)->response);
-        dd($csmoney_items->where('custom_market_name', '=', '★ Karambit | Marble Fade (Factory New)'));
+        dd($csmoney_items->where('custom_market_name', '=', '★ Butterfly Knife | Marble Fade (Factory New)'));
 
     }
 
