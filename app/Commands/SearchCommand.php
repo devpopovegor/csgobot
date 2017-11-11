@@ -302,9 +302,9 @@ class SearchCommand extends Command
         $curl_response = collect($curl_response->response);
         $items = $curl_response->where('custom_market_name', '=', $obj->full_name);
 
-        $this->replyWithChatAction(['action' => Actions::TYPING]);
-        $this->replyWithMessage(['text' => count($items) . "\r\nfloat = {$obj->float}\r\n" . count($curl_response) ."\r\n{$obj->full_name}",
-            'parse_mode' => 'HTML']);
+//        $this->replyWithChatAction(['action' => Actions::TYPING]);
+//        $this->replyWithMessage(['text' => count($items) . "\r\nfloat = {$obj->float}\r\n" . count($curl_response) ."\r\n{$obj->full_name}",
+//            'parse_mode' => 'HTML']);
         if ($obj->float) $items = $items->where('float', '<=', $obj->float);
 
         if (count($items)){
