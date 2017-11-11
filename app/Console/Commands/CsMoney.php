@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Item;
+use App\Pattern;
 use App\Site;
 use App\Task;
 use Illuminate\Console\Command;
