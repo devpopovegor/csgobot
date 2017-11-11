@@ -55,7 +55,7 @@ class Raffletrades extends Command
         $tasks = Task::with('item')->where('site_id', '=', $site_id)->get();
         foreach ($tasks as $task){
             $itemss = $items->where('custom_market_name', '=', $task->item->full_name);
-            Log::info(count($itemss));
+            Log::info(count($itemss) . "\r\n{$task->item->full_name}");
             if ($task->float) $itemss = $itemss->where('float','<=', $task->float);
 
             if (count($itemss)){
