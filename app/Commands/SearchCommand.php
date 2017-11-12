@@ -228,7 +228,7 @@ class SearchCommand extends Command
                             $pattern = $response->result->item_paintseed;
                             $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
                         }
-                    } catch (\Exception $exception){
+                    } catch (\Exception $exception) {
                         continue;
                     }
 
@@ -245,8 +245,7 @@ class SearchCommand extends Command
                             'parse_mode' => 'HTML']);
                         $find = true;
                         break;
-                    }
-                    else {
+                    } else {
                         if (Pattern::where('name', '=', $obj->pattern)
                             ->where('value', '=', $pattern)->first()) {
                             $this->replyWithChatAction(['action' => Actions::TYPING]);
@@ -278,9 +277,13 @@ class SearchCommand extends Command
                     $response = json_decode($response);
                     $pattern = null;
                     $url_metjm = '';
-                    if ($response->success) {
-                        $pattern = $response->result->item_paintseed;
-                        $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
+                    try {
+                        if ($response->success) {
+                            $pattern = $response->result->item_paintseed;
+                            $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
+                        }
+                    } catch (\Exception $exception) {
+                        continue;
                     }
 
                     if (!$obj->pattern) {
@@ -316,9 +319,9 @@ class SearchCommand extends Command
 
         if ($obj->float) $items = $items->where('float', '<=', $obj->float);
 
-        if (count($items)){
-            if ($obj->pattern){
-                foreach ($items as $item){
+        if (count($items)) {
+            if ($obj->pattern) {
+                foreach ($items as $item) {
                     $url = "https://metjm.net/shared/screenshots-v5.php?cmd=request_new_link&inspect_link={$item->inspect_link}";
                     $inspectUrl = explode('%20', $item->inspect_link)[1];
                     $curl = curl_init();
@@ -337,8 +340,7 @@ class SearchCommand extends Command
                         return true;
                     }
                 }
-            }
-            else {
+            } else {
                 $item = $items->first();
                 $url = "https://metjm.net/shared/screenshots-v5.php?cmd=request_new_link&inspect_link={$item->inspect_link}";
                 $inspectUrl = explode('%20', $item->inspect_link)[1];
@@ -564,13 +566,16 @@ class SearchCommand extends Command
                     }
 
                     if ($obj->float) {
+                        $this->replyWithChatAction(['action' => Actions::TYPING]);
+                        $this->replyWithMessage(['text' => "AAAAA"]);
                         if ($float <= $obj->float) {
-                                $this->replyWithChatAction(['action' => Actions::TYPING]);
-                                $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$float}\r\n{$pattern}\r\n<a href='{$url_metjm}'>metjm</a>",
-                                    'parse_mode' => 'HTML']);
-                                return true;
+                            $this->replyWithChatAction(['action' => Actions::TYPING]);
+                            $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$float}\r\n{$pattern}\r\n<a href='{$url_metjm}'>metjm</a>",
+                                'parse_mode' => 'HTML']);
+                            return true;
                         }
-                    } else {
+                    }
+                    else {
                         $this->replyWithChatAction(['action' => Actions::TYPING]);
                         $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$float}\r\n{$pattern}\r\n<a href='{$url_metjm}'>metjm</a>",
                             'parse_mode' => 'HTML']);
@@ -602,10 +607,10 @@ class SearchCommand extends Command
     {
         $find = null;
         $phases = [
-            'Phase 1' => [418,569],
-            'Phase 2' => [419,570],
-            'Phase 3' => [420,571],
-            'Phase 4' => [421,572],
+            'Phase 1' => [418, 569],
+            'Phase 2' => [419, 570],
+            'Phase 3' => [420, 571],
+            'Phase 4' => [421, 572],
             'Ruby' => [],
             'Sapphire' => [],
             'Black Perl' => [],
@@ -616,8 +621,8 @@ class SearchCommand extends Command
             if (is_numeric($item_name)) $item_name = $curl_response[$item_name]->m;
             if ($obj->float) {
                 if ($item_name == $obj->name && $item->k < $obj->float) {
-                    if ($obj->phase){
-                        if (in_array($item->g, $phases[$obj->phase])){
+                    if ($obj->phase) {
+                        if (in_array($item->g, $phases[$obj->phase])) {
                             $obj->float = $item->k;
                             $find = $obj;
                             break;
@@ -630,8 +635,8 @@ class SearchCommand extends Command
                 }
             } else {
                 if ($item_name == $obj->name) {
-                    if ($obj->phase){
-                        if (in_array($item->g, $phases[$obj->phase])){
+                    if ($obj->phase) {
+                        if (in_array($item->g, $phases[$obj->phase])) {
                             $obj->float = $item->k;
                             $find = $obj;
                             break;
