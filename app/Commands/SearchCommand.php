@@ -638,28 +638,71 @@ class SearchCommand extends Command
                 if ($item_name == $obj->name && $item->k < $obj->float) {
                     if ($obj->phase) {
                         if (in_array($item->g, $phases[$obj->phase])) {
+                            if ($obj->pattern){
+                                $pat = Item::find($obj->id)->patterns->where('name', '=', $obj->pattern)->where('value', '=', $item->p)->first();
+                                if ($pat){
+                                    $obj->float = $item->k;
+                                    $find = $obj;
+                                    break;
+                                }
+                            }
+                            else {
+                                $obj->float = $item->k;
+                                $find = $obj;
+                                break;
+                            }
+                        }
+                    }
+                    else {
+                        if ($obj->pattern){
+                            $pat = Item::find($obj->id)->patterns->where('name', '=', $obj->pattern)->where('value', '=', $item->p)->first();
+                            if ($pat){
+                                $obj->float = $item->k;
+                                $find = $obj;
+                                break;
+                            }
+                        }
+                        else {
                             $obj->float = $item->k;
                             $find = $obj;
                             break;
                         }
-                    } else {
-                        $obj->float = $item->k;
-                        $find = $obj;
-                        break;
                     }
                 }
-            } else {
+            }
+            else {
                 if ($item_name == $obj->name) {
                     if ($obj->phase) {
                         if (in_array($item->g, $phases[$obj->phase])) {
+                            if ($obj->pattern){
+                                $pat = Item::find($obj->id)->patterns->where('name', '=', $obj->pattern)->where('value', '=', $item->p)->first();
+                                if ($pat){
+                                    $obj->float = $item->k;
+                                    $find = $obj;
+                                    break;
+                                }
+                            }
+                            else {
+                                $obj->float = $item->k;
+                                $find = $obj;
+                                break;
+                            }
+                        }
+                    }
+                    else {
+                        if ($obj->pattern){
+                            $pat = Item::find($obj->id)->patterns->where('name', '=', $obj->pattern)->where('value', '=', $item->p)->first();
+                            if ($pat){
+                                $obj->float = $item->k;
+                                $find = $obj;
+                                break;
+                            }
+                        }
+                        else {
                             $obj->float = $item->k;
                             $find = $obj;
                             break;
                         }
-                    } else {
-                        $obj->float = $item->k;
-                        $find = $obj;
-                        break;
                     }
                 }
             }

@@ -21,11 +21,11 @@ class TelegramController extends Controller
 
     public function test(){
         $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL,"https://skinsjar.com/api/v3/load/bots?refresh=0&v=0");
+        curl_setopt($curl, CURLOPT_URL,"https://api.raffletrades.com/v1/inventory/");
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         $curl_response = curl_exec($curl);
 	    $csmoney_items = json_decode($curl_response);
-        dd(collect($csmoney_items->items)->where('name','=', '★ Karambit | Marble Fade (Minimal Wear)'));
+        dd(collect($csmoney_items->response));
 //        dd(collect($csmoney_items->response)->where('m', '=', '★ Gut Knife | Gamma Doppler (Factory New)'));
 //        dd($csmoney_items->response);
 
