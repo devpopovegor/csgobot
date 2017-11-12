@@ -502,6 +502,9 @@ class SearchCommand extends Command
             }));
 
             $items = $elements->where('name', '=', $obj->name);
+            $this->replyWithChatAction(['action' => Actions::TYPING]);
+            $this->replyWithMessage(['text' => count($items),
+                'parse_mode' => 'HTML']);
             foreach ($items as $item) {
                 $inspectUrl = explode('%20', $item->inspect_link)[1];
                 $curl = curl_init();
@@ -521,7 +524,8 @@ class SearchCommand extends Command
                             'parse_mode' => 'HTML']);
                         return true;
                     }
-                } elseif ($obj->pattern && !$obj->float) {
+                }
+                elseif ($obj->pattern && !$obj->float) {
                     $p = Item::find($obj->id)->patterns->where('name', '=', $obj->pattern)->where('value', '=', $pattern)->first();
                     if ($p) {
                         $this->replyWithChatAction(['action' => Actions::TYPING]);
@@ -529,7 +533,8 @@ class SearchCommand extends Command
                             'parse_mode' => 'HTML']);
                         return true;
                     }
-                } elseif ($obj->pattern && $obj->float) {
+                }
+                elseif ($obj->pattern && $obj->float) {
                     $p = Item::find($obj->id)->patterns->where('name', '=', $obj->pattern)->where('value', '=', $pattern)->first();
                     if ($p) {
                         if ($float <= $obj->float) {
@@ -539,7 +544,8 @@ class SearchCommand extends Command
                             return true;
                         }
                     }
-                } else {
+                }
+                else {
                     $this->replyWithChatAction(['action' => Actions::TYPING]);
                     $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$float}\r\n<a href='$url_metjm'>metjm</a>",
                         'parse_mode' => 'HTML']);
