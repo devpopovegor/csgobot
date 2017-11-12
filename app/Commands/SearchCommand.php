@@ -213,10 +213,6 @@ class SearchCommand extends Command
                     $item_name = $item->m;
                 }
                 if ($item_name == $obj->full_name && $item->f[0] <= $obj->float) {
-                    $this->replyWithChatAction(['action' => Actions::TYPING]);
-                    $this->replyWithMessage(['text' => "S{$item->b[0]}A{$item->id[0]}D{$item->l[0]}",
-                        'parse_mode' => 'HTML']);
-
                     $url = "https://metjm.net/shared/screenshots-v5.php?cmd=request_new_link&inspect_link=steam://rungame/730/{$item->b[0]}/+csgo_econ_action_preview%20S{$item->b[0]}A{$item->id[0]}D{$item->l[0]}";
                     $inspectUrl = "S{$item->b[0]}A{$item->id[0]}D{$item->l[0]}";
                     $curl = curl_init();
