@@ -295,7 +295,7 @@ class SearchCommand extends Command
                     else {
                         $need_item = Item::where('full_name', '=', $obj->full_name)->first();
                         $this->replyWithChatAction(['action' => Actions::TYPING]);
-                        $this->replyWithMessage(['text' => $need_item->full_name]);
+                        $this->replyWithMessage(['text' => $obj->full_name]);
                         $patterns = $need_item->patterns->where('name', '=', $obj->pattern)->where('value', '=', $pattern)->first();
 
                         if ($patterns) {
