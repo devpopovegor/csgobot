@@ -227,9 +227,13 @@ class SearchCommand extends Command
                     $response = json_decode($response);
                     $pattern = null;
                     $url_metjm = '';
-                    if ($response->success) {
-                        $pattern = $response->result->item_paintseed;
-                        $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
+                    try {
+                        if ($response->success) {
+                            $pattern = $response->result->item_paintseed;
+                            $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
+                        }
+                    } catch (\Exception $exception){
+                        continue;
                     }
 
                     $this->replyWithChatAction(['action' => Actions::TYPING]);
