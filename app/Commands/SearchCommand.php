@@ -330,8 +330,9 @@ class SearchCommand extends Command
                     $response = json_decode($response);
                     $pattern = $response->result->item_paintseed;
                     $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
-                    if (Item::where('full_name', '=', $obj->full_name)->first()
-                        ->patterns->where('name', '=', $obj->pattern)->where('value', '=', $pattern)->first()) {
+                    $need_item = Item::find($obj->id);
+                    $patterns = $need_item->patterns->where('name', '=', $obj->pattern)->where('value', '=', $pattern)->first();
+                    if ($patterns) {
                         $this->replyWithChatAction(['action' => Actions::TYPING]);
                         $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}\r\n{$item->float}\r\n{$obj->pattern}\r\n<a href='$url_metjm'>metjm</a>",
                             'parse_mode' => 'HTML']);
@@ -525,20 +526,25 @@ class SearchCommand extends Command
                     }catch (\Exception $exception){
                         continue;
                     }
-
+                    $this->replyWithChatAction(['action' => Actions::TYPING]);
+                    $this->replyWithMessage(['text' => "asdsadasg",
+                        'parse_mode' => 'HTML']);
                     if ($obj->float) {
                         if ($float <= $obj->float) {
-                            if (Item::where('full_name', '=', $obj->full_name)->first()
-                                ->patterns->where('name', '=', $obj->pattern)->where('value', '=', $pattern)->first()) {
+                            $need_item = Item::find($obj->id);
+                            $patterns = $need_item->patterns->where('name', '=', $obj->pattern)->where('value', '=', $pattern)->first();
+                            if ($patterns) {
                                 $this->replyWithChatAction(['action' => Actions::TYPING]);
                                 $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$float}\r\n{$pattern}\r\n<a href='{$url_metjm}'>metjm</a>",
                                     'parse_mode' => 'HTML']);
                                 return true;
                             }
                         }
-                    } else {
-                        if (Item::where('full_name', '=', $obj->full_name)->first()
-                            ->patterns->where('name', '=', $obj->pattern)->where('value', '=', $pattern)->first()) {
+                    }
+                    else {
+                        $need_item = Item::find($obj->id);
+                        $patterns = $need_item->patterns->where('name', '=', $obj->pattern)->where('value', '=', $pattern)->first();
+                        if ($patterns) {
                             $this->replyWithChatAction(['action' => Actions::TYPING]);
                             $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$float}\r\n{$pattern}\r\n<a href='{$url_metjm}'>metjm</a>",
                                 'parse_mode' => 'HTML']);
