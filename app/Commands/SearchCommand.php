@@ -3,6 +3,7 @@
 namespace App\Commands;
 
 use App\Classes\NeedItem;
+use App\Classes\SumClass;
 use App\Dealer;
 use App\Item;
 use App\Pattern;
@@ -12,6 +13,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Symfony\Component\DomCrawler\Crawler;
 use Telegram\Bot\Actions;
 use Telegram\Bot\Commands\Command;
 use Telegram\Bot\Laravel\Facades\Telegram;
@@ -56,13 +58,11 @@ class SearchCommand extends Command
                     if ($count_params == 3) {
                         if (is_numeric(trim($str_request[2]))) {
                             $float = trim($str_request[2]);
-                        }
-                        else {
+                        } else {
                             if (in_array(trim(last($str_request)), $pattern_names)) $pattern = trim(last($str_request));
                             else $phase = trim($str_request[2]);
                         }
-                    }
-                    elseif ($count_params == 4) {
+                    } elseif ($count_params == 4) {
                         if (is_numeric(trim(last($str_request))) && trim(last($str_request)) > 0) {
                             $float = trim(last($str_request));
                             if (in_array(trim($str_request[2]), $pattern_names)) $pattern = trim($str_request[2]);
@@ -82,8 +82,7 @@ class SearchCommand extends Command
                             if ($pattern && !count($mItem->patterns->where('name', '=', $pattern))) {
                                 $this->replyWithChatAction(['action' => Actions::TYPING]);
                                 $this->replyWithMessage(['text' => 'Поиск по паттерну для данного предмета невозможен']);
-                            }
-                            else {
+                            } else {
                                 $message = "Поиск {$item} на сайте {$mSite->url} начался";
                                 $this->replyWithChatAction(['action' => Actions::TYPING]);
                                 $this->replyWithMessage(['text' => $message]);
@@ -91,11 +90,23 @@ class SearchCommand extends Command
                                 //Логика поиска
                                 $obj = new NeedItem($mItem->name, $mSite->url, $oMessage->getChat()->getId(), $phase, $float, $pattern, $mItem->id);
                                 $curl = curl_init();
-                                $url = $mSite->id == 8 ? $mSite->get_data . str_replace(' ', '', $obj->full_name) : $mSite->get_data;
+                                $url = $mSite->get_data;
                                 curl_setopt($curl, CURLOPT_URL, $url);
                                 curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
                                 $curl_response = null;
-                                if ($mSite->id == 11) {
+                                if ($mSite->id == 8) {
+                                    curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+                                        "Connection: keep-alive",
+                                        "X-Requested-With: XMLHttpRequest",
+                                        "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36",
+                                        "Accept: */*",
+                                        "Accept-Language: en-US,en;q=0.8",
+                                        "Host: www.csgosum.com",
+                                        "Referer:https://www.csgosum.com/",
+                                    ));
+                                    $curl_response = curl_exec($curl);
+
+                                } elseif ($mSite->id == 11) {
                                     curl_setopt($curl, CURLOPT_POST, true);
                                     curl_setopt($curl, CURLOPT_HTTPHEADER, array(
                                         "Origin: https://ru.cs.deals",
@@ -115,8 +126,7 @@ class SearchCommand extends Command
                                     ));
                                     $curl_response = curl_exec($curl);
                                     $curl_response = json_decode(utf8_decode($curl_response))->response;
-                                }
-                                elseif ($mSite->id == 12) {
+                                } elseif ($mSite->id == 12) {
                                     curl_setopt($curl, CURLOPT_POST, true);
                                     curl_setopt($curl, CURLOPT_HTTPHEADER, array(
                                         "Origin: https://ru.tradeskinsfast.com",
@@ -178,14 +188,12 @@ class SearchCommand extends Command
                                     'float' => $float, 'chat_id' => $oMessage->getChat()->getId(), 'pattern' => $pattern]);
                                 //---------------------------
                             }
-                        }
-                        else {
+                        } else {
                             $message = "Предмет {$item} не существует.";
                             $this->replyWithChatAction(['action' => Actions::TYPING]);
                             $this->replyWithMessage(['text' => $message]);
                         }
-                    }
-                    else {
+                    } else {
                         $message = "Сайт {$site} не существует.";
                         $this->replyWithChatAction(['action' => Actions::TYPING]);
                         $this->replyWithMessage(['text' => $message]);
@@ -244,8 +252,7 @@ class SearchCommand extends Command
                             'parse_mode' => 'HTML']);
                         $find = true;
                         break;
-                    }
-                    else {
+                    } else {
                         if (Item::where('full_name', '=', $obj->full_name)->first()
                             ->patterns->where('name', '=', $obj->pattern)->where('value', '=', $pattern)->first()) {
                             $this->replyWithChatAction(['action' => Actions::TYPING]);
@@ -257,8 +264,7 @@ class SearchCommand extends Command
                     }
                 }
             }
-        }
-        else {
+        } else {
             foreach ($curl_response as $item) {
                 $item_name = '';
                 try {
@@ -292,8 +298,7 @@ class SearchCommand extends Command
                             'parse_mode' => 'HTML']);
                         $find = true;
                         break;
-                    }
-                    else {
+                    } else {
                         $need_item = Item::find($obj->id);
                         $patterns = $need_item->patterns->where('name', '=', $obj->pattern)->where('value', '=', $pattern)->first();
                         if ($patterns) {
@@ -365,7 +370,7 @@ class SearchCommand extends Command
             }
 
             return false;
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
             return false;
         }
 
@@ -465,8 +470,7 @@ class SearchCommand extends Command
                     break;
                 }
             }
-        }
-        else {
+        } else {
             foreach ($curl_response as $item) {
                 if ($item->m == $obj->full_name) {
                     $this->replyWithChatAction(['action' => Actions::TYPING]);
@@ -484,23 +488,72 @@ class SearchCommand extends Command
     {
 
         try {
-            $find = false;
-            $curl_response = $curl_response[0]->response;
-            foreach ($curl_response as $item) {
-                if ($item->name == $obj->full_name && $item->current > 0) {
+            $crawler = new Crawler($curl_response);
+            $elements = collect($crawler->filter('div.bot-results > div.inventory-item-hold')->each(function (Crawler $node, $i) {
+                $item = new SumClass();
+                $item->name = $node->attr('data-item-name');
+                $item->cost = $node->attr('data-item-price');
+                try {
+                    $item->inspect_link = "https://metjm.net/shared/screenshots-v5.php?cmd=request_new_link&inspect_link=" . trim(explode('">', explode('<a href="', $node->filter('label div.right-inspect')->first()->html())[1])[0]);
+                } catch (\Exception $exception) {
+                    $item->inspect_link = null;
+                }
+                return $item;
+            }));
+
+            $items = $elements->where('name', '=', $obj->name);
+            foreach ($items as $item) {
+                $inspectUrl = explode('%20', $item->inspect_link)[1];
+                $curl = curl_init();
+                curl_setopt($curl, CURLOPT_URL, $item->inspect_link);
+                curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+                $response = curl_exec($curl);
+                curl_close($curl);
+                $response = json_decode($response);
+                $pattern = $response->result->item_paintseed;
+                $float = $response->result->item_floatvalue;
+                $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
+
+                if ($obj->float && !$obj->pattern) {
+                    if ($float <= $obj->float) {
+                        $this->replyWithChatAction(['action' => Actions::TYPING]);
+                        $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$float}\r\n<a href='$url_metjm'>metjm</a>",
+                            'parse_mode' => 'HTML']);
+                        return true;
+                    }
+                } elseif ($obj->pattern && !$obj->float) {
+                    $p = Item::find($obj->id)->patterns->where('name', '=', $obj->pattern)->where('value', '=', $pattern)->first();
+                    if ($p) {
+                        $this->replyWithChatAction(['action' => Actions::TYPING]);
+                        $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->pattern}\r\n{$float}\r\n<a href='$url_metjm'>metjm</a>",
+                            'parse_mode' => 'HTML']);
+                        return true;
+                    }
+                } elseif ($obj->pattern && $obj->float) {
+                    $p = Item::find($obj->id)->patterns->where('name', '=', $obj->pattern)->where('value', '=', $pattern)->first();
+                    if ($p) {
+                        if ($float <= $obj->float) {
+                            $this->replyWithChatAction(['action' => Actions::TYPING]);
+                            $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->pattern}\r\n{$float}\r\n<a href='$url_metjm'>metjm</a>",
+                                'parse_mode' => 'HTML']);
+                            return true;
+                        }
+                    }
+                } else {
                     $this->replyWithChatAction(['action' => Actions::TYPING]);
-                    $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}"]);
-                    $find = true;
-                    break;
+                    $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$float}\r\n<a href='$url_metjm'>metjm</a>",
+                        'parse_mode' => 'HTML']);
+                    return true;
                 }
             }
-            return $find;
+            return false;
         } catch (\Exception $exception) {
             return false;
         }
     }
 
-    private function check_skinsjar($obj, $curl_response)
+    private
+    function check_skinsjar($obj, $curl_response)
     {
         $curl_response = collect($curl_response->items);
         $find_objs = null;
@@ -527,7 +580,7 @@ class SearchCommand extends Command
                             $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
                             $float = $response->result->item_floatvalue;
                         }
-                    }catch (\Exception $exception){
+                    } catch (\Exception $exception) {
                         continue;
                     }
 
@@ -542,8 +595,7 @@ class SearchCommand extends Command
                                 return true;
                             }
                         }
-                    }
-                    else {
+                    } else {
                         $need_item = Item::find($obj->id);
                         $patterns = $need_item->patterns->where('name', '=', $obj->pattern)->where('value', '=', $pattern)->first();
                         if ($patterns) {
@@ -556,8 +608,7 @@ class SearchCommand extends Command
 
 
                 }
-            }
-            else {
+            } else {
                 foreach ($find_objs as $fo) {
                     $id = $fo->items[0]->id;
                     $inspectUrl = $fo->items[0]->inspectUrl;
@@ -578,7 +629,7 @@ class SearchCommand extends Command
                             $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
                             $float = $response->result->item_floatvalue;
                         }
-                    }catch (\Exception $exception){
+                    } catch (\Exception $exception) {
                         continue;
                     }
 
@@ -589,8 +640,7 @@ class SearchCommand extends Command
                                 'parse_mode' => 'HTML']);
                             return true;
                         }
-                    }
-                    else {
+                    } else {
                         $this->replyWithChatAction(['action' => Actions::TYPING]);
                         $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}\r\n{$float}\r\n{$pattern}\r\n<a href='{$url_metjm}'>metjm</a>",
                             'parse_mode' => 'HTML']);
@@ -604,7 +654,8 @@ class SearchCommand extends Command
         return false;
     }
 
-    private function check_lootfarm($obj, $curl_response)
+    private
+    function check_lootfarm($obj, $curl_response)
     {
         $find = false;
         foreach ($curl_response as $item) {
@@ -618,7 +669,8 @@ class SearchCommand extends Command
         return $find;
     }
 
-    private function check_csdeals($obj, $curl_response)
+    private
+    function check_csdeals($obj, $curl_response)
     {
         $find = null;
         $phases = [
@@ -638,67 +690,60 @@ class SearchCommand extends Command
                 if ($item_name == $obj->name && $item->k < $obj->float) {
                     if ($obj->phase) {
                         if (in_array($item->g, $phases[$obj->phase])) {
-                            if ($obj->pattern){
+                            if ($obj->pattern) {
                                 $pat = Item::find($obj->id)->patterns->where('name', '=', $obj->pattern)->where('value', '=', $item->p)->first();
-                                if ($pat){
+                                if ($pat) {
                                     $obj->float = $item->k;
                                     $find = $obj;
                                     break;
                                 }
-                            }
-                            else {
+                            } else {
                                 $obj->float = $item->k;
                                 $find = $obj;
                                 break;
                             }
                         }
-                    }
-                    else {
-                        if ($obj->pattern){
+                    } else {
+                        if ($obj->pattern) {
                             $pat = Item::find($obj->id)->patterns->where('name', '=', $obj->pattern)->where('value', '=', $item->p)->first();
-                            if ($pat){
+                            if ($pat) {
                                 $obj->float = $item->k;
                                 $find = $obj;
                                 break;
                             }
-                        }
-                        else {
+                        } else {
                             $obj->float = $item->k;
                             $find = $obj;
                             break;
                         }
                     }
                 }
-            }
-            else {
+            } else {
                 if ($item_name == $obj->name) {
                     if ($obj->phase) {
                         if (in_array($item->g, $phases[$obj->phase])) {
-                            if ($obj->pattern){
+                            if ($obj->pattern) {
                                 $pat = Item::find($obj->id)->patterns->where('name', '=', $obj->pattern)->where('value', '=', $item->p)->first();
-                                if ($pat){
+                                if ($pat) {
                                     $obj->float = $item->k;
                                     $find = $obj;
                                     break;
                                 }
-                            }
-                            else {
+                            } else {
                                 $obj->float = $item->k;
                                 $find = $obj;
                                 break;
                             }
                         }
-                    }
-                    else {
-                        if ($obj->pattern){
+                    } else {
+                        if ($obj->pattern) {
                             $pat = Item::find($obj->id)->patterns->where('name', '=', $obj->pattern)->where('value', '=', $item->p)->first();
-                            if ($pat){
+                            if ($pat) {
                                 $obj->float = $item->k;
                                 $find = $obj;
                                 break;
                             }
-                        }
-                        else {
+                        } else {
                             $obj->float = $item->k;
                             $find = $obj;
                             break;

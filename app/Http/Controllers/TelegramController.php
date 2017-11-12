@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Classes\SumClass;
 use App\Item;
 use App\Pattern;
 use App\Site;
@@ -9,6 +10,7 @@ use App\Task;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Symfony\Component\DomCrawler\Crawler;
 use Telegram\Bot\Laravel\Facades\Telegram;
 
 class TelegramController extends Controller
@@ -33,9 +35,20 @@ class TelegramController extends Controller
             "Referer:https://www.csgosum.com/",
         ));
         $curl_response = curl_exec($curl);
-        
+        $crawler = new Crawler($curl_response);
+        $elements = collect($crawler->filter('div.bot-results > div.inventory-item-hold')->each(function (Crawler $node, $i) {
+            $item = new SumClass();
+            $item->name = $node->attr('data-item-name');
+            $item->cost = $node->attr('data-item-price');
+            try {
+                $item->inspect_link = trim(explode('">', explode('<a href="', $node->filter('label div.right-inspect')->first()->html())[1])[0]);
+            }catch (\Exception $exception){
+                $item->inspect_link = null;
+            }
+            return $item;
+        }));
 //	    $csmoney_items = json_decode($curl_response);
-        dd($curl_response);
+        dd($elements);
 
     }
 
