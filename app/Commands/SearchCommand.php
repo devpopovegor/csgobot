@@ -293,10 +293,12 @@ class SearchCommand extends Command
                         break;
                     }
                     else {
+                        $need_item = Item::where('full_name', '=', $obj->full_name)->first();
                         $this->replyWithChatAction(['action' => Actions::TYPING]);
-                        $this->replyWithMessage(['text' => "AAAAAAA"]);
-                        if (Item::where('full_name', '=', $obj->full_name)->first()
-                            ->patterns->where('name', '=', $obj->pattern)->where('value', '=', $pattern)->first()) {
+                        $this->replyWithMessage(['text' => $need_item->full_name]);
+                        $patterns = $need_item->patterns->where('name', '=', $obj->pattern)->where('value', '=', $pattern)->first();
+
+                        if ($patterns) {
                             $this->replyWithChatAction(['action' => Actions::TYPING]);
                             $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$item->f[0]}\r\n{$obj->pattern}\r\n<a href='$url_metjm'>metjm</a>",
                                 'parse_mode' => 'HTML']);
