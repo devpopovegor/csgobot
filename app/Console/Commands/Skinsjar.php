@@ -61,29 +61,27 @@ class Skinsjar extends Command
 
                 if (count($item)) {
                     if (!$task->pattern){
-                        $item = $item->first();
-                        $id = $item->items[0]->id;
-                        $inspectUrl = $item->items[0]->inspectUrl;
-                        $url = "https://metjm.net/shared/screenshots-v5.php?cmd=request_new_link&inspect_link=steam://rungame/730/{$id}/+csgo_econ_action_preview%25{$inspectUrl}";
-                        $curl = curl_init();
-                        curl_setopt($curl, CURLOPT_URL, $url);
-                        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-                        $response = curl_exec($curl);
-                        curl_close($curl);
-                        $response = json_decode($response);
-                        $pattern = null;
-                        $url_metjm = '';
-                        $float = null;
-                        if ($response->success){
-                            $pattern = $response->result->item_paintseed;
-                            $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
-                            $float = $response->result->item_floatvalue;
-                        }
+                        foreach ($item as $obj) {
+                            $id = $obj->items[0]->id;
+                            $inspectUrl = $obj->items[0]->inspectUrl;
+                            $url = "https://metjm.net/shared/screenshots-v5.php?cmd=request_new_link&inspect_link=steam://rungame/730/{$id}/+csgo_econ_action_preview%25{$inspectUrl}";
+                            $curl = curl_init();
+                            curl_setopt($curl, CURLOPT_URL, $url);
+                            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+                            $response = curl_exec($curl);
+                            curl_close($curl);
+                            $response = json_decode($response);
+                            $pattern = null;
+                            $url_metjm = '';
+                            $float = null;
+                            if ($response->success) {
+                                $pattern = $response->result->item_paintseed;
+                                $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
+                                $float = $response->result->item_floatvalue;
+                            }
 
-                        if ($task->float) {
-                            if ($float <= $task->float) {
-                                if (Pattern::where('name', '=', $task->pattern)
-                                    ->where('value', '=', $pattern)->first()) {
+                            if ($task->float) {
+                                if ($float <= $task->float) {
                                     Telegram::sendMessage([
                                         'chat_id' => $task->chat_id,
                                         'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$float}\r\n{$pattern}\r\n<a href='{$url_metjm}'>metjm</a>",
@@ -92,10 +90,7 @@ class Skinsjar extends Command
                                     $task->delete();
                                     break;
                                 }
-                            }
-                        } else {
-                            if (Pattern::where('name', '=', $task->pattern)
-                                ->where('value', '=', $pattern)->first()) {
+                            } else {
                                 Telegram::sendMessage([
                                     'chat_id' => $task->chat_id,
                                     'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$float}\r\n{$pattern}\r\n<a href='{$url_metjm}'>metjm</a>",
@@ -105,6 +100,7 @@ class Skinsjar extends Command
                                 break;
                             }
                         }
+
                     }
                     else {
                         foreach ($item as $obj){
@@ -126,8 +122,20 @@ class Skinsjar extends Command
                                 $float = $response->result->item_floatvalue;
                             }
 
-                            if ($task->float){
-                                if ($float <= $task->float){
+                            if ($task->float) {
+                                if ($float <= $task->float) {
+                                    if ($task->item->patterns->where('name', '=', $task->pattern)->where('value', '=', $pattern)->first()) {
+                                        Telegram::sendMessage([
+                                            'chat_id' => $task->chat_id,
+                                            'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$float}\r\n{$pattern}\r\n<a href='{$url_metjm}'>metjm</a>",
+                                            'parse_mode' => 'HTML'
+                                        ]);
+                                        $task->delete();
+                                        break;
+                                    }
+                                }
+                            } else {
+                                if ($task->item->patterns->where('name', '=', $task->pattern)->where('value', '=', $pattern)->first()) {
                                     Telegram::sendMessage([
                                         'chat_id' => $task->chat_id,
                                         'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$float}\r\n{$pattern}\r\n<a href='{$url_metjm}'>metjm</a>",
@@ -137,15 +145,7 @@ class Skinsjar extends Command
                                     break;
                                 }
                             }
-                            else {
-                                Telegram::sendMessage([
-                                    'chat_id' => $task->chat_id,
-                                    'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$float}\r\n{$pattern}\r\n<a href='{$url_metjm}'>metjm</a>",
-                                    'parse_mode' => 'HTML'
-                                ]);
-                                $task->delete();
-                                break;
-                            }
+
                         }
                     }
                 }

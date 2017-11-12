@@ -74,8 +74,7 @@ class Raffletrades extends Command
                             $pattern = $response->result->item_paintseed;
                             $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
                         }
-                        if (Pattern::where('name', '=', $task->pattern)
-                            ->where('value', '=', $pattern)->first()) {
+                        if ($task->item->patterns->where('name', '=', $task->pattern)->where('value', '=', $pattern)->first()) {
                             Telegram::sendMessage([
                                 'chat_id' => $task->chat_id,
                                 'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->pattern}\r\n{$item->float}\r\n{$pattern}\r\n<a href='$url_metjm'>metjm</a>",
