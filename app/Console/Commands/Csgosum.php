@@ -79,50 +79,51 @@ class Csgosum extends Command
         foreach ($tasks as $task){
             $items = $elements->where('name', '=', trim($task->item->name));
             foreach ($items as $item) {
-                $inspectUrl = explode('%20', $item->inspect_link)[1];
-                $curl = curl_init();
-                curl_setopt($curl, CURLOPT_URL, $item->inspect_link);
-                curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-                $response = curl_exec($curl);
-                curl_close($curl);
-                $response = json_decode($response);
-                $pattern = $response->result->item_paintseed;
-                $float = $response->result->item_floatvalue;
-                $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
+                try {
+                    $inspectUrl = explode('%20', $item->inspect_link)[1];
+                    $curl = curl_init();
+                    curl_setopt($curl, CURLOPT_URL, $item->inspect_link);
+                    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+                    $response = curl_exec($curl);
+                    curl_close($curl);
+                    $response = json_decode($response);
+                    $pattern = $response->result->item_paintseed;
+                    $float = $response->result->item_floatvalue;
+                    $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
 
-                if ($task->float && !$task->pattern) {
-                    if ($float <= $task->float) {
-                        Telegram::replyWithChatAction(['action' => Actions::TYPING]);
-                        Telegram::replyWithMessage(['text' => "{$task->item->name}\r\n{$csgosum->url}\r\n{$float}\r\n<a href='$url_metjm'>metjm</a>",
-                            'parse_mode' => 'HTML']);
-                        break;
-                    }
-                }
-                elseif ($task->pattern && !$task->float) {
-                    $p = $task->item->patterns->where('name', '=', $task->pattern)->where('value', '=', $pattern)->first();
-                    if ($p) {
-                        Telegram::replyWithChatAction(['action' => Actions::TYPING]);
-                        Telegram::replyWithMessage(['text' => "{$task->item->name}\r\n{$csgosum->url}\r\n{$task->pattern}\r\n{$float}\r\n<a href='$url_metjm'>metjm</a>",
-                            'parse_mode' => 'HTML']);
-                        break;
-                    }
-                }
-                elseif ($task->pattern && $task->float) {
-                    $p = $task->item->patterns->where('name', '=', $task->pattern)->where('value', '=', $pattern)->first();
-                    if ($p) {
+                    if ($task->float && !$task->pattern) {
                         if ($float <= $task->float) {
+                            Telegram::replyWithChatAction(['action' => Actions::TYPING]);
+                            Telegram::replyWithMessage(['text' => "{$task->item->name}\r\n{$csgosum->url}\r\n{$float}\r\n<a href='$url_metjm'>metjm</a>",
+                                'parse_mode' => 'HTML']);
+                            break;
+                        }
+                    } elseif ($task->pattern && !$task->float) {
+                        $p = $task->item->patterns->where('name', '=', $task->pattern)->where('value', '=', $pattern)->first();
+                        if ($p) {
                             Telegram::replyWithChatAction(['action' => Actions::TYPING]);
                             Telegram::replyWithMessage(['text' => "{$task->item->name}\r\n{$csgosum->url}\r\n{$task->pattern}\r\n{$float}\r\n<a href='$url_metjm'>metjm</a>",
                                 'parse_mode' => 'HTML']);
                             break;
                         }
+                    } elseif ($task->pattern && $task->float) {
+                        $p = $task->item->patterns->where('name', '=', $task->pattern)->where('value', '=', $pattern)->first();
+                        if ($p) {
+                            if ($float <= $task->float) {
+                                Telegram::replyWithChatAction(['action' => Actions::TYPING]);
+                                Telegram::replyWithMessage(['text' => "{$task->item->name}\r\n{$csgosum->url}\r\n{$task->pattern}\r\n{$float}\r\n<a href='$url_metjm'>metjm</a>",
+                                    'parse_mode' => 'HTML']);
+                                break;
+                            }
+                        }
+                    } else {
+                        Telegram::replyWithChatAction(['action' => Actions::TYPING]);
+                        Telegram::replyWithMessage(['text' => "{$task->item->name}\r\n{$csgosum->url}\r\n{$float}\r\n<a href='$url_metjm'>metjm</a>",
+                            'parse_mode' => 'HTML']);
+                        break;
                     }
-                }
-                else {
-                    Telegram::replyWithChatAction(['action' => Actions::TYPING]);
-                    Telegram::replyWithMessage(['text' => "{$task->item->name}\r\n{$csgosum->url}\r\n{$float}\r\n<a href='$url_metjm'>metjm</a>",
-                        'parse_mode' => 'HTML']);
-                    break;
+                }catch (\Exception $exception){
+                    Log::info($exception->getMessage());
                 }
             }
         }
