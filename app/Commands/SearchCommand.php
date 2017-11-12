@@ -516,10 +516,14 @@ class SearchCommand extends Command
                     $pattern = null;
                     $url_metjm = '';
                     $float = null;
-                    if ($response->success) {
-                        $pattern = $response->result->item_paintseed;
-                        $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
-                        $float = $response->result->item_floatvalue;
+                    try {
+                        if ($response->success) {
+                            $pattern = $response->result->item_paintseed;
+                            $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
+                            $float = $response->result->item_floatvalue;
+                        }
+                    }catch (\Exception $exception){
+                        continue;
                     }
 
                     if ($obj->float) {
@@ -558,6 +562,7 @@ class SearchCommand extends Command
                     $response = json_decode($response);
                     $pattern = null;
                     $url_metjm = '';
+
                     $float = null;
                     try {
                         if ($response->success) {
@@ -570,8 +575,6 @@ class SearchCommand extends Command
                     }
 
                     if ($obj->float) {
-                        $this->replyWithChatAction(['action' => Actions::TYPING]);
-                        $this->replyWithMessage(['text' => "AAAAA"]);
                         if ($float <= $obj->float) {
                             $this->replyWithChatAction(['action' => Actions::TYPING]);
                             $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$float}\r\n{$pattern}\r\n<a href='{$url_metjm}'>metjm</a>",
