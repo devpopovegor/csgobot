@@ -121,7 +121,7 @@ class CsMoney extends Command
                                     $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
                                 }
                             } catch (\Exception $exception){
-                                break;
+                                continue;
                             }
 
                             if (Pattern::where('name', '=',$task->pattern)
