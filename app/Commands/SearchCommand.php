@@ -231,11 +231,16 @@ class SearchCommand extends Command
 
                     if (!$obj->pattern) {
                         $this->replyWithChatAction(['action' => Actions::TYPING]);
-                        $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}\r\n{$item->f[0]}\r\npattern index = {$pattern}\r\n<a href='$url_metjm'>metjm</a>",
+                        $this->replyWithMessage(['text' => "ЗАШЛО",
+                            'parse_mode' => 'HTML']);
+
+                        $this->replyWithChatAction(['action' => Actions::TYPING]);
+                        $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}\r\n{$item->f[0]}\r\n{$pattern}\r\n<a href='$url_metjm'>metjm</a>",
                             'parse_mode' => 'HTML']);
                         $find = true;
                         break;
-                    } else {
+                    }
+                    else {
                         if (Pattern::where('name', '=', $obj->pattern)
                             ->where('value', '=', $pattern)->first()) {
                             $this->replyWithChatAction(['action' => Actions::TYPING]);
@@ -247,7 +252,8 @@ class SearchCommand extends Command
                     }
                 }
             }
-        } else {
+        }
+        else {
             foreach ($curl_response as $item) {
                 $item_name = '';
                 try {
