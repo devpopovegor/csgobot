@@ -503,6 +503,9 @@ class SearchCommand extends Command
             }));
 
             $items = $elements->where('name', '=', trim($obj->name));
+            $this->replyWithChatAction(['action' => Actions::TYPING]);
+            $this->replyWithMessage(['text' => count($items),
+                'parse_mode' => 'HTML']);
 
             foreach ($items as $item) {
                 $inspectUrl = explode('%20', $item->inspect_link)[1];
