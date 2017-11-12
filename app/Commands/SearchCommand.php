@@ -115,7 +115,8 @@ class SearchCommand extends Command
                                     ));
                                     $curl_response = curl_exec($curl);
                                     $curl_response = json_decode(utf8_decode($curl_response))->response;
-                                } elseif ($mSite->id == 12) {
+                                }
+                                elseif ($mSite->id == 12) {
                                     curl_setopt($curl, CURLOPT_POST, true);
                                     curl_setopt($curl, CURLOPT_HTTPHEADER, array(
                                         "Origin: https://ru.tradeskinsfast.com",
@@ -314,6 +315,9 @@ class SearchCommand extends Command
     {
         try {
             $curl_response = collect($curl_response->response);
+            $this->replyWithChatAction(['action' => Actions::TYPING]);
+            $this->replyWithMessage(['text' => "adasdsadsad",
+                'parse_mode' => 'HTML']);
             $items = $curl_response->where('custom_market_name', '=', $obj->full_name);
 
             if ($obj->float) $items = $items->where('float', '<=', $obj->float);
