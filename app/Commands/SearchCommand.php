@@ -559,10 +559,14 @@ class SearchCommand extends Command
                     $pattern = null;
                     $url_metjm = '';
                     $float = null;
-                    if ($response->success) {
-                        $pattern = $response->result->item_paintseed;
-                        $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
-                        $float = $response->result->item_floatvalue;
+                    try {
+                        if ($response->success) {
+                            $pattern = $response->result->item_paintseed;
+                            $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
+                            $float = $response->result->item_floatvalue;
+                        }
+                    }catch (\Exception $exception){
+                        continue;
                     }
 
                     if ($obj->float) {
