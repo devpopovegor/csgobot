@@ -544,7 +544,7 @@ class SearchCommand extends Command
                         $patterns = $need_item->patterns->where('name', '=', $obj->pattern)->where('value', '=', $pattern)->first();
                         if ($patterns) {
                             $this->replyWithChatAction(['action' => Actions::TYPING]);
-                            $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$float}\r\n{$pattern}\r\n<a href='{$url_metjm}'>metjm</a>",
+                            $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$float}\r\n{$obj->pattern}\r\n<a href='{$url_metjm}'>metjm</a>",
                                 'parse_mode' => 'HTML']);
                             return true;
                         }
