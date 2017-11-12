@@ -92,8 +92,8 @@ class Csgosum extends Command
 
                 if ($task->float && !$task->pattern) {
                     if ($float <= $task->float) {
-                        $this->replyWithChatAction(['action' => Actions::TYPING]);
-                        $this->replyWithMessage(['text' => "{$task->item->name}\r\n{$csgosum->url}\r\n{$float}\r\n<a href='$url_metjm'>metjm</a>",
+                        Telegram::replyWithChatAction(['action' => Actions::TYPING]);
+                        Telegram::replyWithMessage(['text' => "{$task->item->name}\r\n{$csgosum->url}\r\n{$float}\r\n<a href='$url_metjm'>metjm</a>",
                             'parse_mode' => 'HTML']);
                         break;
                     }
@@ -101,8 +101,8 @@ class Csgosum extends Command
                 elseif ($task->pattern && !$task->float) {
                     $p = $task->item->patterns->where('name', '=', $task->pattern)->where('value', '=', $pattern)->first();
                     if ($p) {
-                        $this->replyWithChatAction(['action' => Actions::TYPING]);
-                        $this->replyWithMessage(['text' => "{$task->item->name}\r\n{$csgosum->url}\r\n{$task->pattern}\r\n{$float}\r\n<a href='$url_metjm'>metjm</a>",
+                        Telegram::replyWithChatAction(['action' => Actions::TYPING]);
+                        Telegram::replyWithMessage(['text' => "{$task->item->name}\r\n{$csgosum->url}\r\n{$task->pattern}\r\n{$float}\r\n<a href='$url_metjm'>metjm</a>",
                             'parse_mode' => 'HTML']);
                         break;
                     }
@@ -111,16 +111,16 @@ class Csgosum extends Command
                     $p = $task->item->patterns->where('name', '=', $task->pattern)->where('value', '=', $pattern)->first();
                     if ($p) {
                         if ($float <= $task->float) {
-                            $this->replyWithChatAction(['action' => Actions::TYPING]);
-                            $this->replyWithMessage(['text' => "{$task->item->name}\r\n{$csgosum->url}\r\n{$task->pattern}\r\n{$float}\r\n<a href='$url_metjm'>metjm</a>",
+                            Telegram::replyWithChatAction(['action' => Actions::TYPING]);
+                            Telegram::replyWithMessage(['text' => "{$task->item->name}\r\n{$csgosum->url}\r\n{$task->pattern}\r\n{$float}\r\n<a href='$url_metjm'>metjm</a>",
                                 'parse_mode' => 'HTML']);
                             break;
                         }
                     }
                 }
                 else {
-                    $this->replyWithChatAction(['action' => Actions::TYPING]);
-                    $this->replyWithMessage(['text' => "{$task->item->name}\r\n{$csgosum->url}\r\n{$float}\r\n<a href='$url_metjm'>metjm</a>",
+                    Telegram::replyWithChatAction(['action' => Actions::TYPING]);
+                    Telegram::replyWithMessage(['text' => "{$task->item->name}\r\n{$csgosum->url}\r\n{$float}\r\n<a href='$url_metjm'>metjm</a>",
                         'parse_mode' => 'HTML']);
                     break;
                 }
