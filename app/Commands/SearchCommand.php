@@ -589,20 +589,46 @@ class SearchCommand extends Command
     private function check_csdeals($obj, $curl_response)
     {
         $find = null;
+        $phases = [
+            'Phase 1' => [418,569],
+            'Phase 2' => [419,570],
+            'Phase 3' => [420,571],
+            'Phase 4' => [421,572],
+            'Ruby' => [],
+            'Sapphire' => [],
+            'Black Perl' => [],
+            'Emerald' => [],
+        ];
         foreach ($curl_response as $item) {
             $item_name = $item->m;
             if (is_numeric($item_name)) $item_name = $curl_response[$item_name]->m;
             if ($obj->float) {
-                if ($item_name == $obj->full_name && $item->k < $obj->float) {
-                    $obj->float = $item->k;
-                    $find = $obj;
-                    break;
+                if ($item_name == $obj->name && $item->k < $obj->float) {
+                    if ($obj->phase){
+                        if (in_array($item->g, $phases[$obj->phase])){
+                            $obj->float = $item->k;
+                            $find = $obj;
+                            break;
+                        }
+                    } else {
+                        $obj->float = $item->k;
+                        $find = $obj;
+                        break;
+                    }
                 }
             } else {
-                if ($item_name == $obj->full_name) {
-                    $obj->float = $item->k;
-                    $find = $obj;
-                    break;
+                if ($item_name == $obj->name) {
+                    if ($obj->phase){
+                        if (in_array($item->g, $phases[$obj->phase])){
+                            $obj->float = $item->k;
+                            $find = $obj;
+                            break;
+                        }
+                    } else {
+                        $obj->float = $item->k;
+                        $find = $obj;
+                        break;
+                    }
                 }
             }
         }
