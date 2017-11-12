@@ -535,8 +535,6 @@ class SearchCommand extends Command
                 }
                 elseif ($obj->pattern && $obj->float) {
                     $p = Item::find($obj->id)->patterns->where('name', '=', $obj->pattern)->where('value', '=', $pattern)->first();
-                    $this->replyWithChatAction(['action' => Actions::TYPING]);
-                    $this->replyWithMessage(['text' => count($p)]);
                     if ($p) {
                         if ($float <= $obj->float) {
                             $this->replyWithChatAction(['action' => Actions::TYPING]);
