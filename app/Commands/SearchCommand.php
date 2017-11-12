@@ -526,9 +526,7 @@ class SearchCommand extends Command
                     }catch (\Exception $exception){
                         continue;
                     }
-                    $this->replyWithChatAction(['action' => Actions::TYPING]);
-                    $this->replyWithMessage(['text' => "asdsadasg",
-                        'parse_mode' => 'HTML']);
+
                     if ($obj->float) {
                         if ($float <= $obj->float) {
                             $need_item = Item::find($obj->id);
