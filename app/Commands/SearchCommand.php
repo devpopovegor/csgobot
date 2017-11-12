@@ -230,7 +230,9 @@ class SearchCommand extends Command
                         $pattern = $response->result->item_paintseed;
                         $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
                     }
-
+                    $this->replyWithChatAction(['action' => Actions::TYPING]);
+                    $this->replyWithMessage(['text' => "ффф",
+                        'parse_mode' => 'HTML']);
                     if (!$obj->pattern) {
                         $this->replyWithChatAction(['action' => Actions::TYPING]);
                         $this->replyWithMessage(['text' => "ЗАШЛО",
