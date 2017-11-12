@@ -293,6 +293,8 @@ class SearchCommand extends Command
                         break;
                     }
                     else {
+                        $this->replyWithChatAction(['action' => Actions::TYPING]);
+                        $this->replyWithMessage(['text' => "AAAAAAA"]);
                         if (Item::where('full_name', '=', $obj->full_name)->first()
                             ->patterns->where('name', '=', $obj->pattern)->where('value', '=', $pattern)->first()) {
                             $this->replyWithChatAction(['action' => Actions::TYPING]);
