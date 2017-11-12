@@ -492,7 +492,7 @@ class SearchCommand extends Command
             $elements = collect($crawler->filter('div.bot-results > div.inventory-item-hold')->each(function (Crawler $node, $i) {
                 $item = new SumClass();
                 $item->name = $node->attr('data-item-name');
-                $item->name = str_replace('â˜… ', '★ ', $item->name);
+                $item->name = utf8_decode($item->name);
                 $item->cost = $node->attr('data-item-price');
                 try {
                     $item->inspect_link = "https://metjm.net/shared/screenshots-v5.php?cmd=request_new_link&inspect_link=" . trim(explode('">', explode('<a href="', $node->filter('label div.right-inspect')->first()->html())[1])[0]);
@@ -503,9 +503,6 @@ class SearchCommand extends Command
             }));
 
             $items = $elements->where('name', '=', trim($obj->name));
-            $this->replyWithChatAction(['action' => Actions::TYPING]);
-            $this->replyWithMessage(['text' => count($items),
-                'parse_mode' => 'HTML']);
 
             foreach ($items as $item) {
                 $inspectUrl = explode('%20', $item->inspect_link)[1];
