@@ -89,7 +89,7 @@ class SearchCommand extends Command
                                 $this->replyWithMessage(['text' => $message]);
 
                                 //Логика поиска
-                                $obj = new NeedItem($mItem->name, $mSite->url, $oMessage->getChat()->getId(), $phase, $float, $pattern, $mItem->full_name);
+                                $obj = new NeedItem($mItem->name, $mSite->url, $oMessage->getChat()->getId(), $phase, $float, $pattern, $mItem->id);
                                 $curl = curl_init();
                                 $url = $mSite->id == 8 ? $mSite->get_data . str_replace(' ', '', $obj->full_name) : $mSite->get_data;
                                 curl_setopt($curl, CURLOPT_URL, $url);
@@ -293,7 +293,9 @@ class SearchCommand extends Command
                         break;
                     }
                     else {
-                        $need_item = Item::where('full_name', '=', $obj->full_name)->first();
+                        Log::info('Зашло');
+                        $need_item = Item::find($obj->id);
+                        Log::info('name = ' . $need_item->full_name);
                         $this->replyWithChatAction(['action' => Actions::TYPING]);
                         $this->replyWithMessage(['text' => "item name = " . $need_item->full_name]);
                         $patterns = $need_item->patterns->where('name', '=', $obj->pattern)->where('value', '=', $pattern)->first();
