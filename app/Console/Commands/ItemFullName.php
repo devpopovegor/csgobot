@@ -45,7 +45,7 @@ class ItemFullName extends Command
                 if (strpos($item->name, '(') !== false) {
                     $parts_name = explode('(', $item->name);
                     $full_name = trim($parts_name[0]) . ' ';
-                    $full_name .= trim($item->phase) . ' (';
+                    $full_name .= $item->phase ? trim($item->phase) . ' (' : '(';
                     $full_name .= trim($parts_name[1]);
                 } else {
                     $full_name = trim("{$item->name} {$item->phase}");
