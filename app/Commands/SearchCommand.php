@@ -296,11 +296,10 @@ class SearchCommand extends Command
                         break;
                     }
                     else {
-                        Log::info('Зашло');
-                        $need_item = Item::find($obj->id);
-                        Log::info('name = ' . $need_item->full_name);
                         $this->replyWithChatAction(['action' => Actions::TYPING]);
-                        $this->replyWithMessage(['text' => "item name = " . $need_item->full_name]);
+                        $this->replyWithMessage(['text' => "Зашло"]);
+                        $need_item = Item::find($obj->id);
+
                         $patterns = $need_item->patterns->where('name', '=', $obj->pattern)->where('value', '=', $pattern)->first();
 
                         if ($patterns) {
