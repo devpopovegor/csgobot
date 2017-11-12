@@ -57,7 +57,7 @@ class Skinsjar extends Command
             foreach ($tasks as $task) {
                 $item = null;
                 $item = $items->where('name', '=', $task->item->full_name);
-                Log::info('FINDED = ' . count($item));
+                Log::info('FINDED = ' . count($item) ."\r\n{ITEM = $task->item->full_name}");
 
                 if (count($item)) {
                     if (!$task->pattern){

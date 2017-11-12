@@ -25,7 +25,7 @@ class TelegramController extends Controller
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         $curl_response = curl_exec($curl);
 	    $csmoney_items = json_decode($curl_response);
-        dd(collect($csmoney_items->items)->where('name','=', 'AWP | Medusa (Field-Tested)'));
+        dd(collect($csmoney_items->items)->where('name','=', '★ Karambit | Marble Fade (Minimal Wear)'));
 //        dd(collect($csmoney_items->response)->where('m', '=', '★ Gut Knife | Gamma Doppler (Factory New)'));
 //        dd($csmoney_items->response);
 
