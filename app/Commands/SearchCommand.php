@@ -46,7 +46,7 @@ class SearchCommand extends Command
                 $count_params = count($str_request);
                 if ($count_params == 2 || $count_params == 3 || $count_params == 4) {
                     $pattern_names = Pattern::groupBy('name')->pluck('name')->toArray();
-                    $pattern_items = collect(DB::select('select distinct items.name from items, patterns where items.id = patterns.item_id'));
+//                    $pattern_items = collect(DB::select('select distinct items.name from items, patterns where items.id = patterns.item_id'));
                     $site = trim(explode(',', $arguments)[0]);
                     $item = trim(explode(',', $arguments)[1]);
                     $phase = false;
@@ -56,11 +56,13 @@ class SearchCommand extends Command
                     if ($count_params == 3) {
                         if (is_numeric(trim($str_request[2]))) {
                             $float = trim($str_request[2]);
-                        } else {
+                        }
+                        else {
                             if (in_array(trim(last($str_request)), $pattern_names)) $pattern = trim(last($str_request));
                             else $phase = trim($str_request[2]);
                         }
-                    } elseif ($count_params == 4) {
+                    }
+                    elseif ($count_params == 4) {
                         if (is_numeric(trim(last($str_request))) && trim(last($str_request)) > 0) {
                             $float = trim(last($str_request));
                             if (in_array(trim($str_request[2]), $pattern_names)) $pattern = trim($str_request[2]);
@@ -77,10 +79,11 @@ class SearchCommand extends Command
                             ['phase', '=', "{$phase}"]
                         ])->first();
                         if ($mItem) {
-                            if ($pattern && !count($pattern_items->where('name', '=', $mItem->name))) {
+                            if ($pattern && !count($mItem->patterns->where('name', '=', $pattern))) {
                                 $this->replyWithChatAction(['action' => Actions::TYPING]);
                                 $this->replyWithMessage(['text' => 'Поиск по паттерну для данного предмета невозможен']);
-                            } else {
+                            }
+                            else {
                                 $message = "Поиск {$item} на сайте {$mSite->url} начался";
                                 $this->replyWithChatAction(['action' => Actions::TYPING]);
                                 $this->replyWithMessage(['text' => $message]);
@@ -174,12 +177,14 @@ class SearchCommand extends Command
                                     'float' => $float, 'chat_id' => $oMessage->getChat()->getId(), 'pattern' => $pattern]);
                                 //---------------------------
                             }
-                        } else {
+                        }
+                        else {
                             $message = "Предмет {$item} не существует.";
                             $this->replyWithChatAction(['action' => Actions::TYPING]);
                             $this->replyWithMessage(['text' => $message]);
                         }
-                    } else {
+                    }
+                    else {
                         $message = "Сайт {$site} не существует.";
                         $this->replyWithChatAction(['action' => Actions::TYPING]);
                         $this->replyWithMessage(['text' => $message]);
