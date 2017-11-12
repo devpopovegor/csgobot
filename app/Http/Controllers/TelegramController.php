@@ -39,6 +39,7 @@ class TelegramController extends Controller
         $elements = collect($crawler->filter('div.bot-results > div.inventory-item-hold')->each(function (Crawler $node, $i) {
             $item = new SumClass();
             $item->name = $node->attr('data-item-name');
+            $item->name = str_replace('â˜… ', '★', $item->name);
             $item->cost = $node->attr('data-item-price');
             try {
                 $item->inspect_link = trim(explode('">', explode('<a href="', $node->filter('label div.right-inspect')->first()->html())[1])[0]);
