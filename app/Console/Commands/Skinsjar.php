@@ -57,10 +57,10 @@ class Skinsjar extends Command
             foreach ($tasks as $task) {
                 $item = null;
                 $item = $items->where('name', '=', $task->item->full_name);
-                Log::info('FINDED = ' . count($item) ."\r\nITEM = {$task->item->full_name}");
+                Log::info('FINDED = ' . count($item) . "\r\nITEM = {$task->item->full_name}");
 
                 if (count($item)) {
-                    if (!$task->pattern){
+                    if (!$task->pattern) {
                         foreach ($item as $obj) {
                             $id = $obj->items[0]->id;
                             $inspectUrl = $obj->items[0]->inspectUrl;
@@ -101,9 +101,8 @@ class Skinsjar extends Command
                             }
                         }
 
-                    }
-                    else {
-                        foreach ($item as $obj){
+                    } else {
+                        foreach ($item as $obj) {
                             $id = $obj->items[0]->id;
                             $inspectUrl = $obj->items[0]->inspectUrl;
                             $url = "https://metjm.net/shared/screenshots-v5.php?cmd=request_new_link&inspect_link=steam://rungame/730/{$id}/+csgo_econ_action_preview%25{$inspectUrl}";
@@ -116,7 +115,7 @@ class Skinsjar extends Command
                             $pattern = null;
                             $url_metjm = '';
                             $float = null;
-                            if ($response->success){
+                            if ($response->success) {
                                 $pattern = $response->result->item_paintseed;
                                 $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
                                 $float = $response->result->item_floatvalue;
