@@ -710,7 +710,7 @@ class SearchCommand extends Command
 
         if ($find) {
             $this->replyWithChatAction(['action' => Actions::TYPING]);
-            $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}\r\n{$find->float}"]);
+            $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}\r\n{$obj->pattern}\r\n{$find->float}"]);
         }
 
         return $find;

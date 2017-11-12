@@ -21,13 +21,21 @@ class TelegramController extends Controller
 
     public function test(){
         $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL,"https://api.raffletrades.com/v1/inventory/");
+        curl_setopt($curl, CURLOPT_URL,"https://www.csgosum.com/ajax/bots.php?_=1510500047448");
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+            "Connection: keep-alive",
+            "X-Requested-With: XMLHttpRequest",
+            "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36",
+            "Accept: */*",
+            "Accept-Language: en-US,en;q=0.8",
+            "Host: www.csgosum.com",
+            "Referer:https://www.csgosum.com/",
+        ));
         $curl_response = curl_exec($curl);
-	    $csmoney_items = json_decode($curl_response);
-        dd(collect($csmoney_items->response));
-//        dd(collect($csmoney_items->response)->where('m', '=', '★ Gut Knife | Gamma Doppler (Factory New)'));
-//        dd($csmoney_items->response);
+        
+//	    $csmoney_items = json_decode($curl_response);
+        dd($curl_response);
 
     }
 
