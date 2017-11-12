@@ -84,7 +84,7 @@ class Skinsjar extends Command
                                 if ($float <= $task->float) {
                                     Telegram::sendMessage([
                                         'chat_id' => $task->chat_id,
-                                        'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$float}\r\n{$pattern}\r\n<a href='{$url_metjm}'>metjm</a>",
+                                        'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$float}\r\n{$task->pattern}\r\n<a href='{$url_metjm}'>metjm</a>",
                                         'parse_mode' => 'HTML'
                                     ]);
                                     $task->delete();
@@ -93,7 +93,7 @@ class Skinsjar extends Command
                             } else {
                                 Telegram::sendMessage([
                                     'chat_id' => $task->chat_id,
-                                    'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$float}\r\n{$pattern}\r\n<a href='{$url_metjm}'>metjm</a>",
+                                    'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$float}\r\n{$task->pattern}\r\n<a href='{$url_metjm}'>metjm</a>",
                                     'parse_mode' => 'HTML'
                                 ]);
                                 $task->delete();
