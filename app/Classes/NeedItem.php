@@ -18,21 +18,22 @@ class NeedItem
     public $float;
     public $pattern;
 
-    public function __construct($name, $url, $chat_id, $phase, $float, $pattern)
+    public function __construct($name, $url, $chat_id, $phase, $float, $pattern, $full_name)
     {
         $this->name = trim($name);;
         $this->full_name = trim($name);
         $this->phase = trim($phase);
-        if ($phase) {
-            if (strpos($this->name, '(') !== false) {
-                $parts_name = explode('(', $this->name);
-                $this->full_name = trim($parts_name[0]) . ' ';
-                $this->full_name .= trim($phase) . ' (';
-                $this->full_name .= trim($parts_name[1]);
-            } else {
-                $this->full_name .= " {$this->phase}";
-            }
-        }
+//        if ($phase) {
+//            if (strpos($this->name, '(') !== false) {
+//                $parts_name = explode('(', $this->name);
+//                $this->full_name = trim($parts_name[0]) . ' ';
+//                $this->full_name .= trim($phase) . ' (';
+//                $this->full_name .= trim($parts_name[1]);
+//            } else {
+//                $this->full_name .= " {$this->phase}";
+//            }
+//        }
+        $this->full_name = $full_name;
         $this->url = $url;
         $this->chat_id = $chat_id;
         $this->float = $float;
