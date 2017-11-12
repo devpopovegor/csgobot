@@ -315,9 +315,6 @@ class SearchCommand extends Command
     {
         try {
             $curl_response = collect($curl_response->response);
-            $this->replyWithChatAction(['action' => Actions::TYPING]);
-            $this->replyWithMessage(['text' => "adasdsadsad",
-                'parse_mode' => 'HTML']);
             $items = $curl_response->where('custom_market_name', '=', $obj->full_name);
 
             if ($obj->float) $items = $items->where('float', '<=', $obj->float);
