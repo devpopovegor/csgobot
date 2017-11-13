@@ -38,7 +38,7 @@ class Check extends Command
      */
     public function handle()
     {
-        $this->call( 'csmoney:check');
+//        $this->call( 'csmoney:check');
         $this->call( 'skinsjar:check');
         $this->call( 'raffle:check', [ 'site_id' => 1 ] );
         $this->call( 'raffle:check', [ 'site_id' => 2 ] );
