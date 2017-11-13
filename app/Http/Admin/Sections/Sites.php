@@ -48,13 +48,13 @@ class Sites extends Section implements Initializable
 	 */
 	public function onDisplay()
 	{
-		return AdminDisplay::table()
+		return AdminDisplay::datatables()
 		                   ->setHtmlAttribute('class', 'table-primary')
 		                   ->setColumns(
 			                   AdminColumn::text('id', '#')->setWidth('30px'),
 			                   AdminColumn::link('url', 'Ссылка'),
 			                   AdminColumn::text('get_data', 'Ссылка получения данных'),
-			                   AdminColumn::text('active', 'Активность')
+			                   AdminColumnEditable::checkbox( 'active', 'Да', 'Нет', 'Активность' )
 		                   )->paginate(20);
 	}
 
