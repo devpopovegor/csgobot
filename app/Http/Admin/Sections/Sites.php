@@ -7,6 +7,7 @@ use App\Site;
 use App\User;
 use AdminDisplay;
 use AdminColumn;
+use AdminColumnEditable;
 use AdminForm;
 use AdminFormElement;
 use Illuminate\Support\Facades\Auth;
