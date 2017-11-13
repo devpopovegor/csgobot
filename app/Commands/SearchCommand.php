@@ -185,7 +185,7 @@ class SearchCommand extends Command
                                 }
                                 curl_close($curl);
                                 if (!$response) Task::create(['item_id' => $mItem->id, 'site_id' => $mSite->id,
-                                    'float' => $float, 'chat_id' => $oMessage->getChat()->getId(), 'pattern' => $pattern]);
+                                    'float' => $float, 'chat_id' => $oMessage->getChat()->getId(), 'pattern' => $pattern, 'client' => $user->getUsername()]);
                                 //---------------------------
                             }
                         } else {

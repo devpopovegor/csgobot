@@ -57,7 +57,8 @@ class Tasks extends Section implements Initializable
                 AdminColumn::relatedLink('item.full_name', 'Предмет'),
                 AdminColumn::text('site_id', 'Номер сайта'),
                 AdminColumn::text('float', 'Float'),
-                AdminColumn::text('pattern', 'Паттерн')
+                AdminColumn::text('pattern', 'Паттерн'),
+                AdminColumn::text('client', 'Клиент')
             )->paginate(100);
     }
 
