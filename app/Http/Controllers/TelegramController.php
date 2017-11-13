@@ -23,33 +23,26 @@ class TelegramController extends Controller
 
     public function test(){
         $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL,"https://www.csgosum.com/ajax/bots.php?_=1510500047448");
+        curl_setopt($curl, CURLOPT_URL,"https://ru.tradeskinsfast.com/ajax/botsinventory");
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_HTTPHEADER, array(
-            "Connection: keep-alive",
-            "X-Requested-With: XMLHttpRequest",
-            "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36",
-            "Accept: */*",
-            "Accept-Language: en-US,en;q=0.8",
-            "Host: www.csgosum.com",
-            "Referer:https://www.csgosum.com/",
-        ));
-        $curl_response = curl_exec($curl);
-        $crawler = new Crawler($curl_response);
-        $elements = collect($crawler->filter('div.bot-results > div.inventory-item-hold')->each(function (Crawler $node, $i) {
-            $item = new SumClass();
-            $item->name = $node->attr('data-item-name');
-            $item->name = utf8_decode($item->name);
-            $item->cost = $node->attr('data-item-price');
-            try {
-                $item->inspect_link = trim(explode('">', explode('<a href="', $node->filter('label div.right-inspect')->first()->html())[1])[0]);
-            }catch (\Exception $exception){
-                $item->inspect_link = null;
-            }
-            return $item;
-        }));
-//	    $csmoney_items = json_decode($curl_response);
-        dd($elements);
+	    curl_setopt($curl, CURLOPT_POST, true);
+	    curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+		    "Origin: https://ru.tradeskinsfast.com",
+		    "Referer: https://ru.tradeskinsfast.com/",
+		    "Connection: keep-alive",
+		    "Content-Length: 0",
+		    "X-Requested-With: XMLHttpRequest",
+		    "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36",
+		    "Accept: application/json, text/javascript, */*; q=0.01",
+		    "Accept-Language: ru-RU,ru;q=0.8,en-US;q=0.6,en;q=0.4",
+		    "Authority: ru.tradeskinsfast.com",
+		    "Method: POST",
+		    "Path: /ajax/botsinventory",
+		    "Scheme: https"
+	    ));
+	    $curl_response = curl_exec($curl);
+	    $curl_response = json_decode(utf8_decode($curl_response))->response;
+        dd(collect($curl_response)->where('m', '=', '★ Flip Knife | Doppler (Factory New)'));
 
     }
 

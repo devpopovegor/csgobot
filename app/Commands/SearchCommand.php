@@ -683,7 +683,7 @@ class SearchCommand extends Command
             'Phase 2' => [419, 570],
             'Phase 3' => [420, 571],
             'Phase 4' => [421, 572],
-            'Ruby' => [],
+            'Ruby' => [415],
             'Sapphire' => [],
             'Black Perl' => [],
             'Emerald' => [],
