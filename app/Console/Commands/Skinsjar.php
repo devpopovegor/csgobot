@@ -147,11 +147,11 @@ class Skinsjar extends Command
         if ($response->success) {
             try {
                 $pattern = $response->result->item_paintseed;
+                $float = $response->result->item_floatvalue;
             }catch (\Exception $exception){
                 Log::info('Failed pattern');
             }
             $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
-            $float = $response->result->item_floatvalue;
         }
 //        Log::info($pattern);
 
