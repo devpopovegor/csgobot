@@ -70,7 +70,7 @@ class Skinsjar extends Command
                             $float = $data_metjm['float'];
                         }
                         if ($task->float) {
-                            if ($float <= $task->float) {
+                            if ($float && $float <= $task->float) {
                                 if (!$data_metjm) $data_metjm = $this->getDataMetjm($obj, 'pattern');
                                 $pattern = $data_metjm['pattern'];
                                 $url_metjm = $data_metjm['metjm'];
@@ -84,7 +84,8 @@ class Skinsjar extends Command
                                         $task->delete();
                                         break;
                                     }
-                                } else {
+                                }
+                                else {
                                     Telegram::sendMessage([
                                         'chat_id' => $task->chat_id,
                                         'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$float}\r\n{$task->pattern}\r\n<a href='{$url_metjm}'>metjm</a>",
