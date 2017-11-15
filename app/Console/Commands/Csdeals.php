@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Item;
 use App\Site;
 use App\Task;
 use Illuminate\Console\Command;
@@ -87,33 +88,115 @@ class Csdeals extends Command
 	    Log::info(count($items));
 
 	    $tasks = Task::with('item')->where('site_id', '=', $site_id)->get();
+        $phases = [
+            'Phase 1' => [418, 569],
+            'Phase 2' => [419, 570],
+            'Phase 3' => [420, 571],
+            'Phase 4' => [421, 572],
+            'Ruby' => [415],
+            'Sapphire' => [416],
+            'Black Perl' => [],
+            'Emerald' => [],
+        ];
 
-	    foreach ($tasks as $task){
-		    $find = null;
-
-		    foreach ($items as $item){
-			    $item_name = $item->m;
-			    if (is_numeric($item_name)) $item_name = $items[$item_name]->m;
-			    if ($task->float){
-				    if ($item_name == $task->item->full_name && $item->k < $task->float){
-					    $find = $item;
-					    break;
-				    }
-			    } else {
-				    if ($item_name == $task->item->full_name){
-					    $find = $item;
-					    break;
-				    }
-			    }
-		    }
-
-		    if ($find) {
-			    Telegram::sendMessage([
-				    'chat_id' => $task->chat_id,
-				    'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$find->k}"
-			    ]);
-			    $task->delete();
-		    }
+        foreach ($tasks as $task){
+            $find = null;
+            foreach ($curl_response as $item) {
+                $item_name = $item->m;
+                if (is_numeric($item_name)) $item_name = $curl_response[$item_name]->m;
+                if ($task->float) {
+                    if ($item_name == $task->name && $item->k < $task->float) {
+                        if ($task->phase) {
+                            if (in_array($item->g, $phases[$task->phase])) {
+                                if ($task->pattern) {
+                                    $pat = $task->item->patterns->where('name', '=', $task->pattern)->where('value', '=', $item->p)->first();
+                                    if ($pat) {
+                                        Telegram::sendMessage([
+                                            'chat_id' => $task->chat_id,
+                                            'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$item->k}\r\n{$task->pattern}"
+                                        ]);
+                                        $task->delete();
+                                        break;
+                                    }
+                                } else {
+                                    Telegram::sendMessage([
+                                        'chat_id' => $task->chat_id,
+                                        'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$item->k}\r\n{$task->pattern}"
+                                    ]);
+                                    $task->delete();
+                                    break;
+                                }
+                            }
+                        }
+                        else {
+                            if ($task->pattern) {
+                                $pat = $task->item->patterns->where('name', '=', $task->pattern)->where('value', '=', $item->p)->first();
+                                if ($pat) {
+                                    Telegram::sendMessage([
+                                        'chat_id' => $task->chat_id,
+                                        'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$item->k}\r\n{$task->pattern}"
+                                    ]);
+                                    $task->delete();
+                                    break;
+                                }
+                            } else {
+                                Telegram::sendMessage([
+                                    'chat_id' => $task->chat_id,
+                                    'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$item->k}\r\n{$task->pattern}"
+                                ]);
+                                $task->delete();
+                                break;
+                            }
+                        }
+                    }
+                }
+                else {
+                    if ($item_name == $task->name) {
+                        if ($task->phase) {
+                            if (in_array($item->g, $phases[$task->phase])) {
+                                if ($task->pattern) {
+                                    $pat = $task->item->patterns->where('name', '=', $task->pattern)->where('value', '=', $item->p)->first();
+                                    if ($pat) {
+                                        Telegram::sendMessage([
+                                            'chat_id' => $task->chat_id,
+                                            'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$item->k}\r\n{$task->pattern}"
+                                        ]);
+                                        $task->delete();
+                                        break;
+                                    }
+                                } else {
+                                    Telegram::sendMessage([
+                                        'chat_id' => $task->chat_id,
+                                        'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$item->k}\r\n{$task->pattern}"
+                                    ]);
+                                    $task->delete();
+                                    break;
+                                }
+                            }
+                        }
+                        else {
+                            if ($task->pattern) {
+                                $pat = $task->item->patterns->where('name', '=', $task->pattern)->where('value', '=', $item->p)->first();
+                                if ($pat) {
+                                    Telegram::sendMessage([
+                                        'chat_id' => $task->chat_id,
+                                        'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$item->k}\r\n{$task->pattern}"
+                                    ]);
+                                    $task->delete();
+                                    break;
+                                }
+                            } else {
+                                Telegram::sendMessage([
+                                    'chat_id' => $task->chat_id,
+                                    'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$item->k}\r\n{$task->pattern}"
+                                ]);
+                                $task->delete();
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
 	    }
 
     }
