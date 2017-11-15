@@ -123,7 +123,7 @@ class Skinsjar extends Command
                 }
             }
         } catch (\Exception $exception) {
-            Log::info('error');
+            Log::info($exception->getMessage());
         }
 
         Log::info('end check skinsjar');
