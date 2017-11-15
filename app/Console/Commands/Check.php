@@ -38,15 +38,13 @@ class Check extends Command
      */
     public function handle()
     {
-//        $this->call( 'csmoney:check');
-        $this->call( 'skinsjar:check');
         $this->call( 'raffle:check', [ 'site_id' => 1 ] );
         $this->call( 'raffle:check', [ 'site_id' => 2 ] );
         $this->call( 'raffle:check', [ 'site_id' => 3 ] );
-        $this->call( 'cstrade:check');
+//        $this->call( 'cstrade:check');
 //        $this->call( 'skintrade:check');
-        $this->call( 'csgosum:check');
-        $this->call( 'lootfarm:check');
+//        $this->call( 'csgosum:check');
+//        $this->call( 'lootfarm:check');
 	    $this->call( 'csdeals:check', [ 'site_id' => 11 ] );
 	    $this->call( 'csdeals:check', [ 'site_id' => 12 ] );
     }
