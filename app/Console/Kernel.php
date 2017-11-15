@@ -7,6 +7,7 @@ use App\Console\Commands\Csdeals;
 use App\Console\Commands\Csgosum;
 use App\Console\Commands\CsMoney;
 use App\Console\Commands\Cstrade;
+use App\Console\Commands\DeleteSearchNoAuthor;
 use App\Console\Commands\FillItemsCommand;
 use App\Console\Commands\ItemFullName;
 use App\Console\Commands\Lootfarm;
@@ -36,7 +37,8 @@ class Kernel extends ConsoleKernel
         Skintrade::class,
         Raffletrades::class,
 	    Csdeals::class,
-        Check::class
+        Check::class,
+        DeleteSearchNoAuthor::class
     ];
 
     /**
