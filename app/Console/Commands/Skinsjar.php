@@ -134,6 +134,7 @@ class Skinsjar extends Command
         $id = $item->items[0]->id;
         $inspectUrl = $item->items[0]->inspectUrl;
         $url = "https://metjm.net/shared/screenshots-v5.php?cmd=request_new_link&inspect_link=steam://rungame/730/{$id}/+csgo_econ_action_preview%25{$inspectUrl}";
+        Log::info($url);
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, $url);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
