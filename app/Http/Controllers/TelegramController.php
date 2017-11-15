@@ -22,6 +22,9 @@ class TelegramController extends Controller
     }
 
     public function test(){
+        if (null <= 12.3) dd(1);
+        else dd(2);
+
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL,"https://skinsjar.com/api/v3/load/bots?refresh=0&v=0");
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
