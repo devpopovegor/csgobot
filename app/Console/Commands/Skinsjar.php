@@ -149,6 +149,8 @@ class Skinsjar extends Command
             $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
             $float = $response->result->item_floatvalue;
         }
+        Log::info($pattern);
+
         $return = [];
         $return['metjm'] = $url_metjm;
         if ($get == 'float') $return['float'] = $float;
