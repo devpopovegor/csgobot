@@ -38,6 +38,6 @@ class DeleteSearchNoAuthor extends Command
      */
     public function handle()
     {
-        Task::where('client', '=', '')->delete();
+        Task::where('client', '=', null)->delete();
     }
 }
