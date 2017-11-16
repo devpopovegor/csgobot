@@ -48,7 +48,11 @@ class Lootfarm extends Command
         curl_setopt($curl, CURLOPT_URL, $site->get_data);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         $items = json_decode(curl_exec($curl));
-        $items = collect($items->result);
+        try {
+            $items = collect($items->result);
+        }catch (\Exception $exception){
+            Log::info('NO ITEMS LOOTFARM');
+        }
         Log::info(count($items));
 
         $statuses = ['Factory New' => 'FN', 'Minimal Wear' => 'MW', 'Field-Tested' => 'FT',
