@@ -135,6 +135,7 @@ class Lootfarm extends Command
                                 }
                             }
                             elseif (!$task->float && !$task->pattern) {
+                                Log::info('AAAAAA');
                                 Telegram::sendMessage([
                                     'chat_id' => $task->chat_id,
                                     'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$float}\r\n<a href='{$url_metjm}'>metjm</a>",
