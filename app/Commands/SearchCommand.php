@@ -701,6 +701,9 @@ class SearchCommand extends Command
                             $float = $response->result->item_floatvalue;
                         }
                     } catch (\Exception $exception) {
+                        $this->replyWithChatAction(['action' => Actions::TYPING]);
+                        $this->replyWithMessage(['text' => "CATCH",
+                            'parse_mode' => 'HTML']);
                         continue;
                     }
                     if ($obj->float && !$obj->pattern) {
@@ -710,7 +713,8 @@ class SearchCommand extends Command
                                 'parse_mode' => 'HTML']);
                             return true;
                         }
-                    } elseif (!$obj->float && $obj->pattern) {
+                    }
+                    elseif (!$obj->float && $obj->pattern) {
                         $need_item = Item::find($obj->id);
                         $patterns = $need_item->patterns->where('name', '=', $obj->pattern)->where('value', '=', $pattern)->first();
                         if ($patterns) {
@@ -719,7 +723,8 @@ class SearchCommand extends Command
                                 'parse_mode' => 'HTML']);
                             return true;
                         }
-                    } elseif ($obj->float && $obj->pattern) {
+                    }
+                    elseif ($obj->float && $obj->pattern) {
                         $need_item = Item::find($obj->id);
                         $patterns = $need_item->patterns->where('name', '=', $obj->pattern)->where('value', '=', $pattern)->first();
                         if ($float && $float <= $obj->float && $patterns) {
@@ -728,7 +733,8 @@ class SearchCommand extends Command
                                 'parse_mode' => 'HTML']);
                             return true;
                         }
-                    } elseif (!$obj->float && !$obj->pattern) {
+                    }
+                    elseif (!$obj->float && !$obj->pattern) {
                         $this->replyWithChatAction(['action' => Actions::TYPING]);
                         $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}\r\n{$float}\r\n<a href='{$url_metjm}'>metjm</a>",
                             'parse_mode' => 'HTML']);
