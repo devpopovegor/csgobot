@@ -93,7 +93,8 @@ class Lootfarm extends Command
                                 $float = $response->result->item_floatvalue;
                             }
                         } catch (\Exception $exception) {
-                            continue;
+                            $float = $item_u->f / 100000;
+//                            continue;
                         }
                         if ($task->float && !$task->pattern){
                             if ($float && $float <= $task->float){

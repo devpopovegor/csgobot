@@ -680,7 +680,8 @@ class SearchCommand extends Command
 
         if ($find_item) {
             foreach ($find_item->u as $item) {
-                $metjm_link = 'https://metjm.net/shared/screenshots-v5.php?cmd=request_new_link&inspect_link=steam://rungame/730/76561202255233023/+csgo_econ_action_preview%20S76561198413200947';
+                $metjm_link = 'https://metjm.net/shared/screenshots-v5.php?cmd=request_new_link&inspect_link=
+                steam://rungame/730/76561202255233023/+csgo_econ_action_preview%20S76561198413200947';
                 if ($item) {
                     $item_u = array_first($item);
                     $metjm_link .= "A{$item_u->id}";
@@ -704,10 +705,8 @@ class SearchCommand extends Command
                             $float = $response->result->item_floatvalue;
                         }
                     } catch (\Exception $exception) {
-                        $this->replyWithChatAction(['action' => Actions::TYPING]);
-                        $this->replyWithMessage(['text' => "CATCH",
-                            'parse_mode' => 'HTML']);
-                        continue;
+                        $float = $item_u->f / 100000;
+//                        continue;
                     }
                     if ($obj->float && !$obj->pattern) {
                         if ($float && $float <= $obj->float) {
