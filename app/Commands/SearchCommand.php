@@ -386,10 +386,14 @@ class SearchCommand extends Command
             $float = null;
             $pattern = null;
             $url_metjm = '';
+            $data_metjm = null;
             try {
                 $float = $item->wear;
             } catch (\Exception $exception) {
-                $this->getDataMetjm($item, $float, $pattern, $url_metjm);
+                $data_metjm = $this->getDataMetjm($item);
+                $float = $data_metjm['float'];
+                $pattern = $data_metjm['pattern'];
+                $url_metjm = $data_metjm['url_metjm'];
             }
 
             if ($obj->float && !$obj->pattern) {
@@ -401,12 +405,15 @@ class SearchCommand extends Command
                 }
             }
             elseif (!$obj->float && $obj->pattern) {
-                if (!$pattern) $this->getDataMetjm($item, $float, $pattern, $url_metjm);
+                if (!$pattern) {
+                    $data_metjm = $this->getDataMetjm($item);
+                    $pattern = $data_metjm['pattern'];
+                    $url_metjm = $data_metjm['url_metjm'];
+                }
                 $need_item = Item::find($obj->id);
                 $this->replyWithChatAction(['action' => Actions::TYPING]);
                 $this->replyWithMessage(['text' => 'PATTERN = ' . $pattern,
                     'parse_mode' => 'HTML']);
-                Log::info('PATTERN = ' . $pattern);
                 $patterns = $need_item->patterns->where('name', '=', $obj->pattern)->where('value', '=', $pattern)->first();
                 if ($patterns) {
                     $this->replyWithChatAction(['action' => Actions::TYPING]);
@@ -823,7 +830,7 @@ class SearchCommand extends Command
     }
 
 
-    private function getDataMetjm($item, $float, $pattern, $url_metjm){
+    private function getDataMetjm($item){
         $url = "https://metjm.net/shared/screenshots-v5.php?cmd=request_new_link&inspect_link={$item->inspect_link}";
         $inspectUrl = explode('%20', $item->inspect_link)[1];
         $curl = curl_init();
@@ -832,6 +839,9 @@ class SearchCommand extends Command
         $response = curl_exec($curl);
         curl_close($curl);
         $response = json_decode($response);
+        $pattern = null;
+        $url_metjm = null;
+        $float = null;
         try {
             $pattern = $response->result->item_paintseed;
             $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
@@ -840,7 +850,7 @@ class SearchCommand extends Command
             $pattern = null;
             $float = null;
             $url_metjm = null;
-            Log::info($exception->getMessage());
         }
+        return ['float' => $float, 'pattern' => $pattern, 'url_metjm' => $url_metjm];
     }
 }
