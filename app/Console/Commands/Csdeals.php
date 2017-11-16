@@ -103,7 +103,7 @@ class Csdeals extends Command
             $find = null;
             foreach ($items as $item) {
                 $item_name = $item->m;
-                if (is_numeric($item_name)) $item_name = $curl_response[$item_name]->m;
+                if (is_numeric($item_name)) $item_name = $items[$item_name]->m;
                 if ($task->float) {
                     if ($item_name == $task->name && $item->k < $task->float) {
                         if ($task->phase) {
