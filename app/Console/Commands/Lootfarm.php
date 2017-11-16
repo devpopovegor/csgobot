@@ -50,9 +50,6 @@ class Lootfarm extends Command
         $items = json_decode(curl_exec($curl));
         try {
             $items = collect($items->result);
-        }catch (\Exception $exception){
-            Log::info('NO ITEMS LOOTFARM');
-        }
         Log::info(count($items));
 
         $statuses = ['Factory New' => 'FN', 'Minimal Wear' => 'MW', 'Field-Tested' => 'FT',
@@ -148,7 +145,9 @@ class Lootfarm extends Command
                 }
             }
         }
-
+        }catch (\Exception $exception){
+            Log::info($exception->getMessage());
+        }
         Log::info('end check lootfarm');
     }
 }
