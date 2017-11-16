@@ -662,16 +662,86 @@ class SearchCommand extends Command
     private
     function check_lootfarm($obj, $curl_response)
     {
-        $find = false;
-        foreach ($curl_response as $item) {
-            if ($item->name == $obj->full_name) {
-                $this->replyWithChatAction(['action' => Actions::TYPING]);
-                $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}"]);
-                $find = true;
+        $items = collect($curl_response->result);
+        $obj_name = str_replace('★ ', '', $obj->full_name);
+        $pos = strpos($obj_name, ' (');
+        $status = '';
+        $statuses = ['Factory New' => 'FN', 'Minimal Wear' => 'MW', 'Field-Tested' => 'FT',
+            'Battle-Scarred' => 'BS', 'Well-Worn' => 'WW'];
+        if ($pos !== false){
+            $status = trim(substr($obj_name, $pos, strlen($obj_name)));
+            $status = str_replace('(', '', $status);
+            $status = str_replace(')', '', $status);
+            $status = $statuses[$status];
+            $obj_name = trim(substr($obj_name, 0, $pos));
+        }
+        $find_items = $items->where('n', '=', $obj_name);
+        if ($status) $find_items = $find_items->where('e','=', $status);
+        $find_item = $find_items->first();
+        if ($find_item) {
+            foreach ($find_item->u as $item) {
+                $metjm_link = 'https://metjm.net/shared/screenshots-v5.php?cmd=request_new_link&inspect_link=steam://rungame/730/76561202255233023/+csgo_econ_action_preview%20S76561198413200947';
+                if ($item) {
+                    $item_u = array_first($item);
+                    $metjm_link .= "A{$item_u->id}";
+                    $metjm_link .= $item_u->l;
+                    $curl = curl_init();
+                    curl_setopt($curl, CURLOPT_URL, $metjm_link);
+                    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+                    $response = curl_exec($curl);
+                    curl_close($curl);
+                    $response = json_decode($response);
+                    $pattern = null;
+                    $url_metjm = "";
+                    $float = null;
+                    try {
+                        if ($response->success) {
+                            $pattern = $response->result->item_paintseed;
+                            $url_metjm = "https://metjm.net/csgo/#S76561198413200947A{$item_u->id}{$item_u->l}";
+                            $float = $response->result->item_floatvalue;
+                        }
+                    } catch (\Exception $exception) {
+                        continue;
+                    }
+                    if ($obj->float && !$obj->pattern){
+                        if ($float && $float <= $obj->float){
+                            $this->replyWithChatAction(['action' => Actions::TYPING]);
+                            $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}\r\n{$float}\r\n<a href='{$url_metjm}'>metjm</a>",
+                                'parse_mode' => 'HTML']);
+                            return true;
+                        }
+                    }
+                    elseif (!$obj->float && $obj->pattern){
+                        $need_item = Item::find($obj->id);
+                        $patterns = $need_item->patterns->where('name', '=', $obj->pattern)->where('value', '=', $pattern)->first();
+                        if ($patterns) {
+                            $this->replyWithChatAction(['action' => Actions::TYPING]);
+                            $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}\r\n{$float}\r\n{$obj->pattern}\r\n<a href='{$url_metjm}'>metjm</a>",
+                                'parse_mode' => 'HTML']);
+                            return true;
+                        }
+                    }
+                    elseif ($obj->float && $obj->pattern){
+                        $need_item = Item::find($obj->id);
+                        $patterns = $need_item->patterns->where('name', '=', $obj->pattern)->where('value', '=', $pattern)->first();
+                        if ($float && $float <= $obj->float && $patterns){
+                            $this->replyWithChatAction(['action' => Actions::TYPING]);
+                            $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}\r\n{$float}\r\n{$obj->pattern}\r\n<a href='{$url_metjm}'>metjm</a>",
+                                'parse_mode' => 'HTML']);
+                            return true;
+                        }
+                    }
+                    elseif (!$obj->float && !$obj->pattern){
+                        $this->replyWithChatAction(['action' => Actions::TYPING]);
+                        $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}\r\n{$float}\r\n<a href='{$url_metjm}'>metjm</a>",
+                            'parse_mode' => 'HTML']);
+                        return true;
+                    }
+                }
             }
         }
 
-        return $find;
+        return false;
     }
 
     private
