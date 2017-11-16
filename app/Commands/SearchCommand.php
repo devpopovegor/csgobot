@@ -673,6 +673,11 @@ class SearchCommand extends Command
         $find_items = $items->where('n', '=', $obj_name);
         if ($status) $find_items = $find_items->where('e', '=', $status);
         $find_item = $find_items->first();
+
+        $this->replyWithChatAction(['action' => Actions::TYPING]);
+        $this->replyWithMessage(['text' => "{$obj_name}",
+            'parse_mode' => 'HTML']);
+
         if ($find_item) {
             foreach ($find_item->u as $item) {
                 $metjm_link = 'https://metjm.net/shared/screenshots-v5.php?cmd=request_new_link&inspect_link=steam://rungame/730/76561202255233023/+csgo_econ_action_preview%20S76561198413200947';
