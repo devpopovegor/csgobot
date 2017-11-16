@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Item;
 use App\Site;
 use App\Task;
 use Illuminate\Console\Command;
@@ -52,67 +53,41 @@ class Cstrade extends Command
 
         $tasks = Task::with('item')->where('site_id', '=', 4)->get();
         foreach ($tasks as $task){
-//            $item = null;
-//            if ($task->float){
-//                $item = $items->where('market_hash_name', '=', $task->item->full_name)
-//                    ->where('wear', '<=', $task->float);
-//            } else {
-                $itemss = $items->where('market_hash_name', '=', $task->item->full_name);
-//            }
-
+            $itemss = $items->where('market_hash_name', '=', $task->item->full_name);
             if (count($itemss)){
-                foreach ($itemss as $obj) {
+                foreach ($itemss as $item) {
                     $float = null;
+                    $pattern = null;
+                    $url_metjm = '';
                     $data_metjm = null;
-                    $url_metjm = null;
                     try {
-                        $float = $obj->wear;
+                        $float = $item->wear;
                     } catch (\Exception $exception) {
-                        $data_metjm = $this->getDataMetjm($obj, 'float,pattern');
+                        $data_metjm = $this->getDataMetjm($item);
                         $float = $data_metjm['float'];
+                        $pattern = $data_metjm['pattern'];
+                        $url_metjm = $data_metjm['url_metjm'];
                     }
-                    if ($task->float) {
+
+                    if ($task->float && !$task->pattern) {
                         if ($float && $float <= $task->float) {
-                            if (!$data_metjm) $data_metjm = $this->getDataMetjm($obj, 'pattern');
-                            $pattern = $data_metjm['pattern'];
-                            $url_metjm = $data_metjm['metjm'];
-                            if ($task->pattern) {
-                                if ($task->item->patterns->where('name', '=', $task->pattern)->where('value', '=', $pattern)->first()) {
-                                    Telegram::sendMessage([
-                                        'chat_id' => $task->chat_id,
-                                        'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$float}\r\n{$task->pattern}\r\n<a href='{$url_metjm}'>metjm</a>",
-                                        'parse_mode' => 'HTML'
-                                    ]);
-                                    $task->delete();
-                                    break;
-                                }
-                            }
-                            else {
-                                Telegram::sendMessage([
-                                    'chat_id' => $task->chat_id,
-                                    'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$float}\r\n{$task->pattern}\r\n<a href='{$url_metjm}'>metjm</a>",
-                                    'parse_mode' => 'HTML'
-                                ]);
-                                $task->delete();
-                                break;
-                            }
+                            Telegram::sendMessage([
+                                'chat_id' => $task->chat_id,
+                                'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$float}\r\n<a href='{$url_metjm}'>metjm</a>",
+                                'parse_mode' => 'HTML'
+                            ]);
+                            $task->delete();
+                            break;
                         }
                     }
-                    else {
-                        if (!$data_metjm) $data_metjm = $this->getDataMetjm($obj, 'pattern');
-                        $pattern = $data_metjm['pattern'];
-                        $url_metjm = $data_metjm['metjm'];
-                        if ($task->pattern) {
-                            if ($task->item->patterns->where('name', '=', $task->pattern)->where('value', '=', $pattern)->first()) {
-                                Telegram::sendMessage([
-                                    'chat_id' => $task->chat_id,
-                                    'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$float}\r\n{$task->pattern}\r\n<a href='{$url_metjm}'>metjm</a>",
-                                    'parse_mode' => 'HTML'
-                                ]);
-                                $task->delete();
-                                break;
-                            }
-                        } else {
+                    elseif (!$task->float && $task->pattern) {
+                        if (!$pattern) {
+                            $data_metjm = $this->getDataMetjm($item);
+                            $pattern = $data_metjm['pattern'];
+                            $url_metjm = $data_metjm['url_metjm'];
+                        }
+                        $patterns = $task->item->patterns->where('name', '=', $task->pattern)->where('value', '=', $pattern)->first();
+                        if ($patterns) {
                             Telegram::sendMessage([
                                 'chat_id' => $task->chat_id,
                                 'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$float}\r\n{$task->pattern}\r\n<a href='{$url_metjm}'>metjm</a>",
@@ -122,6 +97,39 @@ class Cstrade extends Command
                             break;
                         }
                     }
+                    elseif ($task->float && $task->pattern) {
+                        if ($float && $float <= $task->float) {
+                            if (!$pattern) {
+                                $data_metjm = $this->getDataMetjm($item);
+                                $pattern = $data_metjm['pattern'];
+                                $url_metjm = $data_metjm['url_metjm'];
+                            }
+                            $patterns = $task->item->patterns->where('name', '=', $task->pattern)->where('value', '=', $pattern)->first();
+                            if ($patterns) {
+                                Telegram::sendMessage([
+                                    'chat_id' => $task->chat_id,
+                                    'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$float}\r\n{$task->pattern}\r\n<a href='{$url_metjm}'>metjm</a>",
+                                    'parse_mode' => 'HTML'
+                                ]);
+                                $task->delete();
+                                break;
+                            }
+                        }
+                    }
+                    elseif (!$task->float && !$task->pattern) {
+                        if (!$pattern) {
+                            $data_metjm = $this->getDataMetjm($item);
+                            $pattern = $data_metjm['pattern'];
+                            $url_metjm = $data_metjm['url_metjm'];
+                        }
+                        Telegram::sendMessage([
+                            'chat_id' => $task->chat_id,
+                            'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$float}\r\n<a href='{$url_metjm}'>metjm</a>",
+                            'parse_mode' => 'HTML'
+                        ]);
+                        $task->delete();
+                        break;
+                    }
                 }
             }
         }
@@ -129,7 +137,8 @@ class Cstrade extends Command
         Log::info('end check cstrade');
     }
 
-    private function getDataMetjm($item, $get){
+    private function getDataMetjm($item)
+    {
         $url = "https://metjm.net/shared/screenshots-v5.php?cmd=request_new_link&inspect_link={$item->inspect_link}";
         $inspectUrl = explode('%20', $item->inspect_link)[1];
         $curl = curl_init();
@@ -138,27 +147,18 @@ class Cstrade extends Command
         $response = curl_exec($curl);
         curl_close($curl);
         $response = json_decode($response);
-        $response = json_decode($response);
         $pattern = null;
-        $url_metjm = '';
+        $url_metjm = null;
         $float = null;
-        if ($response->success) {
-            try {
-                $pattern = $response->result->item_paintseed;
-                $float = $response->result->item_floatvalue;
-                $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
-            }catch (\Exception $exception){
-                Log::info('Failed pattern');
-            }
+        try {
+            $pattern = $response->result->item_paintseed;
+            $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
+            $float = $response->result->item_floatvalue;
+        } catch (\Exception $exception) {
+            $pattern = null;
+            $float = null;
+            $url_metjm = null;
         }
-        $return = [];
-        $return['metjm'] = $url_metjm;
-        if ($get == 'float') $return['float'] = $float;
-        if ($get == 'pattern') $return['pattern'] = $pattern;
-        if ($get == 'float,pattern') {
-            $return['float'] = $float;
-            $return['pattern'] = $pattern;
-        }
-        return $return;
+        return ['float' => $float, 'pattern' => $pattern, 'url_metjm' => $url_metjm];
     }
 }
