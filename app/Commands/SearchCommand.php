@@ -689,6 +689,9 @@ class SearchCommand extends Command
                     curl_setopt($curl, CURLOPT_URL, $metjm_link);
                     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
                     $response = curl_exec($curl);
+                    $this->replyWithChatAction(['action' => Actions::TYPING]);
+                    $this->replyWithMessage(['text' => $response,
+                        'parse_mode' => 'HTML']);
                     curl_close($curl);
                     $response = json_decode($response);
                     $pattern = null;
