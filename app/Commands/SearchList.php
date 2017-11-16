@@ -40,11 +40,14 @@ class SearchList extends Command
                 $dealer->save();
                 $this->replyWithChatAction( [ 'action' => Actions::TYPING ] );
                 $this->replyWithMessage( [ 'text' => 'Продлите подписку' ] );
-            } else {
+            }
+            else {
                 $tasks = Task::with('item')->where('client', '=', $user->getUsername())->get();
-                foreach ($tasks as $task){
-                    $message .= "{$task->item->full_name} {$task->site_id} {$task->float} {$task->pattern}\r\n";
-                }
+                if (count($tasks)) {
+                    foreach ($tasks as $task) {
+                        $message .= "{$task->item->full_name} {$task->site_id} {$task->float} {$task->pattern}\r\n";
+                    }
+                } else $message = 'Поисков нет';
             }
         } else {
             $message = 'Купи подписку у @ska4an';
