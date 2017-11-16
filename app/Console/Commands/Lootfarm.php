@@ -56,7 +56,7 @@ class Lootfarm extends Command
             'Battle-Scarred' => 'BS', 'Well-Worn' => 'WW'];
         $tasks = Task::with('item')->where('site_id', '=', 10)->get();
         foreach ($tasks as $task){
-            $obj_name = str_replace('★ ', '', $task->full_name);
+            $obj_name = str_replace('★ ', '', $task->item->full_name);
             $pos = strpos($obj_name, ' (');
             $status = '';
             if ($pos !== false){
@@ -70,7 +70,7 @@ class Lootfarm extends Command
             $find_items = $items->where('n', '=', $obj_name);
             if ($status) $find_items = $find_items->where('e','=', $status);
             $find_item = $find_items->first();
-            Log::info("{$obj_name}\r\n{$status}\r\n" . count($find_item));
+//            Log::info("{$obj_name}\r\n{$status}\r\n" . count($find_item));
             if ($find_item) {
                 foreach ($find_item->u as $item) {
                     $metjm_link = 'https://metjm.net/shared/screenshots-v5.php?cmd=request_new_link&inspect_link=steam://rungame/730/76561202255233023/+csgo_econ_action_preview%20S76561198413200947';
