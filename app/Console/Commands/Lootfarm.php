@@ -74,30 +74,64 @@ class Lootfarm extends Command
                 foreach ($find_item->u as $item) {
                     $metjm_link = 'https://metjm.net/shared/screenshots-v5.php?cmd=request_new_link&inspect_link=steam://rungame/730/76561202255233023/+csgo_econ_action_preview%20S76561198413200947';
                     if ($item) {
-                        $item_u = array_first($item);
-                        $metjm_link .= "A{$item_u->id}";
-                        $metjm_link .= $item_u->l;
-                        $curl = curl_init();
-                        curl_setopt($curl, CURLOPT_URL, $metjm_link);
-                        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-                        $response = curl_exec($curl);
-                        curl_close($curl);
-                        $response = json_decode($response);
-                        $pattern = null;
-                        $url_metjm = "";
-                        $float = null;
-                        try {
-                            if ($response->success) {
-                                $pattern = $response->result->item_paintseed;
-                                $url_metjm = "https://metjm.net/csgo/#S76561198413200947A{$item_u->id}{$item_u->l}";
-                                $float = $response->result->item_floatvalue;
-                            }
-                        } catch (\Exception $exception) {
-                            $float = $item_u->f / 100000;
+                        foreach ($item as $item_u) {
+//                            $item_u = array_first($item);
+                            $metjm_link .= "A{$item_u->id}";
+                            $metjm_link .= $item_u->l;
+                            $curl = curl_init();
+                            curl_setopt($curl, CURLOPT_URL, $metjm_link);
+                            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+                            $response = curl_exec($curl);
+                            curl_close($curl);
+                            $response = json_decode($response);
+                            $pattern = null;
+                            $url_metjm = "";
+                            $float = null;
+                            try {
+                                if ($response->success) {
+                                    $pattern = $response->result->item_paintseed;
+                                    $url_metjm = "https://metjm.net/csgo/#S76561198413200947A{$item_u->id}{$item_u->l}";
+                                    $float = $response->result->item_floatvalue;
+                                }
+                            } catch (\Exception $exception) {
+                                $float = $item_u->f / 100000;
 //                            continue;
-                        }
-                        if ($task->float && !$task->pattern){
-                            if ($float && $float <= $task->float){
+                            }
+                            if ($task->float && !$task->pattern) {
+                                if ($float && $float <= $task->float) {
+                                    Telegram::sendMessage([
+                                        'chat_id' => $task->chat_id,
+                                        'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$float}\r\n<a href='{$url_metjm}'>metjm</a>",
+                                        'parse_mode' => 'HTML'
+                                    ]);
+                                    $task->delete();
+                                    break;
+                                }
+                            } elseif (!$task->float && $task->pattern) {
+                                $need_item = Item::find($task->id);
+                                $patterns = $need_item->patterns->where('name', '=', $task->pattern)->where('value', '=', $pattern)->first();
+                                if ($patterns) {
+                                    Telegram::sendMessage([
+                                        'chat_id' => $task->chat_id,
+                                        'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$float}\r\n{$task->pattern}\r\n<a href='{$url_metjm}'>metjm</a>",
+                                        'parse_mode' => 'HTML'
+                                    ]);
+                                    $task->delete();
+                                    break;
+                                }
+                            } elseif ($task->float && $task->pattern) {
+                                $need_item = Item::find($task->id);
+                                $patterns = $need_item->patterns->where('name', '=', $task->pattern)->where('value', '=', $pattern)->first();
+                                if ($float && $float <= $task->float && $patterns) {
+                                    Telegram::sendMessage([
+                                        'chat_id' => $task->chat_id,
+                                        'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$float}\r\n{$task->pattern}\r\n<a href='{$url_metjm}'>metjm</a>",
+                                        'parse_mode' => 'HTML'
+                                    ]);
+                                    $task->delete();
+                                    break;
+                                }
+                            } elseif (!$task->float && !$task->pattern) {
                                 Telegram::sendMessage([
                                     'chat_id' => $task->chat_id,
                                     'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$float}\r\n<a href='{$url_metjm}'>metjm</a>",
@@ -106,41 +140,6 @@ class Lootfarm extends Command
                                 $task->delete();
                                 break;
                             }
-                        }
-                        elseif (!$task->float && $task->pattern){
-                            $need_item = Item::find($task->id);
-                            $patterns = $need_item->patterns->where('name', '=', $task->pattern)->where('value', '=', $pattern)->first();
-                            if ($patterns) {
-                                Telegram::sendMessage([
-                                    'chat_id' => $task->chat_id,
-                                    'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$float}\r\n{$task->pattern}\r\n<a href='{$url_metjm}'>metjm</a>",
-                                    'parse_mode' => 'HTML'
-                                ]);
-                                $task->delete();
-                                break;
-                            }
-                        }
-                        elseif ($task->float && $task->pattern){
-                            $need_item = Item::find($task->id);
-                            $patterns = $need_item->patterns->where('name', '=', $task->pattern)->where('value', '=', $pattern)->first();
-                            if ($float && $float <= $task->float && $patterns){
-                                Telegram::sendMessage([
-                                    'chat_id' => $task->chat_id,
-                                    'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$float}\r\n{$task->pattern}\r\n<a href='{$url_metjm}'>metjm</a>",
-                                    'parse_mode' => 'HTML'
-                                ]);
-                                $task->delete();
-                                break;
-                            }
-                        }
-                        elseif (!$task->float && !$task->pattern){
-                            Telegram::sendMessage([
-                                'chat_id' => $task->chat_id,
-                                'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$float}\r\n<a href='{$url_metjm}'>metjm</a>",
-                                'parse_mode' => 'HTML'
-                            ]);
-                            $task->delete();
-                            break;
                         }
                     }
                 }
