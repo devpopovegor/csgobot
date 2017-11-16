@@ -61,5 +61,6 @@ return [
         \App\Commands\SitesListCommand::class,
         \App\Commands\SearchCommand::class,
         \App\Commands\StopSearching::class,
+        \App\Commands\SearchList::class,
     ],
 ];
