@@ -411,9 +411,6 @@ class SearchCommand extends Command
                     $url_metjm = $data_metjm['url_metjm'];
                 }
                 $need_item = Item::find($obj->id);
-                $this->replyWithChatAction(['action' => Actions::TYPING]);
-                $this->replyWithMessage(['text' => 'PATTERN = ' . $pattern,
-                    'parse_mode' => 'HTML']);
                 $patterns = $need_item->patterns->where('name', '=', $obj->pattern)->where('value', '=', $pattern)->first();
                 if ($patterns) {
                     $this->replyWithChatAction(['action' => Actions::TYPING]);
@@ -424,7 +421,11 @@ class SearchCommand extends Command
             }
             elseif ($obj->float && $obj->pattern) {
                 if ($float && $float <= $obj->float) {
-                    if (!$pattern) $this->getDataMetjm($item, $float, $pattern, $url_metjm);
+                    if (!$pattern) {
+                        $data_metjm = $this->getDataMetjm($item);
+                        $pattern = $data_metjm['pattern'];
+                        $url_metjm = $data_metjm['url_metjm'];
+                    }
                     $need_item = Item::find($obj->id);
                     $patterns = $need_item->patterns->where('name', '=', $obj->pattern)->where('value', '=', $pattern)->first();
                     if ($patterns) {
@@ -436,12 +437,16 @@ class SearchCommand extends Command
                 }
             }
             elseif (!$obj->float && !$obj->pattern) {
-                    if (!$url_metjm) $this->getDataMetjm($item, $float, $pattern, $url_metjm);
-                    $this->replyWithChatAction(['action' => Actions::TYPING]);
-                    $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}\r\n{$float}\r\n<a href='{$url_metjm}'>metjm</a>",
-                        'parse_mode' => 'HTML']);
-                    return true;
+                if (!$pattern) {
+                    $data_metjm = $this->getDataMetjm($item);
+                    $pattern = $data_metjm['pattern'];
+                    $url_metjm = $data_metjm['url_metjm'];
                 }
+                $this->replyWithChatAction(['action' => Actions::TYPING]);
+                $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}\r\n{$float}\r\n<a href='{$url_metjm}'>metjm</a>",
+                    'parse_mode' => 'HTML']);
+                return true;
+            }
         }
 
         return false;
@@ -516,8 +521,7 @@ class SearchCommand extends Command
                             'parse_mode' => 'HTML']);
                         return true;
                     }
-                }
-                elseif ($obj->pattern && !$obj->float) {
+                } elseif ($obj->pattern && !$obj->float) {
                     $p = Item::find($obj->id)->patterns->where('name', '=', $obj->pattern)->where('value', '=', $pattern)->first();
                     if ($p) {
                         $this->replyWithChatAction(['action' => Actions::TYPING]);
@@ -525,8 +529,7 @@ class SearchCommand extends Command
                             'parse_mode' => 'HTML']);
                         return true;
                     }
-                }
-                elseif ($obj->pattern && $obj->float) {
+                } elseif ($obj->pattern && $obj->float) {
                     $p = Item::find($obj->id)->patterns->where('name', '=', $obj->pattern)->where('value', '=', $pattern)->first();
                     if ($p) {
                         if ($float <= $obj->float) {
@@ -536,8 +539,7 @@ class SearchCommand extends Command
                             return true;
                         }
                     }
-                }
-                else {
+                } else {
                     $this->replyWithChatAction(['action' => Actions::TYPING]);
                     $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$float}\r\n<a href='$url_metjm'>metjm</a>",
                         'parse_mode' => 'HTML']);
@@ -661,7 +663,7 @@ class SearchCommand extends Command
         $status = '';
         $statuses = ['Factory New' => 'FN', 'Minimal Wear' => 'MW', 'Field-Tested' => 'FT',
             'Battle-Scarred' => 'BS', 'Well-Worn' => 'WW'];
-        if ($pos !== false){
+        if ($pos !== false) {
             $status = trim(substr($obj_name, $pos, strlen($obj_name)));
             $status = str_replace('(', '', $status);
             $status = str_replace(')', '', $status);
@@ -669,7 +671,7 @@ class SearchCommand extends Command
             $obj_name = trim(substr($obj_name, 0, $pos));
         }
         $find_items = $items->where('n', '=', $obj_name);
-        if ($status) $find_items = $find_items->where('e','=', $status);
+        if ($status) $find_items = $find_items->where('e', '=', $status);
         $find_item = $find_items->first();
         if ($find_item) {
             foreach ($find_item->u as $item) {
@@ -696,15 +698,14 @@ class SearchCommand extends Command
                     } catch (\Exception $exception) {
                         continue;
                     }
-                    if ($obj->float && !$obj->pattern){
-                        if ($float && $float <= $obj->float){
+                    if ($obj->float && !$obj->pattern) {
+                        if ($float && $float <= $obj->float) {
                             $this->replyWithChatAction(['action' => Actions::TYPING]);
                             $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}\r\n{$float}\r\n<a href='{$url_metjm}'>metjm</a>",
                                 'parse_mode' => 'HTML']);
                             return true;
                         }
-                    }
-                    elseif (!$obj->float && $obj->pattern){
+                    } elseif (!$obj->float && $obj->pattern) {
                         $need_item = Item::find($obj->id);
                         $patterns = $need_item->patterns->where('name', '=', $obj->pattern)->where('value', '=', $pattern)->first();
                         if ($patterns) {
@@ -713,18 +714,16 @@ class SearchCommand extends Command
                                 'parse_mode' => 'HTML']);
                             return true;
                         }
-                    }
-                    elseif ($obj->float && $obj->pattern){
+                    } elseif ($obj->float && $obj->pattern) {
                         $need_item = Item::find($obj->id);
                         $patterns = $need_item->patterns->where('name', '=', $obj->pattern)->where('value', '=', $pattern)->first();
-                        if ($float && $float <= $obj->float && $patterns){
+                        if ($float && $float <= $obj->float && $patterns) {
                             $this->replyWithChatAction(['action' => Actions::TYPING]);
                             $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}\r\n{$float}\r\n{$obj->pattern}\r\n<a href='{$url_metjm}'>metjm</a>",
                                 'parse_mode' => 'HTML']);
                             return true;
                         }
-                    }
-                    elseif (!$obj->float && !$obj->pattern){
+                    } elseif (!$obj->float && !$obj->pattern) {
                         $this->replyWithChatAction(['action' => Actions::TYPING]);
                         $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}\r\n{$float}\r\n<a href='{$url_metjm}'>metjm</a>",
                             'parse_mode' => 'HTML']);
@@ -830,7 +829,8 @@ class SearchCommand extends Command
     }
 
 
-    private function getDataMetjm($item){
+    private function getDataMetjm($item)
+    {
         $url = "https://metjm.net/shared/screenshots-v5.php?cmd=request_new_link&inspect_link={$item->inspect_link}";
         $inspectUrl = explode('%20', $item->inspect_link)[1];
         $curl = curl_init();
@@ -846,7 +846,7 @@ class SearchCommand extends Command
             $pattern = $response->result->item_paintseed;
             $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
             $float = $response->result->item_floatvalue;
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
             $pattern = null;
             $float = null;
             $url_metjm = null;
