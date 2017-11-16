@@ -22,28 +22,12 @@ class TelegramController extends Controller
     }
 
     public function test(){
-
-        $obj_name = str_replace('★ ', '', '★ Bayonet | Marble Fade (Factory New)');
-        $pos = strpos($obj_name, ' (');
-        $status = '';
-        $statuses = ['Factory New' => 'FN', 'Minimal Wear' => 'MW', 'Field-Tested' => 'FT',
-            'Battle-Scarred' => 'BS', 'Well-Worn' => 'WW'];
-        if ($pos !== false){
-            $status = trim(substr($obj_name, $pos, strlen($obj_name)));
-            $status = str_replace('(', '', $status);
-            $status = str_replace(')', '', $status);
-            $status = $statuses[$status];
-            $obj_name = trim(substr($obj_name, 0, $pos));
-        }
-        dd($obj_name, $status);
-
-
         $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL,"https://loot.farm/botsInventory_new.json");
+        curl_setopt($curl, CURLOPT_URL,"https://cstrade.gg/loadBotInventory");
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         $curl_response = curl_exec($curl);
         $curl_response = json_decode($curl_response);
-        dd(collect($curl_response->result)->where('n', '=', 'Karambit | Gamma Doppler Emerald'));
+        dd(collect($curl_response->inventory)->where('market_hash_name', '=', '★ StatTrak™ Karambit | Marble Fade (Factory New)'));
 //        dd($curl_response);
         $i = 0;
         foreach (collect($curl_response->result) as $item){
