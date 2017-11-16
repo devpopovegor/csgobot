@@ -52,7 +52,7 @@ class Cstrade extends Command
 
         $tasks = Task::with('item')->where('site_id', '=', 4)->get();
         foreach ($tasks as $task){
-            $item = null;
+//            $item = null;
 //            if ($task->float){
 //                $item = $items->where('market_hash_name', '=', $task->item->full_name)
 //                    ->where('wear', '<=', $task->float);
@@ -60,7 +60,7 @@ class Cstrade extends Command
                 $itemss = $items->where('market_hash_name', '=', $task->item->full_name);
 //            }
 
-            if (count($item)){
+            if (count($itemss)){
                 foreach ($itemss as $obj) {
                     $float = null;
                     $data_metjm = null;
