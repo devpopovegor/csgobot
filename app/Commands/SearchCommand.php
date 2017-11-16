@@ -675,7 +675,7 @@ class SearchCommand extends Command
         $find_item = $find_items->first();
 
         $this->replyWithChatAction(['action' => Actions::TYPING]);
-        $this->replyWithMessage(['text' => "{$obj_name}",
+        $this->replyWithMessage(['text' => "{$obj_name}\r\n{$status}\r\n" . count($find_item),
             'parse_mode' => 'HTML']);
 
         if ($find_item) {
