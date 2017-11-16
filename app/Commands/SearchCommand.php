@@ -403,6 +403,7 @@ class SearchCommand extends Command
             elseif (!$obj->float && $obj->pattern) {
                 if (!$pattern) $this->getDataMetjm($item, $float, $pattern, $url_metjm);
                 $need_item = Item::find($obj->id);
+                Log::info('PATTERN = ' . $pattern);
                 $patterns = $need_item->patterns->where('name', '=', $obj->pattern)->where('value', '=', $pattern)->first();
                 if ($patterns) {
                     $this->replyWithChatAction(['action' => Actions::TYPING]);
