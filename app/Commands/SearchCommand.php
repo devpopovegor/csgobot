@@ -674,10 +674,6 @@ class SearchCommand extends Command
         if ($status) $find_items = $find_items->where('e', '=', $status);
         $find_item = $find_items->first();
 
-        $this->replyWithChatAction(['action' => Actions::TYPING]);
-        $this->replyWithMessage(['text' => "{$obj_name}\r\n{$status}\r\n" . count($find_item),
-            'parse_mode' => 'HTML']);
-
         if ($find_item) {
             foreach ($find_item->u as $item) {
                 $metjm_link = 'https://metjm.net/shared/screenshots-v5.php?cmd=request_new_link&inspect_link=

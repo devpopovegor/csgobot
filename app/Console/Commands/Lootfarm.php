@@ -107,7 +107,8 @@ class Lootfarm extends Command
                                     $task->delete();
                                     break;
                                 }
-                            } elseif (!$task->float && $task->pattern) {
+                            }
+                            elseif (!$task->float && $task->pattern) {
                                 $need_item = Item::find($task->id);
                                 $patterns = $need_item->patterns->where('name', '=', $task->pattern)->where('value', '=', $pattern)->first();
                                 if ($patterns) {
@@ -119,7 +120,8 @@ class Lootfarm extends Command
                                     $task->delete();
                                     break;
                                 }
-                            } elseif ($task->float && $task->pattern) {
+                            }
+                            elseif ($task->float && $task->pattern) {
                                 $need_item = Item::find($task->id);
                                 $patterns = $need_item->patterns->where('name', '=', $task->pattern)->where('value', '=', $pattern)->first();
                                 if ($float && $float <= $task->float && $patterns) {
@@ -131,7 +133,8 @@ class Lootfarm extends Command
                                     $task->delete();
                                     break;
                                 }
-                            } elseif (!$task->float && !$task->pattern) {
+                            }
+                            elseif (!$task->float && !$task->pattern) {
                                 Telegram::sendMessage([
                                     'chat_id' => $task->chat_id,
                                     'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$float}\r\n<a href='{$url_metjm}'>metjm</a>",
