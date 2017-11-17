@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Item;
+use App\Report;
 use App\Site;
 use App\Task;
 use Illuminate\Console\Command;
@@ -105,6 +106,13 @@ class Lootfarm extends Command
                                         'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$float}\r\n<a href='{$url_metjm}'>metjm</a>",
                                         'parse_mode' => 'HTML'
                                     ]);
+                                    Report::create([
+                                        'item_id' => $task->item_id,
+                                        'site_id' => $task->site_id,
+                                        'float' => $task->float,
+                                        'pattern' => $task->pattern,
+                                        'client' => $task->client,
+                                    ]);
                                     $task->delete();
                                     break;
                                 }
@@ -117,6 +125,13 @@ class Lootfarm extends Command
                                         'chat_id' => $task->chat_id,
                                         'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$float}\r\n{$task->pattern}\r\n<a href='{$url_metjm}'>metjm</a>",
                                         'parse_mode' => 'HTML'
+                                    ]);
+                                    Report::create([
+                                        'item_id' => $task->item_id,
+                                        'site_id' => $task->site_id,
+                                        'float' => $task->float,
+                                        'pattern' => $task->pattern,
+                                        'client' => $task->client,
                                     ]);
                                     $task->delete();
                                     break;
@@ -131,6 +146,13 @@ class Lootfarm extends Command
                                         'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$float}\r\n{$task->pattern}\r\n<a href='{$url_metjm}'>metjm</a>",
                                         'parse_mode' => 'HTML'
                                     ]);
+                                    Report::create([
+                                        'item_id' => $task->item_id,
+                                        'site_id' => $task->site_id,
+                                        'float' => $task->float,
+                                        'pattern' => $task->pattern,
+                                        'client' => $task->client,
+                                    ]);
                                     $task->delete();
                                     break;
                                 }
@@ -141,6 +163,13 @@ class Lootfarm extends Command
                                     'chat_id' => $task->chat_id,
                                     'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$float}\r\n<a href='{$url_metjm}'>metjm</a>",
                                     'parse_mode' => 'HTML'
+                                ]);
+                                Report::create([
+                                    'item_id' => $task->item_id,
+                                    'site_id' => $task->site_id,
+                                    'float' => $task->float,
+                                    'pattern' => $task->pattern,
+                                    'client' => $task->client,
                                 ]);
                                 $task->delete();
                                 break;

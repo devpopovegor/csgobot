@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Item;
+use App\Report;
 use App\Site;
 use App\Task;
 use Illuminate\Console\Command;
@@ -115,6 +116,13 @@ class Csdeals extends Command
                                             'chat_id' => $task->chat_id,
                                             'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$item->k}\r\n{$task->pattern}"
                                         ]);
+                                        Report::create([
+                                            'item_id' => $task->item_id,
+                                            'site_id' => $task->site_id,
+                                            'float' => $task->float,
+                                            'pattern' => $task->pattern,
+                                            'client' => $task->client,
+                                        ]);
                                         $task->delete();
                                         break;
                                     }
@@ -122,6 +130,13 @@ class Csdeals extends Command
                                     Telegram::sendMessage([
                                         'chat_id' => $task->chat_id,
                                         'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$item->k}\r\n{$task->pattern}"
+                                    ]);
+                                    Report::create([
+                                        'item_id' => $task->item_id,
+                                        'site_id' => $task->site_id,
+                                        'float' => $task->float,
+                                        'pattern' => $task->pattern,
+                                        'client' => $task->client,
                                     ]);
                                     $task->delete();
                                     break;
@@ -136,6 +151,13 @@ class Csdeals extends Command
                                         'chat_id' => $task->chat_id,
                                         'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$item->k}\r\n{$task->pattern}"
                                     ]);
+                                    Report::create([
+                                        'item_id' => $task->item_id,
+                                        'site_id' => $task->site_id,
+                                        'float' => $task->float,
+                                        'pattern' => $task->pattern,
+                                        'client' => $task->client,
+                                    ]);
                                     $task->delete();
                                     break;
                                 }
@@ -143,6 +165,13 @@ class Csdeals extends Command
                                 Telegram::sendMessage([
                                     'chat_id' => $task->chat_id,
                                     'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$item->k}\r\n{$task->pattern}"
+                                ]);
+                                Report::create([
+                                    'item_id' => $task->item_id,
+                                    'site_id' => $task->site_id,
+                                    'float' => $task->float,
+                                    'pattern' => $task->pattern,
+                                    'client' => $task->client,
                                 ]);
                                 $task->delete();
                                 break;
@@ -161,6 +190,13 @@ class Csdeals extends Command
                                             'chat_id' => $task->chat_id,
                                             'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$item->k}\r\n{$task->pattern}"
                                         ]);
+                                        Report::create([
+                                            'item_id' => $task->item_id,
+                                            'site_id' => $task->site_id,
+                                            'float' => $task->float,
+                                            'pattern' => $task->pattern,
+                                            'client' => $task->client,
+                                        ]);
                                         $task->delete();
                                         break;
                                     }
@@ -168,6 +204,13 @@ class Csdeals extends Command
                                     Telegram::sendMessage([
                                         'chat_id' => $task->chat_id,
                                         'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$item->k}\r\n{$task->pattern}"
+                                    ]);
+                                    Report::create([
+                                        'item_id' => $task->item_id,
+                                        'site_id' => $task->site_id,
+                                        'float' => $task->float,
+                                        'pattern' => $task->pattern,
+                                        'client' => $task->client,
                                     ]);
                                     $task->delete();
                                     break;
@@ -182,6 +225,13 @@ class Csdeals extends Command
                                         'chat_id' => $task->chat_id,
                                         'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$item->k}\r\n{$task->pattern}"
                                     ]);
+                                    Report::create([
+                                        'item_id' => $task->item_id,
+                                        'site_id' => $task->site_id,
+                                        'float' => $task->float,
+                                        'pattern' => $task->pattern,
+                                        'client' => $task->client,
+                                    ]);
                                     $task->delete();
                                     break;
                                 }
@@ -189,6 +239,13 @@ class Csdeals extends Command
                                 Telegram::sendMessage([
                                     'chat_id' => $task->chat_id,
                                     'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$item->k}\r\n{$task->pattern}"
+                                ]);
+                                Report::create([
+                                    'item_id' => $task->item_id,
+                                    'site_id' => $task->site_id,
+                                    'float' => $task->float,
+                                    'pattern' => $task->pattern,
+                                    'client' => $task->client,
                                 ]);
                                 $task->delete();
                                 break;
