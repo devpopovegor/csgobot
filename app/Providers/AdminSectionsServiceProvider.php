@@ -3,9 +3,10 @@
 namespace App\Providers;
 
 use App\Dealer;
-use App\Http\Admin\Sections\Reports;
+//use App\Http\Admin\Sections\Reports;
 use App\Item;
 use App\Pattern;
+use App\Report;
 use App\Site;
 use App\Task;
 use App\User;
