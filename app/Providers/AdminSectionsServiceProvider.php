@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Dealer;
+use App\Http\Admin\Sections\Reports;
 use App\Item;
 use App\Pattern;
 use App\Site;
@@ -23,6 +24,7 @@ class AdminSectionsServiceProvider extends ServiceProvider
         Site::class => 'App\Http\Admin\Sections\Sites',
         Task::class => 'App\Http\Admin\Sections\Tasks',
         Pattern::class => 'App\Http\Admin\Sections\Patterns',
+        Reports::class => 'App\Http\Admin\Sections\Reports',
     ];
 
     /**
