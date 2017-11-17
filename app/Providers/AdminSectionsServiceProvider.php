@@ -24,7 +24,7 @@ class AdminSectionsServiceProvider extends ServiceProvider
         Site::class => 'App\Http\Admin\Sections\Sites',
         Task::class => 'App\Http\Admin\Sections\Tasks',
         Pattern::class => 'App\Http\Admin\Sections\Patterns',
-        Reports::class => 'App\Http\Admin\Sections\Reports',
+        Report::class => 'App\Http\Admin\Sections\Reports',
     ];
 
     /**
