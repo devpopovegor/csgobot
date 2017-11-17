@@ -83,110 +83,121 @@ class SearchCommand extends Command
                                 $this->replyWithChatAction(['action' => Actions::TYPING]);
                                 $this->replyWithMessage(['text' => 'Поиск по паттерну для данного предмета невозможен']);
                             } else {
-                                $message = "Поиск {$item} на сайте {$mSite->url} начался";
-                                $this->replyWithChatAction(['action' => Actions::TYPING]);
-                                $this->replyWithMessage(['text' => $message]);
+                                $tasks = Task::where('chat_id', '=', $oMessage->getChat()->getId())
+                                    ->where('item_id', '=', $mItem->id)
+                                    ->where('site_id', '=', $mSite->id)
+                                    ->where('float', '=', $float)
+                                    ->where('pattern', '=', $pattern)
+                                    ->where('client', '=', $user->getUsername())->get();
+                                if (!count($tasks)) {
+                                    $message = "Поиск {$item} на сайте {$mSite->url} начался";
+                                    $this->replyWithChatAction(['action' => Actions::TYPING]);
+                                    $this->replyWithMessage(['text' => $message]);
+                                    //Логика поиска
+                                    $obj = new NeedItem($mItem->name, $mSite->url, $oMessage->getChat()->getId(), $phase, $float, $pattern, $mItem->id);
+                                    $curl = curl_init();
+                                    $url = $mSite->get_data;
+                                    curl_setopt($curl, CURLOPT_URL, $url);
+                                    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+                                    $curl_response = null;
+                                    if ($mSite->id == 8) {
+                                        curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+                                            "Connection: keep-alive",
+                                            "X-Requested-With: XMLHttpRequest",
+                                            "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36",
+                                            "Accept: */*",
+                                            "Accept-Language: en-US,en;q=0.8",
+                                            "Host: www.csgosum.com",
+                                            "Referer:https://www.csgosum.com/",
+                                        ));
+                                        $curl_response = curl_exec($curl);
 
-                                //Логика поиска
-                                $obj = new NeedItem($mItem->name, $mSite->url, $oMessage->getChat()->getId(), $phase, $float, $pattern, $mItem->id);
-                                $curl = curl_init();
-                                $url = $mSite->get_data;
-                                curl_setopt($curl, CURLOPT_URL, $url);
-                                curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-                                $curl_response = null;
-                                if ($mSite->id == 8) {
-                                    curl_setopt($curl, CURLOPT_HTTPHEADER, array(
-                                        "Connection: keep-alive",
-                                        "X-Requested-With: XMLHttpRequest",
-                                        "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36",
-                                        "Accept: */*",
-                                        "Accept-Language: en-US,en;q=0.8",
-                                        "Host: www.csgosum.com",
-                                        "Referer:https://www.csgosum.com/",
-                                    ));
-                                    $curl_response = curl_exec($curl);
-
-                                } elseif ($mSite->id == 11) {
-                                    curl_setopt($curl, CURLOPT_POST, true);
-                                    curl_setopt($curl, CURLOPT_HTTPHEADER, array(
-                                        "Origin: https://ru.cs.deals",
-                                        "Referer: https://ru.cs.deals/",
-                                        "Connection: keep-alive",
-                                        "Content-Length: 0",
-                                        "Origin: https://ru.cs.deals",
-                                        "X-Requested-With: XMLHttpRequest",
-                                        "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36",
-                                        "Referer: https://ru.cs.deals/",
-                                        "Accept: application/json, text/javascript, */*; q=0.01",
-                                        "Accept-Language: ru-RU,ru;q=0.8,en-US;q=0.6,en;q=0.4",
-                                        "Authority: ru.cs.deals",
-                                        "Method: POST",
-                                        "Path: /ajax/botsinventory",
-                                        "Scheme: https"
-                                    ));
-                                    $curl_response = curl_exec($curl);
-                                    $curl_response = json_decode(utf8_decode($curl_response))->response;
-                                } elseif ($mSite->id == 12) {
-                                    curl_setopt($curl, CURLOPT_POST, true);
-                                    curl_setopt($curl, CURLOPT_HTTPHEADER, array(
-                                        "Origin: https://ru.tradeskinsfast.com",
-                                        "Referer: https://ru.tradeskinsfast.com/",
-                                        "Connection: keep-alive",
-                                        "Content-Length: 0",
-                                        "X-Requested-With: XMLHttpRequest",
-                                        "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36",
-                                        "Accept: application/json, text/javascript, */*; q=0.01",
-                                        "Accept-Language: ru-RU,ru;q=0.8,en-US;q=0.6,en;q=0.4",
-                                        "Authority: ru.tradeskinsfast.com",
-                                        "Method: POST",
-                                        "Path: /ajax/botsinventory",
-                                        "Scheme: https"
-                                    ));
-                                    $curl_response = curl_exec($curl);
-                                    $curl_response = json_decode(utf8_decode($curl_response))->response;
+                                    } elseif ($mSite->id == 11) {
+                                        curl_setopt($curl, CURLOPT_POST, true);
+                                        curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+                                            "Origin: https://ru.cs.deals",
+                                            "Referer: https://ru.cs.deals/",
+                                            "Connection: keep-alive",
+                                            "Content-Length: 0",
+                                            "Origin: https://ru.cs.deals",
+                                            "X-Requested-With: XMLHttpRequest",
+                                            "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36",
+                                            "Referer: https://ru.cs.deals/",
+                                            "Accept: application/json, text/javascript, */*; q=0.01",
+                                            "Accept-Language: ru-RU,ru;q=0.8,en-US;q=0.6,en;q=0.4",
+                                            "Authority: ru.cs.deals",
+                                            "Method: POST",
+                                            "Path: /ajax/botsinventory",
+                                            "Scheme: https"
+                                        ));
+                                        $curl_response = curl_exec($curl);
+                                        $curl_response = json_decode(utf8_decode($curl_response))->response;
+                                    } elseif ($mSite->id == 12) {
+                                        curl_setopt($curl, CURLOPT_POST, true);
+                                        curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+                                            "Origin: https://ru.tradeskinsfast.com",
+                                            "Referer: https://ru.tradeskinsfast.com/",
+                                            "Connection: keep-alive",
+                                            "Content-Length: 0",
+                                            "X-Requested-With: XMLHttpRequest",
+                                            "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36",
+                                            "Accept: application/json, text/javascript, */*; q=0.01",
+                                            "Accept-Language: ru-RU,ru;q=0.8,en-US;q=0.6,en;q=0.4",
+                                            "Authority: ru.tradeskinsfast.com",
+                                            "Method: POST",
+                                            "Path: /ajax/botsinventory",
+                                            "Scheme: https"
+                                        ));
+                                        $curl_response = curl_exec($curl);
+                                        $curl_response = json_decode(utf8_decode($curl_response))->response;
+                                    } else {
+                                        $curl_response = json_decode(curl_exec($curl));
+                                    }
+                                    $response = false;
+                                    switch ($mSite->id) {
+                                        case 1:
+                                            $response = $this->check_raffletrades($obj, $curl_response);
+                                            break;
+                                        case 2:
+                                            $response = $this->check_raffletrades($obj, $curl_response);
+                                            break;
+                                        case 3:
+                                            $response = $this->check_raffletrades($obj, $curl_response);
+                                            break;
+                                        case 4:
+                                            $response = $this->check_cstradegg($obj, $curl_response);
+                                            break;
+                                        case 5:
+                                            $response = $this->check_skintrade($obj, $curl_response);
+                                            break;
+                                        case 7:
+                                            $response = $this->check_csmoney($obj, $curl_response);
+                                            break;
+                                        case 8:
+                                            $response = $this->check_csgosum($obj, $curl_response);
+                                            break;
+                                        case 9:
+                                            $response = $this->check_skinsjar($obj, $curl_response);
+                                            break;
+                                        case 10:
+                                            $response = $this->check_lootfarm($obj, $curl_response);
+                                            break;
+                                        case 11:
+                                            $response = $this->check_csdeals($obj, $curl_response);
+                                            break;
+                                        case 12:
+                                            $response = $this->check_csdeals($obj, $curl_response);
+                                            break;
+                                    }
+                                    curl_close($curl);
+                                    if (!$response) Task::create(['item_id' => $mItem->id, 'site_id' => $mSite->id,
+                                        'float' => $float, 'chat_id' => $oMessage->getChat()->getId(), 'pattern' => $pattern, 'client' => $user->getUsername()]);
+                                    //---------------------------
                                 } else {
-                                    $curl_response = json_decode(curl_exec($curl));
+                                    $message = "Данный поиск уже существует";
+                                    $this->replyWithChatAction(['action' => Actions::TYPING]);
+                                    $this->replyWithMessage(['text' => $message]);
                                 }
-                                $response = false;
-                                switch ($mSite->id) {
-                                    case 1:
-                                        $response = $this->check_raffletrades($obj, $curl_response);
-                                        break;
-                                    case 2:
-                                        $response = $this->check_raffletrades($obj, $curl_response);
-                                        break;
-                                    case 3:
-                                        $response = $this->check_raffletrades($obj, $curl_response);
-                                        break;
-                                    case 4:
-                                        $response = $this->check_cstradegg($obj, $curl_response);
-                                        break;
-                                    case 5:
-                                        $response = $this->check_skintrade($obj, $curl_response);
-                                        break;
-                                    case 7:
-                                        $response = $this->check_csmoney($obj, $curl_response);
-                                        break;
-                                    case 8:
-                                        $response = $this->check_csgosum($obj, $curl_response);
-                                        break;
-                                    case 9:
-                                        $response = $this->check_skinsjar($obj, $curl_response);
-                                        break;
-                                    case 10:
-                                        $response = $this->check_lootfarm($obj, $curl_response);
-                                        break;
-                                    case 11:
-                                        $response = $this->check_csdeals($obj, $curl_response);
-                                        break;
-                                    case 12:
-                                        $response = $this->check_csdeals($obj, $curl_response);
-                                        break;
-                                }
-                                curl_close($curl);
-                                if (!$response) Task::create(['item_id' => $mItem->id, 'site_id' => $mSite->id,
-                                    'float' => $float, 'chat_id' => $oMessage->getChat()->getId(), 'pattern' => $pattern, 'client' => $user->getUsername()]);
-                                //---------------------------
                             }
                         } else {
                             $message = "Предмет {$item} не существует.";
