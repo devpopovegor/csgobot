@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Item;
 use App\Pattern;
+use App\Report;
 use App\Site;
 use App\Task;
 use Illuminate\Console\Command;
@@ -100,6 +101,13 @@ class CsMoney extends Command
                             'chat_id' => $task->chat_id,
                             'text' => "{$task->item->name}\r\n{$csmoney->url}\r\n{$task->item->phase}\r\n{$item->f[0]}\r\n<a href='$url_metjm'>metjm</a>",
                             'parse_mode' => 'HTML'
+                        ]);
+                        Report::create([
+                            'item_id' => $task->item_id,
+                            'site_id' => $task->site_id,
+                            'float' => $task->float,
+                            'pattern' => $task->pattern,
+                            'client' => $task->client,
                         ]);
                         $task->delete();
                     }

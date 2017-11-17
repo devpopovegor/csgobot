@@ -59,7 +59,8 @@ class Reports extends Section implements Initializable
                 AdminColumn::text('site_id', 'Номер сайта'),
                 AdminColumn::text('float', 'Float'),
                 AdminColumn::text('pattern', 'Паттерн'),
-                AdminColumn::text('client', 'Клиент')
+                AdminColumn::text('client', 'Клиент'),
+                AdminColumn::text('created_at', 'Дата')
             )->paginate(100);
     }
 
