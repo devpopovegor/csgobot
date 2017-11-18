@@ -567,103 +567,110 @@ class SearchCommand extends Command
     private
     function check_skinsjar($obj, $curl_response)
     {
-        $curl_response = collect($curl_response->items);
-        $find_objs = null;
-        $find_objs = $curl_response->where('name', '=', $obj->full_name);
+        try {
+            $curl_response = collect($curl_response->items);
+            $find_objs = null;
+            $find_objs = $curl_response->where('name', '=', $obj->full_name);
 
-        if (count($find_objs)) {
-            if ($obj->pattern) {
-                foreach ($find_objs as $fo) {
-                    $id = $fo->items[0]->id;
-                    $inspectUrl = $fo->items[0]->inspectUrl;
-                    $url = "https://metjm.net/shared/screenshots-v5.php?cmd=request_new_link&inspect_link=steam://rungame/730/{$id}/+csgo_econ_action_preview%25{$inspectUrl}";
-                    $curl = curl_init();
-                    curl_setopt($curl, CURLOPT_URL, $url);
-                    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-                    $response = curl_exec($curl);
-                    curl_close($curl);
-                    $response = json_decode($response);
-                    $pattern = null;
-                    $url_metjm = '';
-                    $float = null;
-                    try {
-                        if ($response->success) {
-                            $pattern = $response->result->item_paintseed;
-                            $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
-                            $float = $response->result->item_floatvalue;
+            if (count($find_objs)) {
+                if ($obj->pattern) {
+                    foreach ($find_objs as $fo) {
+                        $id = $fo->items[0]->id;
+                        $inspectUrl = $fo->items[0]->inspectUrl;
+                        $url = "https://metjm.net/shared/screenshots-v5.php?cmd=request_new_link&inspect_link=steam://rungame/730/{$id}/+csgo_econ_action_preview%25{$inspectUrl}";
+                        $curl = curl_init();
+                        curl_setopt($curl, CURLOPT_URL, $url);
+                        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+                        $response = curl_exec($curl);
+                        curl_close($curl);
+                        $response = json_decode($response);
+                        $pattern = null;
+                        $url_metjm = '';
+                        $float = null;
+                        try {
+                            if ($response->success) {
+                                $pattern = $response->result->item_paintseed;
+                                $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
+                                $float = $response->result->item_floatvalue;
+                            }
+                        } catch (\Exception $exception) {
+                            continue;
                         }
-                    } catch (\Exception $exception) {
-                        continue;
-                    }
 
-                    if ($obj->float) {
-                        if ($float <= $obj->float) {
+                        if ($obj->float) {
+                            if ($float <= $obj->float) {
+                                $need_item = Item::find($obj->id);
+                                $patterns = $need_item->patterns->where('name', '=', $obj->pattern)->where('value', '=', $pattern)->first();
+                                if ($patterns) {
+                                    $this->replyWithChatAction(['action' => Actions::TYPING]);
+                                    $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$float}\r\n{$pattern}\r\n<a href='{$url_metjm}'>metjm</a>",
+                                        'parse_mode' => 'HTML']);
+                                    return true;
+                                }
+                            }
+                        } else {
                             $need_item = Item::find($obj->id);
                             $patterns = $need_item->patterns->where('name', '=', $obj->pattern)->where('value', '=', $pattern)->first();
                             if ($patterns) {
                                 $this->replyWithChatAction(['action' => Actions::TYPING]);
-                                $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$float}\r\n{$pattern}\r\n<a href='{$url_metjm}'>metjm</a>",
+                                $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$float}\r\n{$obj->pattern}\r\n<a href='{$url_metjm}'>metjm</a>",
                                     'parse_mode' => 'HTML']);
                                 return true;
                             }
                         }
-                    } else {
-                        $need_item = Item::find($obj->id);
-                        $patterns = $need_item->patterns->where('name', '=', $obj->pattern)->where('value', '=', $pattern)->first();
-                        if ($patterns) {
-                            $this->replyWithChatAction(['action' => Actions::TYPING]);
-                            $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$float}\r\n{$obj->pattern}\r\n<a href='{$url_metjm}'>metjm</a>",
-                                'parse_mode' => 'HTML']);
-                            return true;
-                        }
+
+
                     }
+                } else {
+                    foreach ($find_objs as $fo) {
+                        $id = $fo->items[0]->id;
+                        $inspectUrl = $fo->items[0]->inspectUrl;
+                        $url = "https://metjm.net/shared/screenshots-v5.php?cmd=request_new_link&inspect_link=steam://rungame/730/{$id}/+csgo_econ_action_preview%25{$inspectUrl}";
+                        $curl = curl_init();
+                        curl_setopt($curl, CURLOPT_URL, $url);
+                        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+                        $response = curl_exec($curl);
+                        curl_close($curl);
+                        $response = json_decode($response);
+                        $pattern = null;
+                        $url_metjm = '';
 
-
-                }
-            } else {
-                foreach ($find_objs as $fo) {
-                    $id = $fo->items[0]->id;
-                    $inspectUrl = $fo->items[0]->inspectUrl;
-                    $url = "https://metjm.net/shared/screenshots-v5.php?cmd=request_new_link&inspect_link=steam://rungame/730/{$id}/+csgo_econ_action_preview%25{$inspectUrl}";
-                    $curl = curl_init();
-                    curl_setopt($curl, CURLOPT_URL, $url);
-                    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-                    $response = curl_exec($curl);
-                    curl_close($curl);
-                    $response = json_decode($response);
-                    $pattern = null;
-                    $url_metjm = '';
-
-                    $float = null;
-                    try {
-                        if ($response->success) {
-                            $pattern = $response->result->item_paintseed;
-                            $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
-                            $float = $response->result->item_floatvalue;
+                        $float = null;
+                        try {
+                            if ($response->success) {
+                                $pattern = $response->result->item_paintseed;
+                                $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
+                                $float = $response->result->item_floatvalue;
+                            }
+                        } catch (\Exception $exception) {
+                            continue;
                         }
-                    } catch (\Exception $exception) {
-                        continue;
-                    }
 
-                    if ($obj->float) {
-                        if ($float <= $obj->float) {
+                        if ($obj->float) {
+                            if ($float <= $obj->float) {
+                                $this->replyWithChatAction(['action' => Actions::TYPING]);
+                                $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}\r\n{$float}\r\n{$pattern}\r\n<a href='{$url_metjm}'>metjm</a>",
+                                    'parse_mode' => 'HTML']);
+                                return true;
+                            }
+                        } else {
                             $this->replyWithChatAction(['action' => Actions::TYPING]);
                             $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}\r\n{$float}\r\n{$pattern}\r\n<a href='{$url_metjm}'>metjm</a>",
                                 'parse_mode' => 'HTML']);
                             return true;
                         }
-                    } else {
-                        $this->replyWithChatAction(['action' => Actions::TYPING]);
-                        $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}\r\n{$float}\r\n{$pattern}\r\n<a href='{$url_metjm}'>metjm</a>",
-                            'parse_mode' => 'HTML']);
-                        return true;
+
+
                     }
-
-
                 }
             }
+            return false;
+        }catch (\Exception $exception){
+            $this->replyWithChatAction(['action' => Actions::TYPING]);
+            $this->replyWithMessage(['text' => "Извините, временные неполадки на сервере",
+                'parse_mode' => 'HTML']);
+            return false;
         }
-        return false;
     }
 
     private
