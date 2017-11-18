@@ -161,8 +161,7 @@ class SearchCommand extends Command
                                             "Accept-Language: en-US,en;q=0.9",
                                             "Cookie: __cfduid=d0df6d8aa98ebfb3b13096c0859746ae71511002753; _ym_uid=1511002761162504861; _ym_isad=2; _ga=GA1.2.1049133680.1511002761; _gid=GA1.2.1258118144.1511002761; _ym_visorc_43477244=w; currentCurrencyCode=USD; intercom-id-f94tzf5i=c1047e04-5c0d-4a9c-a5c8-ac838bdb4ea1; cf_clearance=69cf861a9d3c1871a268efac87b3c32978442f02-1511005035-900"
                                         ));
-//                                        $curl_response = json_decode(curl_exec($curl));
-                                        $curl_response = curl_exec($curl);
+                                        $curl_response = json_decode(curl_exec($curl));
                                     }
                                     else {
                                         $curl_response = json_decode(curl_exec($curl));
@@ -682,7 +681,7 @@ class SearchCommand extends Command
         }catch (\Exception $exception){
             $this->replyWithChatAction(['action' => Actions::TYPING]);
 //            $this->replyWithMessage(['text' => "Извините, временные неполадки на сервере",
-            $this->replyWithMessage(['text' => $curl_response,
+            $this->replyWithMessage(['text' => $exception->getMessage(),
                 'parse_mode' => 'HTML']);
             return false;
         }
