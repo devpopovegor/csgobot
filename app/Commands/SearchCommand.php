@@ -161,6 +161,7 @@ class SearchCommand extends Command
                                             "Accept-Language: en-US,en;q=0.9",
                                             "Cookie: __cfduid=d0df6d8aa98ebfb3b13096c0859746ae71511002753; _ga=GA1.2.1049133680.1511002761; _gid=GA1.2.1258118144.1511002761; _ym_uid=1511002761162504861; currentCurrencyCode=USD; _ym_visorc_43477244=w; _ym_isad=2; intercom-id-f94tzf5i=c1047e04-5c0d-4a9c-a5c8-ac838bdb4ea1; cf_clearance=8242741f508f1748d5554ec410736c151b4f3fbd-1511003906-900"
                                         ));
+                                        $curl_response = json_decode(curl_exec($curl));
                                     }
                                     else {
                                         $curl_response = json_decode(curl_exec($curl));
