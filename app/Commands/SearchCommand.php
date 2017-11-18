@@ -680,8 +680,8 @@ class SearchCommand extends Command
             return false;
         }catch (\Exception $exception){
             $this->replyWithChatAction(['action' => Actions::TYPING]);
-//            $this->replyWithMessage(['text' => "Извините, временные неполадки на сервере",
-            $this->replyWithMessage(['text' => $exception->getMessage(),
+            $this->replyWithMessage(['text' => "Извините, временные неполадки на сервере",
+//            $this->replyWithMessage(['text' => $exception->getMessage(),
                 'parse_mode' => 'HTML']);
             return false;
         }
