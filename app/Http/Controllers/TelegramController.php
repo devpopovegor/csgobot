@@ -36,11 +36,11 @@ class TelegramController extends Controller
             "Referer: https://skinsjar.com/",
 //            "Accept-Encoding: gzip, deflate, br",
             "Accept-Language: en-US,en;q=0.9",
-            "Cookie: __cfduid=d0df6d8aa98ebfb3b13096c0859746ae71511002753; _ym_uid=1511002761162504861; _ym_isad=2; _ga=GA1.2.1049133680.1511002761; _gid=GA1.2.1258118144.1511002761; _ym_visorc_43477244=w; currentCurrencyCode=USD; intercom-id-f94tzf5i=c1047e04-5c0d-4a9c-a5c8-ac838bdb4ea1; cf_clearance=69cf861a9d3c1871a268efac87b3c32978442f02-1511005035-900"
+            "Cookie: __cfduid=d0df6d8aa98ebfb3b13096c0859746ae71511002753; _ym_uid=1511002761162504861; _ym_isad=2; _ym_visorc_43477244=w; _ga=GA1.2.1049133680.1511002761; _gid=GA1.2.1258118144.1511002761; currentCurrencyCode=USD; intercom-id-f94tzf5i=c1047e04-5c0d-4a9c-a5c8-ac838bdb4ea1; cf_clearance=7fcd84048f0495aef59b39770fdbca282df3a3a6-1511006034-900"
         ));
         $curl_response = curl_exec($curl);
 
-        dd(json_decode($curl_response));
+        dd(json_decode($curl_response)->items);
 
     }
 
