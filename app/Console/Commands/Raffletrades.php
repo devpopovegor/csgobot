@@ -65,6 +65,10 @@ class Raffletrades extends Command
                     $url_metjm = null;
                     try {
                         $float = $item->float;
+                        if ($float == -1){
+                            $data_metjm = $this->getDataMetjm($item, 'float,pattern');
+                            $float = $data_metjm['float'];
+                        }
                     } catch (\Exception $exception) {
                         $data_metjm = $this->getDataMetjm($item, 'float,pattern');
                         $float = $data_metjm['float'];
@@ -95,7 +99,7 @@ class Raffletrades extends Command
                             else {
                                 Telegram::sendMessage([
                                     'chat_id' => $task->chat_id,
-                                    'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$float}\r\n{$task->pattern}\r\n<a href='{$url_metjm}'>metjm</a>",
+                                    'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$float}\r\n<a href='{$url_metjm}'>metjm</a>",
                                     'parse_mode' => 'HTML'
                                 ]);
                                 Report::create([

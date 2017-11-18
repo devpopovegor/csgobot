@@ -357,7 +357,8 @@ class SearchCommand extends Command
                             return true;
                         }
                     }
-                } else {
+                }
+                else {
                     $item = $items->first();
                     $url = "https://metjm.net/shared/screenshots-v5.php?cmd=request_new_link&inspect_link={$item->inspect_link}";
                     $inspectUrl = explode('%20', $item->inspect_link)[1];

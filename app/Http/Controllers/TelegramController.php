@@ -23,11 +23,11 @@ class TelegramController extends Controller
 
     public function test(){
         $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL,"https://loot.farm/botsInventory_new.json");
+        curl_setopt($curl, CURLOPT_URL,"https://api.raffletrades.com/v1/inventory/");
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         $curl_response = curl_exec($curl);
         $curl_response = json_decode($curl_response);
-        dd(collect($curl_response->result)->where('n', '=', 'Karambit | Doppler Sapphire'));
+        dd(collect($curl_response->response)->where('float','<=', '0.05'));
 //        dd($curl_response);
         $i = 0;
         foreach (collect($curl_response->result) as $item){
