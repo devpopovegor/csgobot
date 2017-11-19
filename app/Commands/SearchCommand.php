@@ -162,6 +162,29 @@ class SearchCommand extends Command
                                             "Cookie: __cfduid=d0df6d8aa98ebfb3b13096c0859746ae71511002753; _ym_uid=1511002761162504861; _ym_isad=2; _ga=GA1.2.1049133680.1511002761; _gid=GA1.2.1258118144.1511002761; _ym_visorc_43477244=w; currentCurrencyCode=USD; intercom-id-f94tzf5i=c1047e04-5c0d-4a9c-a5c8-ac838bdb4ea1; cf_clearance=69cf861a9d3c1871a268efac87b3c32978442f02-1511005035-900"
                                         ));
                                         $curl_response = json_decode(curl_exec($curl));
+                                    } elseif ($mSite->id == 13){
+                                        curl_setopt($curl, CURLOPT_POST, true);
+                                        curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+                                            "Accept:*/*",
+                                            "Accept-Language:en-US,en;q=0.9",
+                                            "Connection:keep-alive",
+                                            "Content-Length:61",
+                                            "Content-Type:application/x-www-form-urlencoded; charset=UTF-8",
+                                            "Cookie:__cfduid=d70de1f6eabeb188f99455a2b86f795301511086344; language=en; PHPSESSID=90a6e4178d3be74bb4fcc8d8778e0c9d; _ga=GA1.2.1372332778.1511086346; _gid=GA1.2.1835651314.1511086346; _gat=1",
+                                            "Host:csgosell.com",
+                                            "Origin:https://csgosell.com",
+                                            "Referer:https://csgosell.com/ru",
+                                            "User-Agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Safari/537.36",
+                                            "X-Requested-With:XMLHttpRequest"
+                                        ));
+                                        $post_data = array (
+                                            "stage" => "botAll",
+                                            "steamId" => "76561198364873979",
+                                            "hasBonus" => "false",
+                                            "coins" => 0
+                                        );
+                                        curl_setopt($curl, CURLOPT_POSTFIELDS, $post_data);
+                                        $curl_response = json_decode(curl_exec($curl));
                                     }
                                     else {
                                         $curl_response = json_decode(curl_exec($curl));
@@ -200,6 +223,9 @@ class SearchCommand extends Command
                                             break;
                                         case 12:
                                             $response = $this->check_csdeals($obj, $curl_response);
+                                            break;
+                                        case 13:
+                                            $response = $this->check_csgosell($obj, $curl_response);
                                             break;
                                     }
                                     curl_close($curl);
@@ -864,6 +890,53 @@ class SearchCommand extends Command
         }
 
         return $find;
+    }
+
+    private function check_csgosell($obj, $curl_response){
+        if (strpos($obj->full_name, '\'') !== false) $obj->full_name = str_replace('\'', '%27', $obj->full_name);
+        $items = collect($curl_response);
+        $items = $items->where('h', '=', $obj->full_name);
+        if ($obj->float) $items = $items->where('f', '<=', $obj->float);
+        if (count($items)){
+            if ($obj->pattern){
+                foreach ($items as $item){
+                    $url_metjm = "https://metjm.net/shared/screenshots-v5.php?cmd=request_new_link&inspect_link=steam://rungame/730/76561202255233023/+csgo_econ_action_preview%20S{$item->i}";
+                    $curl = curl_init();
+                    curl_setopt($curl, CURLOPT_URL, $url_metjm);
+                    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+                    $response = curl_exec($curl);
+                    curl_close($curl);
+                    $response = json_decode($response);
+                    $pattern = null;
+                    $link_metjm = '';
+                    try {
+                        if ($response->success) {
+                            $pattern = $response->result->item_paintseed;
+                            $link_metjm = "https://metjm.net/csgo/#S{$item->i}";
+                        }
+                    } catch (\Exception $exception) {
+                        continue;
+                    }
+                    $need_item = Item::find($obj->id);
+                    $patterns = $need_item->patterns->where('name', '=', $obj->pattern)->where('value', '=', $pattern)->first();
+                    if ($patterns) {
+                        $this->replyWithChatAction(['action' => Actions::TYPING]);
+                        $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}\r\n{$item->f}\r\n{$obj->pattern}\r\n<a href='{$link_metjm}'>metjm</a>",
+                            'parse_mode' => 'HTML']);
+                        return true;
+                    }
+                }
+            }
+            else {
+                $item = $items->first();
+                $link_metjm = "https://metjm.net/csgo/#S{$item->i}";
+                $this->replyWithChatAction(['action' => Actions::TYPING]);
+                $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}\r\n{$item->f}\r\n<a href='{$link_metjm}'>metjm</a>",
+                    'parse_mode' => 'HTML']);
+                return true;
+            }
+        }
+        return false;
     }
 
 
