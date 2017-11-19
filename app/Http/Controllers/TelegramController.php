@@ -22,10 +22,25 @@ class TelegramController extends Controller
     }
 
     public function test(){
-//        dd(dirname(__FILE__) . '/cookie.txt');
+
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL,"https://skinsjar.com/api/v3/load/bots?refresh=0&v=0");
-//        curl_setopt($curl, CURLOPT_URL,"http://104.28.26.228");
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_HEADER, 1);
+        curl_setopt($curl, CURLOPT_NOBODY, 1);
+        $curl_response = curl_exec($curl);
+        curl_close($curl);
+//        $headers=array();
+        $data=explode("\r\n",$curl_response);
+//        $headers['status']=$data[0];
+//        array_shift($data);
+//        foreach($data as $part){
+//            $middle=explode(":",$part);
+//            $headers[trim($middle[0])] = trim($middle[1]);
+//        }
+//        dd($data);
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL,"https://skinsjar.com/api/v3/load/bots?refresh=0&v=0");
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($curl, CURLOPT_HTTPHEADER, array(
             "Host: skinsjar.com",
@@ -34,13 +49,11 @@ class TelegramController extends Controller
             "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Safari/537.36",
             "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
             "Referer: https://skinsjar.com/",
-//            "Accept-Encoding: gzip, deflate, br",
             "Accept-Language: en-US,en;q=0.9",
-            "Cookie: __cfduid=d0df6d8aa98ebfb3b13096c0859746ae71511002753; _ym_uid=1511002761162504861; _ym_isad=2; _ym_visorc_43477244=w; _ga=GA1.2.1049133680.1511002761; _gid=GA1.2.1258118144.1511002761; currentCurrencyCode=USD; intercom-id-f94tzf5i=c1047e04-5c0d-4a9c-a5c8-ac838bdb4ea1; cf_clearance=7fcd84048f0495aef59b39770fdbca282df3a3a6-1511006034-900"
+            "Cookie:" . explode(' ', $data[4])[1] .  "_ym_uid=1511002761162504861; _ym_isad=2; _ym_visorc_43477244=w; _ga=GA1.2.1049133680.1511002761; _gid=GA1.2.1258118144.1511002761; currentCurrencyCode=USD; intercom-id-f94tzf5i=c1047e04-5c0d-4a9c-a5c8-ac838bdb4ea1; cf_clearance=7fcd84048f0495aef59b39770fdbca282df3a3a6-1511006034-900"
         ));
         $curl_response = curl_exec($curl);
-
-        dd(json_decode($curl_response)->items);
+        dd($curl_response);
 
     }
 
