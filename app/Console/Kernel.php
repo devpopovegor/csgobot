@@ -4,6 +4,7 @@ namespace App\Console;
 
 use App\Console\Commands\Check;
 use App\Console\Commands\Csdeals;
+use App\Console\Commands\Csgosell;
 use App\Console\Commands\Csgosum;
 use App\Console\Commands\CsMoney;
 use App\Console\Commands\Cstrade;
@@ -38,7 +39,8 @@ class Kernel extends ConsoleKernel
         Raffletrades::class,
 	    Csdeals::class,
         Check::class,
-        DeleteSearchNoAuthor::class
+        DeleteSearchNoAuthor::class,
+        Csgosell::class
     ];
 
     /**
