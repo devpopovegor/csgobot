@@ -976,7 +976,7 @@ class SearchCommand extends Command
 
         $items = collect($curl_response);
         $items = $items->where('market_hash_name', '=', $name);
-        if ($obj->float) $items->where('descriptions.0.aFloat', '<=', $obj->float);
+        if ($obj->float) $items = $items->where('descriptions.0.aFloat', '<=', $obj->float);
         if (count($items)){
             if ($obj->pattern){
                 foreach ($items as $item){
@@ -1006,7 +1006,8 @@ class SearchCommand extends Command
                         return true;
                     }
                 }
-            } else {
+            }
+            else {
                 $item = $items->first();
                 $metj = "https://metjm.net/csgo/#" . explode('%20', $item->descriptions[0]->inspectURL)[1];
                 $this->replyWithChatAction(['action' => Actions::TYPING]);
@@ -1015,6 +1016,7 @@ class SearchCommand extends Command
                 return true;
             }
         }
+        return false;
     }
 
     private function getDataMetjm($item)

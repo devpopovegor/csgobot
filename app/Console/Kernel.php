@@ -4,6 +4,7 @@ namespace App\Console;
 
 use App\Console\Commands\Check;
 use App\Console\Commands\Csdeals;
+use App\Console\Commands\Csgobot;
 use App\Console\Commands\Csgosell;
 use App\Console\Commands\Csgosum;
 use App\Console\Commands\CsMoney;
@@ -40,7 +41,8 @@ class Kernel extends ConsoleKernel
 	    Csdeals::class,
         Check::class,
         DeleteSearchNoAuthor::class,
-        Csgosell::class
+        Csgosell::class,
+        Csgobot::class
     ];
 
     /**
