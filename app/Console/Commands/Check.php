@@ -38,11 +38,11 @@ class Check extends Command
      */
     public function handle()
     {
-//        $this->call( 'raffle:check', [ 'site_id' => 1 ] );
 //        $this->call( 'raffle:check', [ 'site_id' => 2 ] );
         $this->call( 'raffle:check', [ 'site_id' => 3 ] );
         $this->call( 'cstrade:check');
         $this->call( 'csgosell:check');
+        $this->call( 'csgobot:check');
 //        $this->call( 'skintrade:check');
 //        $this->call( 'csgosum:check');
         $this->call( 'lootfarm:check');
