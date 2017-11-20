@@ -9,7 +9,8 @@ class ApiController extends Controller
 {
     public function getSkinsjar()
     {
-        $skinsjar_task = Task::where('site_id','=','9')->get()->toArray();
-        return json_encode($skinsjar_task);
+        $skinsjar_tasks = Task::with('item')->where('site_id','=','9')->get();
+        $result = [];
+        return json_encode($skinsjar_tasks);
     }
 }
