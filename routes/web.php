@@ -21,3 +21,4 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/test', 'TelegramController@test')->name('test');
+Route::get('/skinsjar', 'ApiController@getSkinsjar')->name('skinsjar');
