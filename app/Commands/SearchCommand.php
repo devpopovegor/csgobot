@@ -834,8 +834,8 @@ class SearchCommand extends Command
             'Phase 4' => [421, 572],
             'Ruby' => [415],
             'Sapphire' => [416],
-            'Black Perl' => [],
-            'Emerald' => [],
+            'Black Perl' => [417],
+            'Emerald' => [568],
         ];
         foreach ($curl_response as $item) {
             $item_name = $item->m;
