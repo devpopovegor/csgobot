@@ -15,11 +15,11 @@ class ApiController extends Controller
         if ($item = Item::where('name', '=', $name)->first()){
             if (Task::where('item_id', '=', $item->id)->where('client','=','ska4an')
                 ->where('site_id', '=', 7)->where('float', '=', $float)->first()){
-                return json_encode(['error' => 'Данный поиск уже существует', 'result' => null]);
+                return json_encode(['error' => 'Search already exists', 'result' => null]);
             }
         }
         else {
-            return json_encode(['error' => 'Предмет не существует', 'result' => null]);
+            return json_encode(['error' => 'Item not exists', 'result' => null]);
         }
 
         return json_encode(['error' => null, 'result' => 'ok']);
