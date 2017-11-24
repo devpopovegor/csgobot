@@ -12,7 +12,7 @@ class ApiController extends Controller
     {
         $name = $request->item_name;
         $float = $request->item_float;
-        return json_encode($request);
+        return json_encode($_GET);
         if ($item = Item::where('name', '=', $name)->first()){
             if (Task::where('item_id', '=', $item->id)->where('client','=','ska4an')
                 ->where('site_id', '=', 7)->where('float', '=', $float)->first()){
