@@ -7,9 +7,16 @@ use Illuminate\Http\Request;
 
 class ApiController extends Controller
 {
-    public function getSkinsjar()
+    public function addItem()
     {
-        $skinsjar_tasks = Task::with('item')->where('site_id','=','9')->get();
-        return json_encode($skinsjar_tasks);
+
+    }
+
+    public function getList()
+    {
+        $tasks = Task::with('item')->where('site_id', '=', '7')
+            ->where('client','=', 'ska4an')->get();
+
+        return json_encode($tasks);
     }
 }
