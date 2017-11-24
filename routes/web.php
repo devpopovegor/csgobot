@@ -22,4 +22,3 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/test', 'TelegramController@test')->name('test');
 Route::post('/add-item', 'ApiController@addItem')->name('add-item');
-Route::get('/get-list', 'ApiController@getList')->name('get-list');
