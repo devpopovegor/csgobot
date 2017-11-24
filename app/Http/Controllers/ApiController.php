@@ -10,10 +10,9 @@ class ApiController extends Controller
 {
     public function addItem(Request $request)
     {
-        return '123';
         $name = $request->item_name;
         $float = $request->item_float;
-
+        return json_encode($request);
         if ($item = Item::where('name', '=', $name)->first()){
             if (Task::where('item_id', '=', $item->id)->where('client','=','ska4an')
                 ->where('site_id', '=', 7)->where('float', '=', $float)->first()){
