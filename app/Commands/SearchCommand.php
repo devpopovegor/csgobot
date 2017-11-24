@@ -834,7 +834,7 @@ class SearchCommand extends Command
             'Phase 4' => [421, 572],
             'Ruby' => [415],
             'Sapphire' => [416],
-            'Black Perl' => [417],
+            'Black Pearl' => [417],
             'Emerald' => [568],
         ];
 
@@ -873,7 +873,8 @@ class SearchCommand extends Command
                         }
                     }
                 }
-            } else {
+            }
+            else {
                 if ($item_name == $obj->name) {
                     if ($obj->phase) {
                         if (in_array($item->g, $phases[$obj->phase])) {
@@ -890,7 +891,8 @@ class SearchCommand extends Command
                                 break;
                             }
                         }
-                    } else {
+                    }
+                    else {
                         if ($obj->pattern) {
                             $pat = Item::find($obj->id)->patterns->where('name', '=', $obj->pattern)->where('value', '=', $item->p)->first();
                             if ($pat) {
@@ -907,9 +909,6 @@ class SearchCommand extends Command
                 }
             }
         }
-
-        $this->replyWithChatAction(['action' => Actions::TYPING]);
-        $this->replyWithMessage(['text' => "4444"]);
 
         if ($find) {
             $this->replyWithChatAction(['action' => Actions::TYPING]);
