@@ -23,7 +23,7 @@ class ApiController extends Controller
             return "Item not exists";
         }
 
-        Task::create(['item_id' => $item->id, 'site_id' => 7, 'float' => $float, 'client' => 'ska4an', 'pattern' => '']);
+        Task::create(['item_id' => $item->id, 'site_id' => 7, 'float' => $float, 'client' => 'ska4an', 'pattern' => '', 'chat_id' => '']);
         return "OK";
     }
 
