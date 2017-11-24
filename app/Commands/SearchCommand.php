@@ -837,6 +837,10 @@ class SearchCommand extends Command
             'Black Perl' => [417],
             'Emerald' => [568],
         ];
+
+        $this->replyWithChatAction(['action' => Actions::TYPING]);
+        $this->replyWithMessage(['text' => "123123123"]);
+
         foreach ($curl_response as $item) {
             $item_name = $item->m;
             if (is_numeric($item_name)) $item_name = $curl_response[$item_name]->m;
