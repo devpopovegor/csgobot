@@ -12,7 +12,8 @@ class ApiController extends Controller
     {
         $name = $_GET['name'];
         $float = $_GET['float'];
-        if ($item = Item::where('name', '=', $name)->first()){
+        $item = Item::where('name', '=', $name)->first();
+        if ($item){
             if (Task::where('item_id', '=', $item->id)->where('client','=','ska4an')
                 ->where('site_id', '=', 7)->where('float', '=', $float)->first()){
                 return "Search already exists";
@@ -22,7 +23,7 @@ class ApiController extends Controller
             return "Item not exists";
         }
 
-
+        Task::create(['item_id' => $item->id, 'site_id' => 7, 'float' => $float, 'client' => 'ska4an', 'pattern' => '']);
         return "OK";
     }
 
