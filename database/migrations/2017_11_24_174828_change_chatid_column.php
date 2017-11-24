@@ -14,7 +14,7 @@ class ChangeChatidColumn extends Migration
     public function up()
     {
         Schema::table('tasks', function (Blueprint $table) {
-            $table->string('chat_id')->nullable();
+            $table->string('chat_id')->nullable()->change();
         });
     }
 
