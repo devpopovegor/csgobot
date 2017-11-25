@@ -82,7 +82,7 @@ class Csgobot extends Command
                 }
             }
             $current_items = $items->where('market_hash_name', '=', $name);
-            if ($task->float) $current_items = $items->where('descriptions.0.aFloat', '<=', $task->float);
+            if ($task->float) $current_items = $current_items->where('descriptions.0.aFloat', '<=', $task->float);
             if (count($current_items)){
                 if ($task->pattern){
                     foreach ($current_items as $item){
