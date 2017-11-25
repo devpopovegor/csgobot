@@ -23,27 +23,12 @@ class TelegramController extends Controller
 
     public function test(){
         $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL,"https://ru.tradeskinsfast.com/ajax/botsinventory");
+        curl_setopt($curl, CURLOPT_URL,"https://api.raffletrades.com/v1/inventory/");
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_POST, true);
-        curl_setopt($curl, CURLOPT_HTTPHEADER, array(
-            "Origin: https://ru.tradeskinsfast.com",
-            "Referer: https://ru.tradeskinsfast.com/",
-            "Connection: keep-alive",
-            "Content-Length: 0",
-            "X-Requested-With: XMLHttpRequest",
-            "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36",
-            "Accept: application/json, text/javascript, */*; q=0.01",
-            "Accept-Language: ru-RU,ru;q=0.8,en-US;q=0.6,en;q=0.4",
-            "Authority: ru.tradeskinsfast.com",
-            "Method: POST",
-            "Path: /ajax/botsinventory",
-            "Scheme: https"
-        ));
         $curl_response = curl_exec($curl);
-        $curl_response = collect(json_decode(utf8_decode($curl_response))->response);
+        $curl_response = json_decode(utf8_decode($curl_response));
         curl_close($curl);
-        dd($curl_response->where('m','=', '★ Flip Knife | Gamma Doppler (Factory New)'));
+        dd($curl_response);
 //        dd($curl_response);
 
     }

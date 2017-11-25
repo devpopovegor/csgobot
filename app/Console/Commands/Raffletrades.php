@@ -54,18 +54,18 @@ class Raffletrades extends Command
         Log::info(count($items));
 
         $tasks = Task::with('item')->where('site_id', '=', $site_id)->get();
-        foreach ($tasks as $task){
+        foreach ($tasks as $task) {
             $itemss = $items->where('custom_market_name', '=', $task->item->full_name);
 //            if ($task->float) $itemss = $itemss->where('float','<=', $task->float);
 
-            if (count($itemss)){
+            if (count($itemss)) {
                 foreach ($itemss as $item) {
                     $float = null;
                     $data_metjm = null;
                     $url_metjm = null;
                     try {
                         $float = $item->float;
-                        if ($float == -1){
+                        if ($float == -1) {
                             $data_metjm = $this->getDataMetjm($item, 'float,pattern');
                             $float = $data_metjm['float'];
                         }
@@ -95,8 +95,7 @@ class Raffletrades extends Command
                                     $task->delete();
                                     break;
                                 }
-                            }
-                            else {
+                            } else {
                                 Telegram::sendMessage([
                                     'chat_id' => $task->chat_id,
                                     'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$float}\r\n<a href='{$url_metjm}'>metjm</a>",
@@ -113,8 +112,7 @@ class Raffletrades extends Command
                                 break;
                             }
                         }
-                    }
-                    else {
+                    } else {
                         if (!$data_metjm) $data_metjm = $this->getDataMetjm($item, 'pattern');
                         $pattern = $data_metjm['pattern'];
                         $url_metjm = $data_metjm['metjm'];
@@ -159,7 +157,8 @@ class Raffletrades extends Command
         Log::info('end check raffle');
     }
 
-    private function getDataMetjm($item, $get){
+    private function getDataMetjm($item, $get)
+    {
         $url = "https://metjm.net/shared/screenshots-v5.php?cmd=request_new_link&inspect_link={$item->inspect_link}";
         $inspectUrl = explode('%20', $item->inspect_link)[1];
         $curl = curl_init();
@@ -171,15 +170,14 @@ class Raffletrades extends Command
         $pattern = null;
         $url_metjm = '';
         $float = null;
-        if ($response->success) {
-            try {
-                $pattern = $response->result->item_paintseed;
-                $float = $response->result->item_floatvalue;
-                $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
-            }catch (\Exception $exception){
-                Log::info('Failed pattern');
-            }
+        try {
+            $pattern = $response->result->item_paintseed;
+            $float = $response->result->item_floatvalue;
+            $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
+        } catch (\Exception $exception) {
+            Log::info('Failed pattern');
         }
+
 
         $return = [];
         $return['metjm'] = $url_metjm;
