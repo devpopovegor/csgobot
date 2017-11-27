@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Item;
+use App\Pattern;
 use App\Task;
 use Illuminate\Http\Request;
 
@@ -33,5 +34,10 @@ class ApiController extends Controller
             ->where('client','=', 'ska4an')->get());
 
         return json_encode($tasks);
+    }
+
+    public function getPatterns()
+    {
+        return json_encode(Pattern::all());
     }
 }
