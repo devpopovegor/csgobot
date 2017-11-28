@@ -12,7 +12,7 @@ class ApiController extends Controller
     public function addItem()
     {
         $name = $_GET['name'];
-        $phase = $_GET['phase'];
+        $phase = $_GET['phase'] ? $_GET['phase'] : '';
         $float = $_GET['float'];
         $pattern = $_GET['pattern'];
         $item = Item::where('name', '=', $name)->where('phase', '=', $phase)->first();
