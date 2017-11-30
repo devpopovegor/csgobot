@@ -43,14 +43,4 @@ class ApiController extends Controller
     {
         return json_encode(Pattern::all());
     }
-
-    public function sendMessage(Request $request){
-	    $item  = Item::find($request->item_id);
-	    $chat_id = 222881167;
-	    Telegram::sendMessage([
-		    'chat_id' => $chat_id,
-		    'text' => "{$item->full_name}",
-		    'parse_mode' => 'HTML'
-	    ]);
-    }
 }
