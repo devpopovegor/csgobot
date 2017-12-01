@@ -43,4 +43,16 @@ class ApiController extends Controller
     {
         return json_encode(Pattern::all());
     }
+
+    public function send()
+    {
+    	$item = Item::find($_GET['item_id']);
+	    Telegram::sendMessage([
+		    'chat_id' => 222881167,
+		    'text' => "Бот для cs.money отправил оффер на {$item->full_name}",
+		    'parse_mode' => 'HTML'
+	    ]);
+
+	    return 'ok';
+    }
 }
