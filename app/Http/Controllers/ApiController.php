@@ -53,6 +53,6 @@ class ApiController extends Controller
 		    'parse_mode' => 'HTML'
 	    ]);
 
-	    return 'ok';
+	    return json_encode('ok');
     }
 }
