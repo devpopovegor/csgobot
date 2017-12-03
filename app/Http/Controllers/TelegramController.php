@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Classes\SumClass;
 use App\Item;
+use App\Paintseed;
 use App\Pattern;
 use App\Site;
 use App\Task;
@@ -23,7 +24,7 @@ class TelegramController extends Controller
 
     public function test(){
 
-    	dd(Task::where('client', '=', 'popov_egor_dev')->first());
+    	dd(Paintseed::all());
 
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL,"https://www.thecsgobot.com/api/service.inventory.json");
