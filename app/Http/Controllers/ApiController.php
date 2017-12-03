@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Item;
+use App\Paintseed;
 use App\Pattern;
 use App\Task;
 use Illuminate\Http\Request;
@@ -54,5 +55,15 @@ class ApiController extends Controller
 	    ]);
 
 	    return json_encode('ok');
+    }
+
+    public function setPatterns()
+    {
+        $patterns = json_decode($_GET['patterns']);
+        foreach ($patterns as $pattern){
+            foreach ($pattern->items as $item){
+                Paintseed::create(['item_id' => $item, 'value' => $pattern->paintseed]);
+            }
+        }
     }
 }
