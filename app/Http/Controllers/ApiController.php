@@ -65,5 +65,7 @@ class ApiController extends Controller
                 Paintseed::create(['item_id' => $item, 'value' => $pattern->paintseed]);
             }
         }
+
+        return 'ok';
     }
 }
