@@ -59,6 +59,7 @@ class ApiController extends Controller
 
     public function setPatterns()
     {
+        return 'responce server';
         $patterns = json_decode($_GET['patterns']);
         foreach ($patterns as $pattern){
             foreach ($pattern->items as $item){
@@ -66,6 +67,6 @@ class ApiController extends Controller
             }
         }
 
-        return 'ok';
+        return $_GET['patterns'];
     }
 }
