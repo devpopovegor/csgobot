@@ -7,6 +7,7 @@ use App\Paintseed;
 use App\Pattern;
 use App\Task;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Telegram\Bot\Laravel\Facades\Telegram;
 
 class ApiController extends Controller
@@ -60,6 +61,7 @@ class ApiController extends Controller
     public function setPatterns()
     {
 //        return 'responce server';
+        Log::info($_GET['patterns']);
         $patterns = json_decode($_GET['patterns']);
         foreach ($patterns as $pattern){
             foreach ($pattern->items as $item){
