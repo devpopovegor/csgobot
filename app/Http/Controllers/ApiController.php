@@ -61,7 +61,7 @@ class ApiController extends Controller
     public function setPatterns()
     {
 //        return 'responce server';
-        Log::info($_GET['patterns']);
+        Log::info($_GET['patterns'] . " PATTERNS");
         $patterns = json_decode($_GET['patterns']);
         foreach ($patterns as $pattern){
             foreach ($pattern->items as $item){
