@@ -62,7 +62,7 @@ class ApiController extends Controller
     {
 
 //        dd($_GET);
-        Log::info(json_encode($_GET) . " PATTERNS");
+        Log::info(json_encode($_REQUEST) . " PATTERNS");
         set_time_limit(0);
 //        return json_encode($_GET);
         return 'aaaaaaaSUKAaaaaa';
