@@ -62,7 +62,7 @@ class ApiController extends Controller
     {
 //        Log::info($_GET['patterns'] . " PATTERNS");
         set_time_limit(0);
-        return $_GET['patterns'];
+        return 'aasdsadsdsd';
 
         $patterns = json_decode($_GET['patterns']);
         foreach ($patterns as $pattern){
