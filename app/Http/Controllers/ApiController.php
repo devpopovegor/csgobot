@@ -60,7 +60,9 @@ class ApiController extends Controller
 
     public function setPatterns()
     {
-        Log::info($_GET['patterns'] . " PATTERNS");
+
+        dd($_GET);
+//        Log::info($_GET . " PATTERNS");
         set_time_limit(0);
         return 'aasdsadsdsd';
 
