@@ -69,6 +69,6 @@ class ApiController extends Controller
             }
         }
 
-        return $_GET['patterns'];
+        return 'OK';
     }
 }
