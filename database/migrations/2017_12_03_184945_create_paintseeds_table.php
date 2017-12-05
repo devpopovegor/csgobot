@@ -15,8 +15,8 @@ class CreatePaintseedsTable extends Migration
     {
         Schema::create('paintseeds', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('item_id')->unsigned();
-            $table->foreign('item_id')->references('id')->on('items');
+            $table->string('item_id')->unsigned();
+//            $table->foreign('item_id')->references('id')->on('items');
             $table->string('value');
             $table->timestamps();
         });
