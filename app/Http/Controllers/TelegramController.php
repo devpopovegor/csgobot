@@ -24,7 +24,7 @@ class TelegramController extends Controller
 
     public function test(){
 
-    	dd(Paintseed::all());
+    	dd(Paintseed::all()[0]);
 
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL,"https://www.thecsgobot.com/api/service.inventory.json");
