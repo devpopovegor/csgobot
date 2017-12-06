@@ -28,7 +28,7 @@ class TelegramController extends Controller
             ->where('site_id', '=', '7')->get();
 
 
-        $tasks2 = DB::select('select item_id from tasks where client = "ska4an" and site_id = 7 and pattern <> null');
+        $tasks2 = DB::select('select item_id from tasks where client = "ska4an" and site_id = 7 and pattern <> ""');
     	dd($tasks2);
 
         $curl = curl_init();
