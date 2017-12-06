@@ -29,7 +29,7 @@ class TelegramController extends Controller
 
         $paintseeds = [];
         foreach ($tasks as $task){
-            $paintseeds[] = $task->item->patterns->where('name', '=', $task->pattern);
+            $paintseeds[] = $task->item->patterns->where('name', '=', $task->pattern)->toArray();
         }
 
         dd($paintseeds);
