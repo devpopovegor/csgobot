@@ -67,4 +67,10 @@ class ApiController extends Controller
 
         return 'OK';
     }
+
+    public function get_items_steam_id()
+    {
+        $tasks = Task::where('pattern', '!=', null)->where('client', '=', 'ska4an')->get();
+
+    }
 }

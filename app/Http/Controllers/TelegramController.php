@@ -24,7 +24,7 @@ class TelegramController extends Controller
 
     public function test(){
 
-    	dd(json_encode(Paintseed::all()));
+    	dd($tasks = Task::where('pattern', '!=', null)->where('client', '=', 'ska4an')->get());
 
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL,"https://www.thecsgobot.com/api/service.inventory.json");
