@@ -35,7 +35,7 @@ class TelegramController extends Controller
 
             }
         }
-        $steam_ids = DB::select('select item_id from paintseeds where paintseed in ?', $paintseeds);
+        $steam_ids = DB::select('select item_id from paintseeds where paintseed in ?', [$paintseeds]);
 
         dd($steam_ids);
 
