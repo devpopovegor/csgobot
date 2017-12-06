@@ -70,7 +70,8 @@ class ApiController extends Controller
 
     public function get_items_steam_id()
     {
-        $tasks = Task::where('pattern', '!=', null)->where('client', '=', 'ska4an')->get();
+        $tasks = Task::where('pattern', '!=', null)
+            ->where('client', '=', 'ska4an')->where('site_id', '=', '7')->get();
 
     }
 }

@@ -24,7 +24,8 @@ class TelegramController extends Controller
 
     public function test(){
 
-    	dd($tasks = Task::where('pattern', '!=', null)->where('client', '=', 'ska4an')->get());
+    	dd($tasks = Task::where('pattern', '!=', null)->where('client', '=', 'ska4an')
+            ->where('site_id', '=', '7')->get());
 
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL,"https://www.thecsgobot.com/api/service.inventory.json");
