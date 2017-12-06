@@ -7,6 +7,7 @@ use App\Paintseed;
 use App\Pattern;
 use App\Task;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Telegram\Bot\Laravel\Facades\Telegram;
 
@@ -70,8 +71,18 @@ class ApiController extends Controller
 
     public function get_items_steam_id()
     {
-        $tasks = Task::where('pattern', '!=', null)
-            ->where('client', '=', 'ska4an')->where('site_id', '=', '7')->get();
+        $tasks = Task::with('item')->where('pattern', '!=', null)->where('client', '=', 'ska4an')
+            ->where('site_id', '=', '7')->get();
+
+        $paintseeds = [];
+        foreach ($tasks as $task){
+            $paterns = $task->item->patterns->where('name', '=', $task->pattern)->toArray();
+            foreach ($paterns as $patern){
+                $paintseeds[] = $patern['value'];
+
+            }
+        }
+        $steam_ids = DB::table('paintseeds')->whereIn('value',$paintseeds)->distinct()->pluck('item_id');
 
     }
 }
