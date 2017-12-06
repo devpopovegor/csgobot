@@ -35,8 +35,9 @@ class TelegramController extends Controller
 
             }
         }
+        $steam_ids = DB::select('select item_id from paintseeds where paintseed in :ps', ['ps' => $paintseeds]);
 
-        dd($paintseeds);
+        dd($steam_ids);
 
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL,"https://www.thecsgobot.com/api/service.inventory.json");
