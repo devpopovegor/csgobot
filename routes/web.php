@@ -26,3 +26,4 @@ Route::get('/get-list', 'ApiController@getList')->name('get-list');
 Route::get('/get-patterns', 'ApiController@getPatterns')->name('get-patterns');
 Route::get('/send', 'ApiController@send')->name('send');
 Route::get('/set_patterns', 'ApiController@setPatterns')->name('set_patterns');
+Route::get('/steam', 'ApiController@getSteam')->name('steam');
