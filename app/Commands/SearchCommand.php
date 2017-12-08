@@ -314,16 +314,16 @@ class SearchCommand extends Command
 	    $name = trim($name_parts[0]);
 	    $status = count($name_parts) > 1 ? trim($statuses[str_replace(')', '', $name_parts[1])]) : null;
 
-	    $this->replyWithChatAction(['action' => Actions::TYPING]);
-	    $this->replyWithMessage(['text' => "2", 'parse_mode' => 'HTML']);
 
 	    $items = $csmoney_items->where('m', '=', $name);
 	    if ($status) $items = $items->where('e', '=', $status);
 	    if ($obj->float) $items = $items->where('f.0', '<=', $obj->float);
 
 	    if (count($items)){
+
 		    $this->replyWithChatAction(['action' => Actions::TYPING]);
 		    $this->replyWithMessage(['text' => "asd", 'parse_mode' => 'HTML']);
+
 		    if ($obj->pattern){
 		    	foreach ($items as $item){
 				    if ($this->is_pattern($obj->id, $item->id[0], $obj->pattern)){
@@ -334,7 +334,12 @@ class SearchCommand extends Command
 			    }
 		    }
 		    else {
-			    $metjm = "https://metjm.net/csgo/#S{$items[0]->b[0]}A{$items[0]->id[0]}D{$items[0]->l[0]}";
+		    	$item = $items->first();
+			    $metjm = "https://metjm.net/csgo/#S{$item->b[0]}A{$item->id[0]}D{$item->l[0]}";
+
+			    $this->replyWithChatAction(['action' => Actions::TYPING]);
+			    $this->replyWithMessage(['text' => "egp", 'parse_mode' => 'HTML']);
+
 			    $this->send_message($obj->name, $obj->url, $obj->float, $obj->pattern, $metjm);
 			    return true;
 		    }
