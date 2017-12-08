@@ -319,10 +319,6 @@ class SearchCommand extends Command
 	    if ($obj->float) $items = $items->where('f.0', '<=', $obj->float);
 
 	    if (count($items)){
-
-		    $this->replyWithChatAction(['action' => Actions::TYPING]);
-		    $this->replyWithMessage(['text' => "asd", 'parse_mode' => 'HTML']);
-
 		    if ($obj->pattern){
 		    	foreach ($items as $item){
 				    if ($this->is_pattern($obj->id, $item->id[0], $obj->pattern)){
