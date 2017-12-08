@@ -306,15 +306,17 @@ class SearchCommand extends Command
 
     private function check_csmoney($obj, $curl_response)
     {
-        $statuses = ['FN' => '(Factory New)', 'MW' => '(Minimal Wear)', 'FT' => '(Field-Tested)', 'BS' => '(Battle-Scarred)', 'WW' => '(Well-Worn)'];
+        $statuses = ['Factory New' =>  'FN', 'Minimal Wear' => 'MW', 'Field-Tested' => 'FT', 'Battle-Scarred' => 'BS', 'Well-Worn' => 'WW'];
 
 	    $csmoney_items = collect($curl_response);
 
 	    $name_parts = explode(' (', $obj->full_name);
 	    $name = trim($name_parts[0]);
 	    $status = count($name_parts) > 1 ? trim($statuses[str_replace(')', '', $name_parts[1])]) : null;
+
 	    $this->replyWithChatAction(['action' => Actions::TYPING]);
 	    $this->replyWithMessage(['text' => "2", 'parse_mode' => 'HTML']);
+
 	    $items = $csmoney_items->where('m', '=', $name);
 	    if ($status) $items = $items->where('e', '=', $status);
 	    if ($obj->float) $items = $items->where('f.0', '<=', $obj->float);
