@@ -291,7 +291,6 @@ class SearchCommand extends Command
     }
 
     private function is_pattern($item_id, $steam_id, $pattern_name){
-
 	    $item = Item::find($item_id);
 	    $patterns = $item->patterns->where('name', '=', $pattern_name)->pluck('value')->toArray();
 	    $steam_ids = DB::table('paintseeds')->whereIn('value',$patterns)->distinct()->pluck('item_id')->toArray();
@@ -299,9 +298,9 @@ class SearchCommand extends Command
 	    return false;
     }
 
-    private function send_message($name, $url, $float, $pattern, $metj){
+    private function send_message($name, $url, $phase, $float, $pattern, $metj){
 	    $this->replyWithChatAction(['action' => Actions::TYPING]);
-	    $this->replyWithMessage(['text' => "{$name}\r\n{$url}\r\n{$float}\r\n{$pattern}\r\n<a href='$metj'>metjm</a>", 'parse_mode' => 'HTML']);
+	    $this->replyWithMessage(['text' => "{$name}\r\n{$url}\r\n{$phase}\r\n{$float}\r\n{$pattern}\r\n<a href='$metj'>metjm</a>", 'parse_mode' => 'HTML']);
     }
 
     private function check_csmoney($obj, $curl_response)
@@ -328,7 +327,7 @@ class SearchCommand extends Command
 		    	foreach ($items as $item){
 				    if ($this->is_pattern($obj->id, $item->id[0], $obj->pattern)){
 					    $metjm = "https://metjm.net/csgo/#S{$item->b[0]}A{$item->id[0]}D{$item->l[0]}";
-					    $this->send_message($obj->name, $obj->url, $obj->float, $obj->pattern, $metjm);
+					    $this->send_message($obj->name, $obj->url, $obj->phase, $obj->float, $obj->pattern, $metjm);
 					    return true;
 				    }
 			    }
@@ -336,15 +335,10 @@ class SearchCommand extends Command
 		    else {
 		    	$item = $items->first();
 			    $metjm = "https://metjm.net/csgo/#S{$item->b[0]}A{$item->id[0]}D{$item->l[0]}";
-
-			    $this->replyWithChatAction(['action' => Actions::TYPING]);
-			    $this->replyWithMessage(['text' => "egp", 'parse_mode' => 'HTML']);
-
-			    $this->send_message($obj->name, $obj->url, $obj->float, $obj->pattern, $metjm);
+			    $this->send_message($obj->name, $obj->url, $obj->phase, $obj->float, $obj->pattern, $metjm);
 			    return true;
 		    }
 	    }
-
 
 	    return false;
 
