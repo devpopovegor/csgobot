@@ -22,9 +22,12 @@ class TelegramController extends Controller
     }
 
     public function test(){
-	    $item = Item::find(15);
-	    $patterns = $item->patterns->where('name', '=', 'FI')->pluck('value')->toArray();
-	    dd($patterns);
+	    $curl = curl_init();
+	    curl_setopt($curl, CURLOPT_URL, 'https://api.raffletrades.com/v1/inventory/');
+	    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+	    $items = json_decode(curl_exec($curl));
+	    $items = collect($items->response);
+	    dd($items);
     }
 
 	private function is_pattern($item_id, $steam_id, $pattern_name){
