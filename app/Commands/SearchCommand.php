@@ -323,7 +323,7 @@ class SearchCommand extends Command
 		    	foreach ($items as $item){
 				    if ($this->is_pattern($obj->id, $item->id[0], $obj->pattern)){
 					    $metjm = "https://metjm.net/csgo/#S{$item->b[0]}A{$item->id[0]}D{$item->l[0]}";
-					    $this->send_message($obj->name, $obj->url, $obj->phase, $obj->float, $obj->pattern, $metjm);
+					    $this->send_message($obj->name, $obj->url, $obj->phase, $item->f[0], $obj->pattern, $metjm);
 					    return true;
 				    }
 			    }
@@ -331,7 +331,7 @@ class SearchCommand extends Command
 		    else {
 		    	$item = $items->first();
 			    $metjm = "https://metjm.net/csgo/#S{$item->b[0]}A{$item->id[0]}D{$item->l[0]}";
-			    $this->send_message($obj->name, $obj->url, $obj->phase, $obj->float, $obj->pattern, $metjm);
+			    $this->send_message($obj->name, $obj->url, $obj->phase, $item->f[0], $obj->pattern, $metjm);
 			    return true;
 		    }
 	    }
