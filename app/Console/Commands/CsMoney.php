@@ -8,6 +8,7 @@ use App\Report;
 use App\Site;
 use App\Task;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Telegram\Bot\Laravel\Facades\Telegram;
 
