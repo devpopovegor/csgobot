@@ -46,110 +46,49 @@ class CsMoney extends Command
     {
         Log::info('csmoney check');
         $csmoney = Site::find(7);
+
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, $csmoney->get_data);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         $curl_exec = curl_exec($curl);
-        $csmoney_items = collect(json_decode($curl_exec));
-        Log::info(count($csmoney_items));
-        if (count($csmoney_items) > 0) {
-            $statuses = ['Factory New' => 'FN', 'Minimal Wear' => 'MW', 'Field-Tested' => 'FT',
-                'Battle-Scarred' => 'BS', 'Well-Worn' => 'WW'];
 
+        $csmoney_items = collect(json_decode($curl_exec)); // получение предметов с cs.money
+
+        Log::info(count($csmoney_items));
+
+        if (count($csmoney_items) > 0) { //проверка на то что cs.money вернула предметы
+
+            $statuses = ['Factory New' => 'FN', 'Minimal Wear' => 'MW', 'Field-Tested' => 'FT', 'Battle-Scarred' => 'BS', 'Well-Worn' => 'WW'];
             $tasks = Task::with('item')->where('site_id', '=', 7)->get();
-            foreach ($tasks as $task) {
+
+            foreach ($tasks as $task) { //перебор задач
+
                 $name_parts = explode(' (', $task->item->full_name);
                 $name = trim($name_parts[0]);
                 $status = count($name_parts) > 1 ? trim($statuses[str_replace(')', '', $name_parts[1])]) : null;
 
-	            $item = null;
-                if ($task->float) {
-                    if ($status) $item = $csmoney_items->where('m', '=', $name)
-                        ->where('e', '=', $status)->where('f.0', '<=', $task->float);
-                    else $item = $csmoney_items->where('m', '=', $name)
-                        ->where('f.0', '<=', $task->float);
-                }
-                else {
-                    if ($status) $item = $csmoney_items->where('m', '=', $name)->where('e', '=', $status);
-                    else $item = $csmoney_items->where('m', '=', $name);
-                }
+	            $items = $csmoney_items->where('m', '=', $name);
+	            if ($status) $items = $items->where('e', '=', $status);
+	            if ($task->float) $items = $items->where('f.0', '<=', $task->float);
 
-                if (count($item)) {
-                    if (!$task->pattern) {
-                        $item = $item->first();
 
-                        $url = "https://metjm.net/shared/screenshots-v5.php?cmd=request_new_link&inspect_link=steam://rungame/730/{$item->b[0]}/+csgo_econ_action_preview%20S{$item->b[0]}A{$item->id[0]}D{$item->l[0]}";
-                        $inspectUrl = "S{$item->b[0]}A{$item->id[0]}D{$item->l[0]}";
-                        $curl = curl_init();
-                        curl_setopt($curl, CURLOPT_URL, $url);
-                        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-                        $response = curl_exec($curl);
-                        curl_close($curl);
-                        $response = json_decode($response);
-                        $pattern = null;
-                        $url_metjm = '';
-                        try {
-                            if ($response->success) {
-                                $pattern = $response->result->item_paintseed;
-                                $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
-                            }
-                        }catch (\Exception $exception){
+                if (count($items)) {
 
-                        }
-
-                        Telegram::sendMessage([
-                            'chat_id' => $task->chat_id,
-                            'text' => "{$task->item->name}\r\n{$csmoney->url}\r\n{$task->item->phase}\r\n{$item->f[0]}\r\n<a href='$url_metjm'>metjm</a>",
-                            'parse_mode' => 'HTML'
-                        ]);
-                        Report::create([
-                            'item_id' => $task->item_id,
-                            'site_id' => $task->site_id,
-                            'float' => $task->float,
-                            'pattern' => $task->pattern,
-                            'client' => $task->client,
-                        ]);
-                        $task->delete();
-                    }
-                    else {
-                        foreach ($item as $obj){
-                            $url = "https://metjm.net/shared/screenshots-v5.php?cmd=request_new_link&inspect_link=steam://rungame/730/{$obj->b[0]}/+csgo_econ_action_preview%20S{$obj->b[0]}A{$obj->id[0]}D{$obj->l[0]}";
-                            $inspectUrl = "S{$obj->b[0]}A{$obj->id[0]}D{$obj->l[0]}";
-                            $curl = curl_init();
-                            curl_setopt($curl, CURLOPT_URL, $url);
-                            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-                            $response = curl_exec($curl);
-                            curl_close($curl);
-                            $response = json_decode($response);
-                            $pattern = null;
-                            $url_metjm = '';
-                            try {
-                                if ($response->success) {
-                                    $pattern = $response->result->item_paintseed;
-                                    $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
-                                }
-                            } catch (\Exception $exception){
-                                continue;
-                            }
-
-                            if ($task->item->patterns->where('name', '=', $task->pattern)->where('value', '=', $pattern)->first()) {
-                                Telegram::sendMessage([
-                                    'chat_id' => $task->chat_id,
-                                    'text' => "{$task->item->name}\r\n{$csmoney->url}\r\n{$obj->f[0]}\r\n{$task->pattern}\r\n<a href='$url_metjm'>metjm</a>",
-                                    'parse_mode' => 'HTML'
-                                ]);
-                                Report::create([
-                                    'item_id' => $task->item_id,
-                                    'site_id' => $task->site_id,
-                                    'float' => $task->float,
-                                    'pattern' => $task->pattern,
-                                    'client' => $task->client,
-                                ]);
-                                $task->delete();
-                                break;
-                            }
-                        }
-                    }
+	                if ($task->pattern){
+		                foreach ($items as $item){
+			                if ($this->is_pattern($task->item_id, $item->id[0], $task->pattern)){
+				                $metjm = "https://metjm.net/csgo/#S{$item->b[0]}A{$item->id[0]}D{$item->l[0]}";
+				                $this->send_message($task, $csmoney->url, $item->f[0], $metjm);
+				                break;
+			                }
+		                }
+	                }
+	                else {
+		                $item = $items->first();
+		                $metjm = "https://metjm.net/csgo/#S{$item->b[0]}A{$item->id[0]}D{$item->l[0]}";
+		                $this->send_message($task, $csmoney->url, $item->f[0], $metjm);
+		                return true;
+	                }
                 }
             }
         }
@@ -160,4 +99,28 @@ class CsMoney extends Command
         Log::info('end check csmoney');
 
     }
+
+	private function send_message($task, $url, $float, $metj){
+		Telegram::sendMessage([
+			'chat_id' => $task->chat_id,
+			'text' => "{$task->item->name}\r\n{$url}\r\n{$task->item->phase}\r\n{$float}\r\n{$task->pattern}\r\n<a href='$metj'>metjm</a>",
+			'parse_mode' => 'HTML'
+		]);
+		Report::create([
+			'item_id' => $task->item_id,
+			'site_id' => $task->site_id,
+			'float' => $task->float,
+			'pattern' => $task->pattern,
+			'client' => $task->client,
+		]);
+		$task->delete();
+	}
+
+	private function is_pattern($item_id, $steam_id, $pattern_name){
+		$item = Item::find($item_id);
+		$patterns = $item->patterns->where('name', '=', $pattern_name)->pluck('value')->toArray();
+		$steam_ids = DB::table('paintseeds')->whereIn('value',$patterns)->distinct()->pluck('item_id')->toArray();
+		if (in_array($steam_id, $steam_ids)) return true;
+		return false;
+	}
 }
