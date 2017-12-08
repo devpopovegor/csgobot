@@ -87,7 +87,6 @@ class CsMoney extends Command
 		                $item = $items->first();
 		                $metjm = "https://metjm.net/csgo/#S{$item->b[0]}A{$item->id[0]}D{$item->l[0]}";
 		                $this->send_message($task, $csmoney->url, $item->f[0], $metjm);
-		                return true;
 	                }
                 }
             }
