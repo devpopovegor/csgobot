@@ -351,17 +351,19 @@ class SearchCommand extends Command
             if (count($items)) {
                 if ($obj->pattern) {
                     foreach ($items as $item) {
-	                    if ($this->is_pattern($obj->id, $item->id[0], $obj->pattern)){
-		                    $metjm = "https://metjm.net/csgo/#S{$item->b[0]}A{$item->id[0]}D{$item->l[0]}";
-		                    $this->send_message($obj->name, $obj->url, $obj->phase, $item->f[0], $obj->pattern, $metjm);
+	                    if ($this->is_pattern($obj->id, $item->id, $obj->pattern)){
+		                    $inspectUrl = explode('%20', $item->inspect_link)[1];
+		                    $metjm = "https://metjm.net/csgo/#{$inspectUrl}";
+		                    $this->send_message($obj->name, $obj->url, $obj->phase, $item->float, $obj->pattern, $metjm);
 		                    return true;
 	                    }
                     }
                 }
                 else {
 	                $item = $items->first();
-	                $metjm = "https://metjm.net/csgo/#S{$item->b[0]}A{$item->id[0]}D{$item->l[0]}";
-	                $this->send_message($obj->name, $obj->url, $obj->phase, $item->f[0], $obj->pattern, $metjm);
+	                $inspectUrl = explode('%20', $item->inspect_link)[1];
+	                $metjm = "https://metjm.net/csgo/#{$inspectUrl}";
+	                $this->send_message($obj->name, $obj->url, $obj->phase, $item->float, $obj->pattern, $metjm);
 	                return true;
                 }
             }
