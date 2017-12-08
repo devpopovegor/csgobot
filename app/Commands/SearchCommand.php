@@ -303,6 +303,7 @@ class SearchCommand extends Command
 	    $this->replyWithMessage(['text' => "{$name}\r\n{$url}\r\n{$phase}\r\n{$float}\r\n{$pattern}\r\n<a href='$metj'>metjm</a>", 'parse_mode' => 'HTML']);
     }
 
+
     private function check_csmoney($obj, $curl_response)
     {
         $statuses = ['Factory New' =>  'FN', 'Minimal Wear' => 'MW', 'Field-Tested' => 'FT', 'Battle-Scarred' => 'BS', 'Well-Worn' => 'WW'];
@@ -343,53 +344,25 @@ class SearchCommand extends Command
     {
         try {
             $curl_response = collect($curl_response->response);
-            $items = $curl_response->where('custom_market_name', '=', $obj->full_name);
 
+            $items = $curl_response->where('custom_market_name', '=', $obj->full_name);
             if ($obj->float) $items = $items->where('float', '<=', $obj->float);
 
             if (count($items)) {
                 if ($obj->pattern) {
                     foreach ($items as $item) {
-                        $url = "https://metjm.net/shared/screenshots-v5.php?cmd=request_new_link&inspect_link={$item->inspect_link}";
-                        $inspectUrl = explode('%20', $item->inspect_link)[1];
-                        $curl = curl_init();
-                        curl_setopt($curl, CURLOPT_URL, $url);
-                        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-                        $response = curl_exec($curl);
-                        curl_close($curl);
-                        $response = json_decode($response);
-                        $pattern = $response->result->item_paintseed;
-                        $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
-                        $need_item = Item::find($obj->id);
-                        $patterns = $need_item->patterns->where('name', '=', $obj->pattern)->where('value', '=', $pattern)->first();
-                        if ($patterns) {
-                            $this->replyWithChatAction(['action' => Actions::TYPING]);
-                            $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}\r\n{$item->float}\r\n{$obj->pattern}\r\n<a href='$url_metjm'>metjm</a>",
-                                'parse_mode' => 'HTML']);
-                            return true;
-                        }
+	                    if ($this->is_pattern($obj->id, $item->id[0], $obj->pattern)){
+		                    $metjm = "https://metjm.net/csgo/#S{$item->b[0]}A{$item->id[0]}D{$item->l[0]}";
+		                    $this->send_message($obj->name, $obj->url, $obj->phase, $item->f[0], $obj->pattern, $metjm);
+		                    return true;
+	                    }
                     }
                 }
                 else {
-                    $item = $items->first();
-                    $url = "https://metjm.net/shared/screenshots-v5.php?cmd=request_new_link&inspect_link={$item->inspect_link}";
-                    $inspectUrl = explode('%20', $item->inspect_link)[1];
-                    $curl = curl_init();
-                    curl_setopt($curl, CURLOPT_URL, $url);
-                    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-                    $response = curl_exec($curl);
-                    curl_close($curl);
-                    $response = json_decode($response);
-                    $pattern = null;
-                    $url_metjm = '';
-                    if ($response->success) {
-                        $pattern = $response->result->item_paintseed;
-                        $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
-                    }
-                    $this->replyWithChatAction(['action' => Actions::TYPING]);
-                    $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}\r\n{$item->float}\r\n<a href='$url_metjm'>metjm</a>",
-                        'parse_mode' => 'HTML']);
-                    return true;
+	                $item = $items->first();
+	                $metjm = "https://metjm.net/csgo/#S{$item->b[0]}A{$item->id[0]}D{$item->l[0]}";
+	                $this->send_message($obj->name, $obj->url, $obj->phase, $item->f[0], $obj->pattern, $metjm);
+	                return true;
                 }
             }
 
