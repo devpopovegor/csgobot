@@ -309,12 +309,12 @@ class SearchCommand extends Command
         $statuses = ['FN' => '(Factory New)', 'MW' => '(Minimal Wear)', 'FT' => '(Field-Tested)', 'BS' => '(Battle-Scarred)', 'WW' => '(Well-Worn)'];
 
 	    $csmoney_items = collect($curl_response);
-	    $this->replyWithChatAction(['action' => Actions::TYPING]);
-	    $this->replyWithMessage(['text' => "1", 'parse_mode' => 'HTML']);
+
 	    $name_parts = explode(' (', $obj->full_name);
 	    $name = trim($name_parts[0]);
 	    $status = count($name_parts) > 1 ? trim($statuses[str_replace(')', '', $name_parts[1])]) : null;
-
+	    $this->replyWithChatAction(['action' => Actions::TYPING]);
+	    $this->replyWithMessage(['text' => "2", 'parse_mode' => 'HTML']);
 	    $items = $csmoney_items->where('m', '=', $name);
 	    if ($status) $items = $items->where('e', '=', $status);
 	    if ($obj->float) $items = $items->where('f.0', '<=', $obj->float);
