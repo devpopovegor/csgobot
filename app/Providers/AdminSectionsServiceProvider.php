@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Dealer;
 //use App\Http\Admin\Sections\Reports;
 use App\Item;
+use App\Paintseed;
 use App\Pattern;
 use App\Report;
 use App\Site;
@@ -26,6 +27,7 @@ class AdminSectionsServiceProvider extends ServiceProvider
         Task::class => 'App\Http\Admin\Sections\Tasks',
         Pattern::class => 'App\Http\Admin\Sections\Patterns',
         Report::class => 'App\Http\Admin\Sections\Reports',
+        Paintseed::class => 'App\Http\Admin\Sections\Paintseeds',
     ];
 
     /**
