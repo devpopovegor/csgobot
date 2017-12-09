@@ -31,7 +31,7 @@ class TelegramController extends Controller
             foreach ($paterns as $patern){
                 if (!in_array($patern, $paintseeds)) $paintseeds[] = $patern;
             }
-            dd($paintseeds);
+//            dd($paintseeds);
         }
         dd($paintseeds);
         $steam_ids = DB::table('paintseeds')->whereIn('value',$paintseeds)->distinct()->pluck('item_id')->toArray();
