@@ -59,7 +59,7 @@ class Tasks extends Section implements Initializable
                 AdminColumn::text('float', 'Float'),
                 AdminColumn::text('pattern', 'Паттерн'),
                 AdminColumn::text('client', 'Клиент')
-            )->paginate(100);
+            )->setDisplaySearch(true)->paginate(100);
     }
 
     /**
