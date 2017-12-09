@@ -35,9 +35,9 @@ class TelegramController extends Controller
 //            dd($paintseeds);
         }
 //        dd($paintseeds);
-        $steam_ids = DB::table('paintseeds')->whereIn('value',$paintseeds)->distinct()->get()->toArray();
+        $steam_ids = DB::table('paintseeds')->whereIn('value',$paintseeds)->distinct()->get();
 
-        dd(array_unique($paintseeds), $steam_ids);
+        dd(array_unique($paintseeds), $steam_ids->toArray());
     }
 
 
