@@ -35,17 +35,9 @@ class TelegramController extends Controller
 //            dd($paintseeds);
         }
 //        dd($paintseeds);
-        $steam_ids = DB::table('paintseeds')->whereIn('value',$paintseeds)->pluck('item_id', 'name')->toArray();
+        $steam_ids = DB::table('paintseeds')->whereIn('value',$paintseeds)->pluck('item_id')->toArray();
         dd(array_unique($paintseeds), $steam_ids);
     }
 
-	private function is_pattern($item_id, $steam_id, $pattern_name){
-
-		$item = Item::find($item_id);
-		$patterns = $item->patterns->where('name', '=', $pattern_name)->pluck('value')->toArray();
-		$steam_ids = DB::table('paintseeds')->whereIn('value',$patterns)->distinct()->pluck('item_id')->toArray();
-		if (in_array($steam_id, $steam_ids)) return true;
-		return false;
-	}
 
 }
