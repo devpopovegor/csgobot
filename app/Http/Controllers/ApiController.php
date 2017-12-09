@@ -73,7 +73,7 @@ class ApiController extends Controller
     public function getSteam()
     {
         $tasks = Task::with('item')->where('client', '=', 'ska4an')
-            ->where('site_id', '=', '7')->get();
+            ->where('site_id', '=', '7')->where('pattern', '!=', null)->get();
 
         $paintseeds = [];
         foreach ($tasks as $task){

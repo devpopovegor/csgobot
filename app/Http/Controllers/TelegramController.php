@@ -23,8 +23,8 @@ class TelegramController extends Controller
 
     public function test(){
         $tasks = Task::with('item')->where('client', '=', 'ska4an')
-            ->where('site_id', '=', '7')->get();
-
+            ->where('site_id', '=', '7')->where('pattern', '!=', null)->get();
+        echo count($tasks) . "\r\n";
         $paintseeds = [];
         foreach ($tasks as $task){
             $paterns = $task->item->patterns->where('name', '=', $task->pattern)->toArray();
