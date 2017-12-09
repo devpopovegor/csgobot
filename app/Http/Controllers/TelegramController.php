@@ -22,12 +22,19 @@ class TelegramController extends Controller
     }
 
     public function test(){
-	    $curl = curl_init();
-	    curl_setopt($curl, CURLOPT_URL, 'https://api.raffletrades.com/v1/inventory/');
-	    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-	    $items = json_decode(curl_exec($curl));
-	    $items = collect($items->response);
-	    dd($items);
+        $tasks = Task::with('item')->where('client', '=', 'ska4an')
+            ->where('site_id', '=', '7')->get();
+
+        $paintseeds = [];
+        foreach ($tasks as $task){
+            $paterns = $task->item->patterns->where('name', '=', $task->pattern)->toArray();
+            foreach ($paterns as $patern){
+                $paintseeds[] = $patern['value'];
+
+            }
+        }
+        $steam_ids = DB::table('paintseeds')->whereIn('value',$paintseeds)->distinct()->pluck('item_id')->toArray();
+        dd($steam_ids);
     }
 
 	private function is_pattern($item_id, $steam_id, $pattern_name){
