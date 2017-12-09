@@ -25,6 +25,11 @@ class TelegramController extends Controller
 
 //        dd("SUCK MY DICK\r\nLICK MY ASS");
 
+        $ps = Paintseed::where('name', '=', '★ StatTrak™ Bayonet | Marble Fade(Factory New)')
+        ->update(['name' => '★ StatTrak™ Bayonet | Marble Fade (Factory New)']);
+
+        dd('ok');
+
         $tasks = Task::with('item')->where('client', '=', 'ska4an')
             ->where('site_id', '=', '7')->where('pattern', '!=', '')->get();
         echo count($tasks) . "\r\n";
