@@ -29,7 +29,8 @@ class TelegramController extends Controller
         foreach ($tasks as $task){
             $paterns = $task->item->patterns->where('name', '=', $task->pattern)->pluck('value')->toArray();
             foreach ($paterns as $patern){
-                if (!in_array($patern, $paintseeds)) $paintseeds[] = $patern;
+//                if (!in_array($patern, $paintseeds))
+                    $paintseeds[] = $patern;
             }
 //            dd($paintseeds);
         }
