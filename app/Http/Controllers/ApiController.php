@@ -73,17 +73,17 @@ class ApiController extends Controller
     public function getSteam()
     {
         $tasks = Task::with('item')->where('client', '=', 'ska4an')
-            ->where('site_id', '=', '7')->where('pattern', '!=', null)->get();
-
+            ->where('site_id', '=', '7')->where('pattern', '!=', '')->get();
+        echo count($tasks) . "\r\n";
         $paintseeds = [];
         foreach ($tasks as $task){
-            $paterns = $task->item->patterns->where('name', '=', $task->pattern)->toArray();
+            $paterns = $task->item->patterns->where('name', '=', $task->pattern)->pluck('value')->toArray();
             foreach ($paterns as $patern){
-                $paintseeds[] = $patern['value'];
-
+                $paintseeds[] = $patern;
             }
         }
-        $steam_ids = DB::table('paintseeds')->whereIn('value',$paintseeds)->distinct()->pluck('item_id')->toArray();
+        $paintseeds = array_unique($paintseeds);
+        $steam_ids = DB::table('paintseeds')->whereIn('value',$paintseeds)->distinct()->get()->toArray();
 
         return json_encode($steam_ids);
 
