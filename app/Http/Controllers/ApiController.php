@@ -74,7 +74,6 @@ class ApiController extends Controller
     {
         $tasks = Task::with('item')->where('client', '=', 'ska4an')
             ->where('site_id', '=', '7')->where('pattern', '!=', '')->get();
-        echo count($tasks) . "\r\n";
         $paintseeds = [];
         foreach ($tasks as $task){
             $paterns = $task->item->patterns->where('name', '=', $task->pattern)->pluck('value')->toArray();
