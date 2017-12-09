@@ -28,12 +28,11 @@ class TelegramController extends Controller
         $paintseeds = [];
         foreach ($tasks as $task){
             $paterns = $task->item->patterns->where('name', '=', $task->pattern)->pluck('value')->toArray();
-            dd($paterns);
             foreach ($paterns as $patern){
-                $paintseeds[] = $patern['value'];
-
+                if (!in_array($paintseeds, $patern)) $paintseeds[] = $patern;
             }
         }
+        dd($paintseeds);
         $steam_ids = DB::table('paintseeds')->whereIn('value',$paintseeds)->distinct()->pluck('item_id')->toArray();
         dd($steam_ids);
     }
