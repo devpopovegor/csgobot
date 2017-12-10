@@ -25,8 +25,8 @@ class TelegramController extends Controller
 
 //        dd("SUCK MY DICK\r\nLICK MY ASS");
 
-        $ps = Paintseed::where('name', '=', '★ Karambit | Marble Fade(Factory New)')
-        ->update(['name' => '★ Karambit | Marble Fade (Factory New)']);
+        $ps = Paintseed::where('name', '=', '★ Karambit | Marble Fade(Minimal Wear)')
+        ->update(['name' => '★ Karambit | Marble Fade (Minimal Wear)']);
 
         dd('ok');
 
