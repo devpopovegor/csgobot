@@ -46,7 +46,14 @@ class TelegramController extends Controller
             }
         }
 
-        dd($objects);
+        $result = [];
+
+        foreach ($objects as $object){
+            $result[] = Paintseed::where('name', '=', $object['name'])
+                ->where('value', '=', $object['paintseed'])->get();
+        }
+
+        dd($result);
     }
 
 }
