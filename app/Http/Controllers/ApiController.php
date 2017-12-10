@@ -48,7 +48,7 @@ class ApiController extends Controller
         foreach ($tasks as $task){
             $arr = [];
             $arr['task'] = $task;
-            $arr['patterns'] = $task->item->patterns->pluck('value')->toArray();
+            $arr['patterns'] = array_intersect($task->item->paintseeds->pluck('value', 'item_id')->toArray(), array_unique($task->item->patterns->where('name', '=', $task->pattern)->pluck('value')->toArray()));
             $result[] = $arr;
         }
 
