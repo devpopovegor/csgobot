@@ -36,7 +36,6 @@ class TelegramController extends Controller
             ->where('site_id', '=', '7')->where('pattern', '!=', '')->get();
         echo count($tasks) . "\r\n";
 
-        $objects = [];
         $paindseeds = [];
         $names = [];
 
@@ -44,17 +43,13 @@ class TelegramController extends Controller
             $paterns = $task->item->patterns->where('name', '=', $task->pattern);
             $names[] = $task->item->name;
             foreach ($paterns as $patern){
-                $object = [];
-                $object['paintseed'] = $patern->value;
-                $object['name'] = $task->item->name;
-                $objects[] = $object;
                 $paindseeds[] = $patern->value;
             }
         }
 
         $paindseeds = array_unique($paindseeds);
         $steams = Paintseed::whereIn('value', $paindseeds)->get();
-        $steams = $steams->whereIn('name', $names)->toArray();
+        $steams = $steams->whereIn('name', $names)->toJson();
         dd($steams);
 
 
