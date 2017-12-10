@@ -48,6 +48,8 @@ class TelegramController extends Controller
             }
         }
 
+        $paindseeds = array_unique($paindseeds);
+
         dd($paindseeds);
 
         $result = [];
