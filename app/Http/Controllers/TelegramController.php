@@ -25,8 +25,11 @@ class TelegramController extends Controller
 
 //        dd("SUCK MY DICK\r\nLICK MY ASS");
 
-        Paintseed::where('name', '=', 'AK-47 | Case Hardened (Battle-Scarred)')
-            ->update(['steam_id' => '40']);
+        $names_paintseeds = DB::select('select DISTINCT `name` from paintseeds')->get();
+        dd($names_paintseeds);
+
+        Paintseed::where('name', '=', 'StatTrak™ AK-47 | Case Hardened (Well-Worn)')
+            ->update(['steam_id' => '44']);
         Paintseed::where('name', '=', 'StatTrak™ AK-47 | Case Hardened (Minimal Wear)')
             ->update(['steam_id' => '42']);
         Paintseed::where('name', '=', 'StatTrak™ AK-47 | Case Hardened (Field-Tested)')
