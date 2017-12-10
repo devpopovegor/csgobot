@@ -38,6 +38,7 @@ class TelegramController extends Controller
 
         $objects = [];
         $paindseeds = [];
+        $names = [];
 
         foreach ($tasks as $task){
             $paterns = $task->item->patterns->where('name', '=', $task->pattern);
@@ -47,11 +48,13 @@ class TelegramController extends Controller
                 $object['name'] = $task->item->name;
                 $objects[] = $object;
                 $paindseeds[] = $patern->value;
+                $names[] = $patern->name;
             }
         }
 
         $paindseeds = array_unique($paindseeds);
-        $steams = Paintseed::whereIn('value', $paindseeds)->get()->toArray();
+        $steams = Paintseed::whereIn('value', $paindseeds)->get();
+        $steams = $steams->whereIn('name', $names)->toArray();
         dd($steams);
         $resut = [];
         foreach ($objects as $object){
