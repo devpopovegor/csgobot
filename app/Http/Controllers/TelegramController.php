@@ -50,7 +50,7 @@ class TelegramController extends Controller
 
         $paindseeds = array_unique($paindseeds);
 
-        $steams = Paintseed::whereIn('value', $paindseeds)->get();
+        $steams = Paintseed::whereIn('value', $paindseeds)->get()->toArray();
 
         dd($steams);
 
