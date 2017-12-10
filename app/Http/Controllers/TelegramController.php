@@ -23,7 +23,7 @@ class TelegramController extends Controller
 
     public function test(){
 
-        dd("SUCK MY DICK\r\nLICK MY ASS");
+//        dd("SUCK MY DICK\r\nLICK MY ASS");
 
         set_time_limit(0);
 
