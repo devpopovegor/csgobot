@@ -37,9 +37,9 @@ class TelegramController extends Controller
         $names = [];
         foreach ($tasks as $task){
             $names[] = $task->item->name;
-        $paterns = $task->item->patterns->where('name', '=', $task->pattern)->get();
+        $paterns = $task->item->patterns->where('name', '=', $task->pattern);
             foreach ($paterns as $patern){
-                    $paintseeds[] = $patern;
+                    $paintseeds[] = $patern->value;
             }
         }
         $paintseeds = array_unique($paintseeds);
