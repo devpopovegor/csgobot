@@ -25,23 +25,23 @@ class TelegramController extends Controller
 
 //        dd("SUCK MY DICK\r\nLICK MY ASS");
 
-//        $ps = Paintseed::where('name', '=', '★ Karambit | Marble Fade(Minimal Wear)')
-//        ->update(['name' => '★ Karambit | Marble Fade (Minimal Wear)']);
+        $ps = Paintseed::where('name', '=', 'AK-47 | Case Hardened (Factory New)')
+        ->update(['steam_id' => '36']);
+
+        dd('ok');
+
+//        $tasks = Task::with('item')->where('site_id', '=', '7')
+//            ->where('client','=', 'ska4an')->get();
 //
-//        dd('ok');
-
-        $tasks = Task::with('item')->where('site_id', '=', '7')
-            ->where('client','=', 'ska4an')->get();
-
-        $result = [];
-        foreach ($tasks as $task){
-            $arr = [];
-            $arr['task'] = $task;
-            $arr['patterns'] = $task->item->patterns->pluck('value')->toArray();
-            $result[] = $arr;
-        }
-        dd($result[10]);
-        set_time_limit(0);
+//        $result = [];
+//        foreach ($tasks as $task){
+//            $arr = [];
+//            $arr['task'] = $task;
+//            $arr['patterns'] = $task->item->patterns->pluck('value')->toArray();
+//            $result[] = $arr;
+//        }
+//        dd($result[10]);
+//        set_time_limit(0);
 
         $tasks = Task::with('item')->where('client', '=', 'ska4an')
             ->where('site_id', '=', '7')->where('pattern', '!=', '')->get();
