@@ -34,7 +34,7 @@ class TelegramController extends Controller
         foreach ($tasks as $task){
             $arr = [];
             $arr['task'] = $task;
-            $arr['patterns'] = array_unique($task->item->patterns->pluck('value')->toArray());
+            $arr['patterns'] = array_unique($task->item->patterns->where('name', '=', $task->pattern)->pluck('value')->toArray());
             $arr['paintseeds'] = $task->item->paintseeds->pluck('value', 'item_id')->toArray();
             $arr['match'] = array_intersect($arr['paintseeds'], $arr['patterns']);
             $result[] = $arr;
