@@ -52,7 +52,7 @@ class TelegramController extends Controller
 
         $steams = Paintseed::whereIn('value', $paindseeds)->get()->toArray();
 
-        dd($steams);
+        dd($steams,$objects);
 
     }
 
