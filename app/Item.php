@@ -15,4 +15,8 @@ class Item extends Model
     public function patterns(){
         return $this->hasMany(Pattern::class);
     }
+
+    public function paintseeds(){
+        return $this->hasMany(Paintseed::class);
+    }
 }

@@ -25,36 +25,20 @@ class TelegramController extends Controller
 
 //        dd("SUCK MY DICK\r\nLICK MY ASS");
 
-//        $names_paintseeds = DB::select('select DISTINCT `name` from paintseeds');
-        $names_paintseeds = Paintseed::all()->pluck('name')->toArray();
-        $names_paintseeds = array_unique($names_paintseeds);
-        $ids = Item::whereIn('name', $names_paintseeds)->distinct()->get();
-        foreach ($ids as $id){
-            Paintseed::where('name', '=', $id->name)->update(['steam_id' => $id->id]);
+
+        $tasks = Task::with('item')->where('site_id', '=', '7')
+            ->where('client','=', 'ska4an')->get();
+
+        $result = [];
+        foreach ($tasks as $task){
+            $arr = [];
+            $arr['task'] = $task;
+            $arr['patterns'] = $task->item->patterns->pluck('value')->toArray();
+            $arr['paintseeds'] = $task->item->paintseeds->pluck('item_id')->toArray();
+            $result[] = $arr;
         }
-        dd("ok");
-
-        Paintseed::where('name', '=', 'StatTrak™ AK-47 | Case Hardened (Well-Worn)')
-            ->update(['steam_id' => '44']);
-        Paintseed::where('name', '=', 'StatTrak™ AK-47 | Case Hardened (Minimal Wear)')
-            ->update(['steam_id' => '42']);
-        Paintseed::where('name', '=', 'StatTrak™ AK-47 | Case Hardened (Field-Tested)')
-            ->update(['steam_id' => '43']);
-
-        dd('ok');
-
-//        $tasks = Task::with('item')->where('site_id', '=', '7')
-//            ->where('client','=', 'ska4an')->get();
-//
-//        $result = [];
-//        foreach ($tasks as $task){
-//            $arr = [];
-//            $arr['task'] = $task;
-//            $arr['patterns'] = $task->item->patterns->pluck('value')->toArray();
-//            $result[] = $arr;
-//        }
-//        dd($result[10]);
-//        set_time_limit(0);
+        dd($result[10]);
+        set_time_limit(0);
 
         $tasks = Task::with('item')->where('client', '=', 'ska4an')
             ->where('site_id', '=', '7')->where('pattern', '!=', '')->get();
