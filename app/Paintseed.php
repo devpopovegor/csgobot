@@ -9,6 +9,6 @@ class Paintseed extends Model
     protected $fillable = ['item_id', 'value', 'name', 'steam_id'];
 
     public function item(){
-        return $this->belongsTo(Item::class);
+        return $this->belongsTo(Item::class, 'steam_id');
     }
 }
