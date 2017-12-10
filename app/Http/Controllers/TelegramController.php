@@ -25,10 +25,10 @@ class TelegramController extends Controller
 
 //        dd("SUCK MY DICK\r\nLICK MY ASS");
 
-        $ps = Paintseed::where('name', '=', '★ Karambit | Marble Fade(Minimal Wear)')
-        ->update(['name' => '★ Karambit | Marble Fade (Minimal Wear)']);
-
-        dd('ok');
+//        $ps = Paintseed::where('name', '=', '★ Karambit | Marble Fade(Minimal Wear)')
+//        ->update(['name' => '★ Karambit | Marble Fade (Minimal Wear)']);
+//
+//        dd('ok');
 
         $tasks = Task::with('item')->where('client', '=', 'ska4an')
             ->where('site_id', '=', '7')->where('pattern', '!=', '')->get();
@@ -43,7 +43,7 @@ class TelegramController extends Controller
         $paintseeds = array_unique($paintseeds);
         $steam_ids = DB::table('paintseeds')->where('name','=',$tasks[0]->item->name)->get();
         $steam_ids = $steam_ids->whereIn('value',$paintseeds)->toArray();
-        dd(array_unique($paintseeds), $steam_ids, $tasks[0]->item->name);
+        dd(array_unique($paintseeds), $steam_ids);
     }
 //
 
