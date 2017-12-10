@@ -45,7 +45,7 @@ class ApiController extends Controller
             $arr = [];
             $arr['task'] = $task;
             $arr['patterns'] = array_unique($task->item->patterns->where('name', '=', $task->pattern)->pluck('value')->toArray());
-            $arr['patterns'] = $task->item->paintseeds->whereIn('value', $arr['patterns'])->pluck('value','item_id')->toArray();
+            $arr['patterns'] = $task->item->paintseeds->whereIn('value', $arr['patterns'])->pluck('item_id')->toArray();
             $result[] = $arr;
         }
 
