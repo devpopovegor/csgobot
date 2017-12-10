@@ -36,10 +36,6 @@ class ApiController extends Controller
 
     public function getList()
     {
-//        $tasks = json_encode(Task::with('item')->where('site_id', '=', '7')
-//            ->where('client','=', 'ska4an')->get());
-
-//        return json_encode($tasks);
 
         $tasks = Task::with('item')->where('site_id', '=', '7')
             ->where('client','=', 'ska4an')->get();
@@ -49,6 +45,7 @@ class ApiController extends Controller
             $arr = [];
             $arr['task'] = $task;
             $arr['patterns'] = array_intersect($task->item->paintseeds->pluck('value', 'item_id')->toArray(), array_unique($task->item->patterns->where('name', '=', $task->pattern)->pluck('value')->toArray()));
+            $arr['patterns'] = array_keys($arr['patterns']);
             $result[] = $arr;
         }
 
