@@ -34,14 +34,16 @@ class TelegramController extends Controller
             ->where('site_id', '=', '7')->where('pattern', '!=', '')->get();
         echo count($tasks) . "\r\n";
         $paintseeds = [];
+        $names = [];
         foreach ($tasks as $task){
+            $names[] = $task->item->name;
         $paterns = $task->item->patterns->where('name', '=', $task->pattern)->pluck('value')->toArray();
             foreach ($paterns as $patern){
                     $paintseeds[] = $patern;
             }
         }
         $paintseeds = array_unique($paintseeds);
-        $steam_ids = DB::table('paintseeds')->where('name','=',$tasks[0]->item->name)->get();
+        $steam_ids = DB::table('paintseeds')->whereIn('name', $names)->get();
         $steam_ids = $steam_ids->whereIn('value',$paintseeds)->toArray();
         dd(array_unique($paintseeds), $steam_ids);
     }
