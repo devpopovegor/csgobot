@@ -29,7 +29,10 @@ class TelegramController extends Controller
         $names_paintseeds = Paintseed::all()->pluck('name')->toArray();
         $names_paintseeds = array_unique($names_paintseeds);
         $ids = Item::whereIn('name', $names_paintseeds)->distinct()->get();
-        dd($names_paintseeds, $ids);
+        foreach ($ids as $id){
+            Paintseed::where('name', '=', $id->name)->update(['steam_id' => $id->id]);
+        }
+        dd("ok");
 
         Paintseed::where('name', '=', 'StatTrak™ AK-47 | Case Hardened (Well-Worn)')
             ->update(['steam_id' => '44']);
