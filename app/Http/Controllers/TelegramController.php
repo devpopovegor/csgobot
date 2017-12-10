@@ -39,7 +39,7 @@ class TelegramController extends Controller
             $arr['match'] = array_intersect($arr['paintseeds'], $arr['patterns']);
             $result[] = $arr;
         }
-        dd($result[10]);
+        dd($result[9]);
 
         $tasks = Task::with('item')->where('client', '=', 'ska4an')
             ->where('site_id', '=', '7')->where('pattern', '!=', '')->get();
