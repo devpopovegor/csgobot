@@ -41,7 +41,7 @@ class TelegramController extends Controller
             foreach ($paterns as $patern){
                 $object = [];
                 $object['paintseed'] = $patern->value;
-                $object['name'] = $task->item()->name;
+                $object['name'] = $task->item->name;
                 $objects[] = $object;
             }
         }
