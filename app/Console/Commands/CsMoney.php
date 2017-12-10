@@ -118,7 +118,7 @@ class CsMoney extends Command
 	}
 
 	private function get_steam($tasks){
-        $tasks = $tasks->whereNotNull('pattern');
+        $tasks = $tasks->where('pattern', '!=', '');
         $result = [];
         foreach ($tasks as $task){
             $arr = array_unique($task->item->patterns->where('name', '=', $task->pattern)->pluck('value')->toArray());
