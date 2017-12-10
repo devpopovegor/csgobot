@@ -17,6 +17,6 @@ class Item extends Model
     }
 
     public function paintseeds(){
-        return $this->hasMany(Paintseed::class);
+        return $this->hasMany(Paintseed::class, 'steam_id');
     }
 }
