@@ -25,23 +25,21 @@ class TelegramController extends Controller
 
 //        dd("SUCK MY DICK\r\nLICK MY ASS");
 
-//        $ps = Paintseed::where('name', '=', '★ StatTrak™ Bayonet | Marble Fade(Factory New)')
-//        ->update(['name' => '★ StatTrak™ Bayonet | Marble Fade (Factory New)']);
-//
-//        dd('ok');
+        $ps = Paintseed::where('name', '=', '★ StatTrak™ Bayonet | Marble Fade(Minimal Wear)')
+        ->update(['name' => '★ StatTrak™ Bayonet | Marble Fade (Minimal Wear)']);
+
+        dd('ok');
 
         $tasks = Task::with('item')->where('client', '=', 'ska4an')
             ->where('site_id', '=', '7')->where('pattern', '!=', '')->get();
         echo count($tasks) . "\r\n";
-//        $paintseeds = [];
-//        foreach ($tasks as $task){
-        $paintseeds = $tasks[0]->item->patterns->where('name', '=', $tasks[0]->pattern)->pluck('value')->toArray();
-//            foreach ($paterns as $patern){
-//                if (!in_array($patern, $paintseeds))
-//                    $paintseeds[] = $patern;
-//            }
-//            dd($paintseeds);
-//        }
+        $paintseeds = [];
+        foreach ($tasks as $task){
+        $paterns = $task->item->patterns->where('name', '=', $task->pattern)->pluck('value')->toArray();
+            foreach ($paterns as $patern){
+                    $paintseeds[] = $patern;
+            }
+        }
         $paintseeds = array_unique($paintseeds);
         $steam_ids = DB::table('paintseeds')->where('name','=',$tasks[0]->item->name)->get();
         $steam_ids = $steam_ids->whereIn('value',$paintseeds)->toArray();
