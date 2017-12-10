@@ -28,7 +28,8 @@ class TelegramController extends Controller
 //        $names_paintseeds = DB::select('select DISTINCT `name` from paintseeds');
         $names_paintseeds = Paintseed::all()->pluck('name')->toArray();
         $names_paintseeds = array_unique($names_paintseeds);
-        dd($names_paintseeds);
+        $ids = Item::whereIn('name', $names_paintseeds)->distinct()->get();
+        dd($names_paintseeds, $ids);
 
         Paintseed::where('name', '=', 'StatTrak™ AK-47 | Case Hardened (Well-Worn)')
             ->update(['steam_id' => '44']);
