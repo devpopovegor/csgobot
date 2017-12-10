@@ -49,9 +49,13 @@ class TelegramController extends Controller
         }
 
         $paindseeds = array_unique($paindseeds);
-
-        $steams = Paintseed::whereIn('value', $paindseeds)->get()->toArray();
-
+        $steams = Paintseed::whereIn('value', $paindseeds)->get();
+        $resut = [];
+        foreach ($objects as $object){
+            $resut[] = $steams->where('value', '=', $object['paintseed'])
+                ->where('name', '=', $object['name']);
+        }
+        dd($resut);
         dd($steams,$objects);
 
     }
