@@ -40,7 +40,7 @@ class TelegramController extends Controller
             $arr['patterns'] = $task->item->patterns;
             $result[] = $arr;
         }
-        dd($result);
+        dd(json_encode($result));
         set_time_limit(0);
 
         $tasks = Task::with('item')->where('client', '=', 'ska4an')
