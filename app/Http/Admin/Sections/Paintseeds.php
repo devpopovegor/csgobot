@@ -53,7 +53,9 @@ class Paintseeds extends Section implements Initializable
 	public function onDisplay()
 	{
 		return AdminDisplay::datatables()
-                            ->setFilters(AdminDisplayFilter::field('value'))
+                           ->setFilters(AdminDisplayFilter::custom('custom_filter')->setCallback(function($query, $value) {
+                               $query->where('value', $value);
+                           })
 		                   ->setHtmlAttribute('class', 'table-primary')
 		                   ->setColumns(
 			                   AdminColumn::text('id', '#')->setWidth('30px'),
