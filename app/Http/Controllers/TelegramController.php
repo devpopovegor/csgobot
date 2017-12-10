@@ -30,6 +30,8 @@ class TelegramController extends Controller
 //
 //        dd('ok');
 
+        set_time_limit(0);
+
         $tasks = Task::with('item')->where('client', '=', 'ska4an')
             ->where('site_id', '=', '7')->where('pattern', '!=', '')->get();
         echo count($tasks) . "\r\n";
