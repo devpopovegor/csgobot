@@ -13,7 +13,7 @@ class AddFkPs extends Migration
      */
     public function up()
     {
-        Schema::create('paintseeds', function (Blueprint $table) {
+        Schema::table('paintseeds', function (Blueprint $table) {
             $table->integer('steam_id')->unsigned();
             $table->foreign('steam_id')->references('id')->on('items');
         });
@@ -26,7 +26,7 @@ class AddFkPs extends Migration
      */
     public function down()
     {
-        Schema::create('paintseeds', function (Blueprint $table) {
+        Schema::table('paintseeds', function (Blueprint $table) {
             $table->dropForeign(['steam_id']);
         });
     }
