@@ -49,8 +49,9 @@ class TelegramController extends Controller
         $result = [];
 
         foreach ($objects as $object){
-            $result[] = Paintseed::where('name', '=', $object['name'])
-                ->where('value', '=', $object['paintseed'])->get();
+            $collection = Paintseed::where('name', '=', $object['name'])
+                ->where('value', '=', $object['paintseed'])->get()->toArray();
+            if (count($collection)) $result[] = $collection;
         }
 
         dd($result);
