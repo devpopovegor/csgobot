@@ -26,7 +26,8 @@ class TelegramController extends Controller
 //        dd("SUCK MY DICK\r\nLICK MY ASS");
 
 //        $names_paintseeds = DB::select('select DISTINCT `name` from paintseeds');
-        $names_paintseeds = Paintseed::all()->pluck('name');
+        $names_paintseeds = Paintseed::all()->pluck('name')->toArray();
+        $names_paintseeds = array_unique($names_paintseeds);
         dd($names_paintseeds);
 
         Paintseed::where('name', '=', 'StatTrak™ AK-47 | Case Hardened (Well-Worn)')
