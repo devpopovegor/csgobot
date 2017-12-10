@@ -33,20 +33,20 @@ class TelegramController extends Controller
         $tasks = Task::with('item')->where('client', '=', 'ska4an')
             ->where('site_id', '=', '7')->where('pattern', '!=', '')->get();
         echo count($tasks) . "\r\n";
-        $paintseeds = [];
-        $names = [];
+
+        $objects = [];
+
         foreach ($tasks as $task){
-            $names[] = $task->item->name;
-        $paterns = $task->item->patterns->where('name', '=', $task->pattern);
+            $paterns = $task->item->patterns->where('name', '=', $task->pattern);
             foreach ($paterns as $patern){
-                    $paintseeds[] = $patern->value;
+                $object = [];
+                $object['paintseed'] = $patern->value;
+                $object['name'] = $task->item()->name;
+                $objects[] = $object;
             }
         }
-        $paintseeds = array_unique($paintseeds);
-        $steam_ids = DB::table('paintseeds')->whereIn('name', $names)->get();
-        $steam_ids = $steam_ids->whereIn('value',$paintseeds)->toArray();
-        dd(array_unique($paintseeds), $steam_ids);
+
+        dd($objects);
     }
-//
 
 }
