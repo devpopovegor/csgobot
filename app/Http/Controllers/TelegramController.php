@@ -30,6 +30,9 @@ class TelegramController extends Controller
 //
 //        dd('ok');
 
+        $tasks = json_encode(Task::with('item')->with('patterns')->where('site_id', '=', '7')
+            ->where('client','=', 'ska4an')->get());
+        dd($tasks);
         set_time_limit(0);
 
         $tasks = Task::with('item')->where('client', '=', 'ska4an')
