@@ -35,6 +35,7 @@ class TelegramController extends Controller
         echo count($tasks) . "\r\n";
 
         $objects = [];
+        $paindseeds = [];
 
         foreach ($tasks as $task){
             $paterns = $task->item->patterns->where('name', '=', $task->pattern);
@@ -43,8 +44,11 @@ class TelegramController extends Controller
                 $object['paintseed'] = $patern->value;
                 $object['name'] = $task->item->name;
                 $objects[] = $object;
+                $paindseeds[] = $patern->value;
             }
         }
+
+        dd($paindseeds);
 
         $result = [];
 
