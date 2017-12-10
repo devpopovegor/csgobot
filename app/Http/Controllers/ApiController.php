@@ -36,10 +36,24 @@ class ApiController extends Controller
 
     public function getList()
     {
-        $tasks = json_encode(Task::with('item')->where('site_id', '=', '7')
-            ->where('client','=', 'ska4an')->get());
+//        $tasks = json_encode(Task::with('item')->where('site_id', '=', '7')
+//            ->where('client','=', 'ska4an')->get());
 
-        return json_encode($tasks);
+//        return json_encode($tasks);
+
+        $tasks = Task::with('item')->where('site_id', '=', '7')
+            ->where('client','=', 'ska4an')->get();
+
+        $result = [];
+        foreach ($tasks as $task){
+            $arr = [];
+            $arr['task'] = $task;
+            $arr['patterns'] = $task->item->patterns->pluck('value')->toArray();
+            $result[] = $arr;
+        }
+
+        return json_encode($result);
+
     }
 
     public function getPatterns()
