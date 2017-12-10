@@ -35,7 +35,7 @@ class TelegramController extends Controller
             $arr = [];
             $arr['task'] = $task;
             $arr['patterns'] = array_unique($task->item->patterns->pluck('value')->toArray());
-            $arr['paintseeds'] = $task->item->paintseeds->pluck('value')->toArray();
+            $arr['paintseeds'] = $task->item->paintseeds->pluck('value', 'tem_id')->toArray();
             $result[] = $arr;
         }
         dd($result[10]);
