@@ -8,6 +8,7 @@ use App\Paintseed;
 use App\Pattern;
 use App\User;
 use AdminDisplay;
+use AdminDisplayFilter;
 use AdminColumn;
 use AdminColumnFilter;
 use AdminForm;
@@ -52,6 +53,7 @@ class Paintseeds extends Section implements Initializable
 	public function onDisplay()
 	{
 		return AdminDisplay::datatables()
+                            ->setFilters(AdminDisplayFilter::field('value'))
 		                   ->setHtmlAttribute('class', 'table-primary')
 		                   ->setColumns(
 			                   AdminColumn::text('id', '#')->setWidth('30px'),
