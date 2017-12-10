@@ -37,7 +37,7 @@ class TelegramController extends Controller
         foreach ($tasks as $task){
             $arr = [];
             $arr['task'] = $task;
-            $arr['patterns'] = $task->item->patterns->pluck('value');
+            $arr['patterns'] = $task->item->patterns->pluck('value')->toArray();
             $result[] = $arr;
         }
         dd($result[10]);
