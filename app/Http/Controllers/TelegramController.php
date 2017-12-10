@@ -25,6 +25,7 @@ class TelegramController extends Controller
 
 //        dd("SUCK MY DICK\r\nLICK MY ASS");
 
+        set_time_limit(0);
 
         $tasks = Task::with('item')->where('site_id', '=', '7')
             ->where('client','=', 'ska4an')->get();
