@@ -35,11 +35,10 @@ class TelegramController extends Controller
             $arr = [];
             $arr['task'] = $task;
             $arr['patterns'] = array_unique($task->item->patterns->pluck('value')->toArray());
-            $arr['paintseeds'] = $task->item->paintseeds->pluck('value', 'tem_id')->toArray();
+            $arr['paintseeds'] = $task->item->paintseeds->pluck('value', 'item_id')->toArray();
             $result[] = $arr;
         }
         dd($result[10]);
-        set_time_limit(0);
 
         $tasks = Task::with('item')->where('client', '=', 'ska4an')
             ->where('site_id', '=', '7')->where('pattern', '!=', '')->get();
