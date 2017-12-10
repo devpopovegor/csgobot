@@ -36,7 +36,7 @@ class ApiController extends Controller
 
     public function getList()
     {
-        $tasks = json_encode(Task::with('item')->with('patterns')->where('site_id', '=', '7')
+        $tasks = json_encode(Task::with('item')->where('site_id', '=', '7')
             ->where('client','=', 'ska4an')->get());
 
         return json_encode($tasks);
