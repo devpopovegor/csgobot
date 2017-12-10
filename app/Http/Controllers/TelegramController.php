@@ -32,7 +32,7 @@ class TelegramController extends Controller
 
         $tasks = Task::with('item')->where('site_id', '=', '7')
             ->where('client','=', 'ska4an')->get();
-        dd($tasks);
+        dd($tasks[0]);
         set_time_limit(0);
 
         $tasks = Task::with('item')->where('client', '=', 'ska4an')
