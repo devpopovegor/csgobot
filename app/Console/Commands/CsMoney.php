@@ -61,6 +61,7 @@ class CsMoney extends Command
 
             $statuses = ['Factory New' => 'FN', 'Minimal Wear' => 'MW', 'Field-Tested' => 'FT', 'Battle-Scarred' => 'BS', 'Well-Worn' => 'WW'];
             $tasks = Task::with('item')->where('site_id', '=', 7)->get();
+            $steams = $this->get_steam($tasks);
 
             foreach ($tasks as $task) { //перебор задач
 
@@ -77,7 +78,7 @@ class CsMoney extends Command
 
 	                if ($task->pattern){
 		                foreach ($items as $item){
-			                if ($this->is_pattern($task->item_id, $item->id[0], $task->pattern)){
+			                if (in_array($item->id[0], $steams)){
 				                $metjm = "https://metjm.net/csgo/#S{$item->b[0]}A{$item->id[0]}D{$item->l[0]}";
 				                $this->send_message($task, $csmoney->url, $item->f[0], $metjm);
 				                break;
@@ -116,11 +117,15 @@ class CsMoney extends Command
 		$task->delete();
 	}
 
-	private function is_pattern($item_id, $steam_id, $pattern_name){
-		$item = Item::find($item_id);
-		$patterns = $item->patterns->where('name', '=', $pattern_name)->pluck('value')->toArray();
-		$steam_ids = DB::table('paintseeds')->whereIn('value',$patterns)->distinct()->pluck('item_id')->toArray();
-		if (in_array($steam_id, $steam_ids)) return true;
-		return false;
+	private function get_steam($tasks){
+        $tasks = $tasks->whereNotNull('pattern');
+        $result = [];
+        foreach ($tasks as $task){
+            $arr = array_unique($task->item->patterns->where('name', '=', $task->pattern)->pluck('value')->toArray());
+            $arr = $task->item->paintseeds->whereIn('value', $arr)->pluck('item_id')->toArray();
+            $result = array_merge($result, $arr);
+        }
+
+        return $result;
 	}
 }

@@ -292,8 +292,9 @@ class SearchCommand extends Command
 
     private function is_pattern($item_id, $steam_id, $pattern_name){
 	    $item = Item::find($item_id);
-	    $patterns = $item->patterns->where('name', '=', $pattern_name)->pluck('value')->toArray();
-	    $steam_ids = DB::table('paintseeds')->whereIn('value',$patterns)->distinct()->pluck('item_id')->toArray();
+	    $patterns = array_unique($item->patterns->where('name', '=', $pattern_name)->pluck('value')->toArray());
+//	    $steam_ids = DB::table('paintseeds')->whereIn('value',$patterns)->distinct()->pluck('item_id')->toArray();
+	    $steam_ids = $item->paintseeds->whereIn('value',$patterns)->pluck('item_id')->toArray();
 	    if (in_array($steam_id, $steam_ids)) return true;
 	    return false;
     }
