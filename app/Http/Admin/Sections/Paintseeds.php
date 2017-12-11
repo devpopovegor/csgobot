@@ -75,7 +75,9 @@ class Paintseeds extends Section implements Initializable
 	{
 		return AdminForm::panel()->addBody([
 			AdminFormElement::text('item_id', 'steam id'),
-			AdminFormElement::text('value', 'Паттерн')
+			AdminFormElement::text('value', 'Паттерн'),
+			AdminColumn::text('name', 'Название'),
+			AdminColumn::text('steam_id', 'Предмет')
 		]);
 	}
 
