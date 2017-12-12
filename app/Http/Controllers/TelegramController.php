@@ -24,11 +24,19 @@ class TelegramController extends Controller
 
     public function test(){
 
-        dd("SUCK MY DICK\r\nLICK MY ASS");
+//        dd("SUCK MY DICK\r\nLICK MY ASS");
 
         set_time_limit(0);
 
 
+        $tasks = Task::with('item')->with('steams')->get();
+
+        dd($tasks[0]);
+
+    }
+
+    private function set_Steams_task()
+    {
         $tasks = Task::with('item')->where('site_id', '=', '7')
             ->where('pattern','!=', '')->get();
 
@@ -41,7 +49,6 @@ class TelegramController extends Controller
         }
 
         return dd('ok');
-
     }
 
 }
