@@ -9,6 +9,7 @@ use App\Item;
 use App\Paintseed;
 use App\Pattern;
 use App\Site;
+use App\Steam;
 use App\Task;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Artisan;
@@ -257,8 +258,18 @@ class SearchCommand extends Command
                                             break;
                                     }
                                     curl_close($curl);
-                                    if (!$response) Task::create(['item_id' => $mItem->id, 'site_id' => $mSite->id,
-                                        'float' => $float, 'chat_id' => $oMessage->getChat()->getId(), 'pattern' => $pattern, 'client' => $user->getUsername()]);
+                                    if (!$response) {
+                                        $task = Task::create(['item_id' => $mItem->id, 'site_id' => $mSite->id,
+                                            'float' => $float, 'chat_id' => $oMessage->getChat()->getId(),
+                                            'pattern' => $pattern, 'client' => $user->getUsername()]);
+                                        if ($pattern) {
+                                            $arr = array_unique($task->item->patterns->where('name', '=', $task->pattern)->pluck('value')->toArray());
+                                            $arr = $task->item->paintseeds->whereIn('value', $arr)->pluck('item_id')->toArray();
+                                            foreach ($arr as $item) {
+                                                Steam::create(['steam_id' => $item, 'task_id' => $task->id]);
+                                            }
+                                        }
+                                    }
                                     //---------------------------
                                 } else {
                                     $message = "Данный поиск уже существует";
