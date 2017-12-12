@@ -381,72 +381,23 @@ class SearchCommand extends Command
         $curl_response = $curl_response->inventory;
         $items = collect($curl_response);
         $items = $items->where('market_hash_name', '=', $obj->full_name);
+        if ($obj->float) $items = $items->where('wear', '<=', $obj->float);
 
-        foreach ($items as $item) {
-            $float = null;
-            $pattern = null;
-            $url_metjm = '';
-            $data_metjm = null;
-            try {
-                $float = $item->wear;
-            } catch (\Exception $exception) {
-                $data_metjm = $this->getDataMetjm($item);
-                $float = $data_metjm['float'];
-                $pattern = $data_metjm['pattern'];
-                $url_metjm = $data_metjm['url_metjm'];
-            }
-
-            if ($obj->float && !$obj->pattern) {
-                if ($float && $float <= $obj->float) {
-                    $this->replyWithChatAction(['action' => Actions::TYPING]);
-                    $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}\r\n{$float}\r\n<a href='{$url_metjm}'>metjm</a>",
-                        'parse_mode' => 'HTML']);
+        if ($obj->pattern){
+            foreach ($items as $item) {
+                if ($this->is_pattern($obj->id, $item->id, $obj->pattern)) {
+                    $inspectUrl = explode('%20', $item->inspect_link)[1];
+                    $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
+                    $this->send_message($obj->name, $obj->url, $obj->phase, $item->wear, $obj->pattern, $url_metjm);
                     return true;
                 }
             }
-            elseif (!$obj->float && $obj->pattern) {
-                if (!$pattern) {
-                    $data_metjm = $this->getDataMetjm($item);
-                    $pattern = $data_metjm['pattern'];
-                    $url_metjm = $data_metjm['url_metjm'];
-                }
-                $need_item = Item::find($obj->id);
-                $patterns = $need_item->patterns->where('name', '=', $obj->pattern)->where('value', '=', $pattern)->first();
-                if ($patterns) {
-                    $this->replyWithChatAction(['action' => Actions::TYPING]);
-                    $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$float}\r\n{$obj->phase}\r\n{$obj->pattern}\r\n<a href='{$url_metjm}'>metjm</a>",
-                        'parse_mode' => 'HTML']);
-                    return true;
-                }
-            }
-            elseif ($obj->float && $obj->pattern) {
-                if ($float && $float <= $obj->float) {
-                    if (!$pattern) {
-                        $data_metjm = $this->getDataMetjm($item);
-                        $pattern = $data_metjm['pattern'];
-                        $url_metjm = $data_metjm['url_metjm'];
-                    }
-                    $need_item = Item::find($obj->id);
-                    $patterns = $need_item->patterns->where('name', '=', $obj->pattern)->where('value', '=', $pattern)->first();
-                    if ($patterns) {
-                        $this->replyWithChatAction(['action' => Actions::TYPING]);
-                        $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}\r\n{$float}\r\n{$obj->pattern}\r\n<a href='{$url_metjm}'>metjm</a>",
-                            'parse_mode' => 'HTML']);
-                        return true;
-                    }
-                }
-            }
-            elseif (!$obj->float && !$obj->pattern) {
-                if (!$pattern) {
-                    $data_metjm = $this->getDataMetjm($item);
-                    $pattern = $data_metjm['pattern'];
-                    $url_metjm = $data_metjm['url_metjm'];
-                }
-                $this->replyWithChatAction(['action' => Actions::TYPING]);
-                $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}\r\n{$float}\r\n<a href='{$url_metjm}'>metjm</a>",
-                    'parse_mode' => 'HTML']);
-                return true;
-            }
+        } else {
+            $item = $items->first();
+            $inspectUrl = explode('%20', $item->inspect_link)[1];
+            $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
+            $this->send_message($obj->name, $obj->url, $obj->phase, $item->wear, $obj->pattern, $url_metjm);
+            return true;
         }
 
         return false;

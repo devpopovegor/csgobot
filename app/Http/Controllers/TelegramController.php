@@ -31,11 +31,11 @@ class TelegramController extends Controller
 //        $curl_response = json_decode(curl_exec($curl));
 //        dd($curl_response->inventory[1500]);
 
-        dd("SUCK MY DICK\r\nLICK MY ASS");
+//        dd("SUCK MY DICK\r\nLICK MY ASS");
 
         set_time_limit(0);
 
-        $this->set_Steams_task(3);
+        $this->set_Steams_task(4);
 
         $tasks = Task::with('item')->with('steams')->where('pattern', '!=', null)->get();
 
