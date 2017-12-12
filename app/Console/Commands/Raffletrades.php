@@ -53,97 +53,53 @@ class Raffletrades extends Command
         $items = collect($items->response);
         Log::info(count($items));
 
-        $tasks = Task::with('item')->where('site_id', '=', $site_id)->get();
-        foreach ($tasks as $task) {
-            $itemss = $items->where('custom_market_name', '=', $task->item->full_name);
-            if ($task->float) $itemss = $itemss->where('float', '<=', $task->float);
+        $tasks = Task::with('item')->with('steams')->where('site_id', '=', $site_id)->get();
 
-            if (count($itemss)) {
-                foreach ($itemss as $item) {
-                    $data_metjm = null;
-                    $pattern = null;
-                    $inspectUrl = explode('%20', $item->inspect_link)[1];
-                    $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
+        foreach ($tasks as $task) {
+
+            $items = $items->where('custom_market_name', '=', $task->item->full_name);
+            if ($task->float) $items = $items->where('float', '<=', $task->float);
+
+            if (count($items)) {
                     if ($task->pattern) {
-                        try {
-                            $data_metjm = $this->getDataMetjm($item, 'pattern');
-                            $pattern = $data_metjm['pattern'];
-                            $url_metjm = $data_metjm['metjm'];
-                        } catch (\Exception $exception) {
-                            continue;
+                        foreach ($items as $item) {
+                            if (in_array($item->id, $task->steams->pluck('steam_id')->toArray())){
+                                $inspectUrl = explode('%20', $item->inspect_link)[1];
+                                $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
+                                $this->send_message($task, $site->url, $item->float, $url_metjm);
+                                break;
+                            }
                         }
-                        if ($task->item->patterns->where('name', '=', $task->pattern)->where('value', '=', $pattern)->first()) {
-                            Telegram::sendMessage([
-                                'chat_id' => $task->chat_id,
-                                'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$item->float}\r\n{$task->pattern}\r\n<a href='{$url_metjm}'>metjm</a>",
-                                'parse_mode' => 'HTML'
-                            ]);
-                            Report::create([
-                                'item_id' => $task->item_id,
-                                'site_id' => $task->site_id,
-                                'float' => $task->float,
-                                'pattern' => $task->pattern,
-                                'client' => $task->client,
-                            ]);
-                            $task->delete();
-                            break;
-                        }
-                    }
-                    else {
-                        Telegram::sendMessage([
-                            'chat_id' => $task->chat_id,
-                            'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$item->float}\r\n<a href='{$url_metjm}'>metjm</a>",
-                            'parse_mode' => 'HTML'
-                        ]);
-                        Report::create([
-                            'item_id' => $task->item_id,
-                            'site_id' => $task->site_id,
-                            'float' => $task->float,
-                            'pattern' => $task->pattern,
-                            'client' => $task->client,
-                        ]);
-                        $task->delete();
-                        break;
+                    } else {
+                        $item = $items->first();
+                        $inspectUrl = explode('%20', $item->inspect_link)[1];
+                        $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
+                        $this->send_message($task, $site->url, $item->float, $url_metjm);
                     }
                 }
             }
-        }
 
         Log::info('end check raffle');
     }
 
-private
-function getDataMetjm($item, $get)
-{
-    $url = "https://metjm.net/shared/screenshots-v5.php?cmd=request_new_link&inspect_link={$item->inspect_link}";
-    $inspectUrl = explode('%20', $item->inspect_link)[1];
-    $curl = curl_init();
-    curl_setopt($curl, CURLOPT_URL, $url);
-    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-    $response = curl_exec($curl);
-    curl_close($curl);
-    $response = json_decode($response);
-    $pattern = null;
-    $url_metjm = '';
-    $float = null;
-    try {
-        $pattern = $response->result->item_paintseed;
-        $float = $response->result->item_floatvalue;
-        $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
-    } catch (\Exception $exception) {
-        Log::info('Failed pattern');
+    private function send_message($task, $url, $float, $metj)
+    {
+        Telegram::sendMessage([
+            'chat_id' => $task->chat_id,
+            'text' => "{$task->item->name}\r\n{$url}\r\n{$task->item->phase}\r\n{$float}\r\n{$task->pattern}\r\n<a href='$metj'>metjm</a>",
+            'parse_mode' => 'HTML'
+        ]);
+        Report::create([
+            'item_id' => $task->item_id,
+            'site_id' => $task->site_id,
+            'float' => $task->float,
+            'pattern' => $task->pattern,
+            'client' => $task->client,
+        ]);
+        foreach ($task->steams as $steam) {
+            $steam->delete();
+        }
+        $task->delete();
     }
-
-
-    $return = [];
-    $return['metjm'] = $url_metjm;
-    if ($get == 'float') $return['float'] = $float;
-    if ($get == 'pattern') $return['pattern'] = $pattern;
-    if ($get == 'float,pattern') {
-        $return['float'] = $float;
-        $return['pattern'] = $pattern;
-    }
-    return $return;
-}
 
 }
