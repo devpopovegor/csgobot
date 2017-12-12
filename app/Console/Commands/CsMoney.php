@@ -113,6 +113,9 @@ class CsMoney extends Command
 			'pattern' => $task->pattern,
 			'client' => $task->client,
 		]);
+		foreach ($task->steams as $steam){
+		    $steam->delete();
+        }
 		$task->delete();
 	}
 
