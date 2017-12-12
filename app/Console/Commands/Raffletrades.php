@@ -51,7 +51,7 @@ class Raffletrades extends Command
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         $items = json_decode(curl_exec($curl));
         $items_raffle = collect($items->response);
-        Log::info(count($items));
+        Log::info(count($items_raffle));
 
         $tasks = Task::with('item')->with('steams')->where('site_id', '=', $site_id)->get();
 
