@@ -33,11 +33,11 @@ class TelegramController extends Controller
 
         $result = [];
         foreach ($tasks as $task){
-            $arr = [];
-            $arr['task'] = $task;
-            $arr['patterns'] = array_unique($task->item->patterns->where('name', '=', $task->pattern)->pluck('value')->toArray());
-            $arr['patterns'] = $task->item->paintseeds->whereIn('value', $arr['patterns'])->pluck('item_id')->toArray();
-            $result[] = $arr;
+            $arr = array_unique($task->item->patterns->where('name', '=', $task->pattern)->pluck('value')->toArray());
+            $arr = $task->item->paintseeds->whereIn('value', $arr)->pluck('item_id')->toArray();
+            foreach ($arr as $item){
+                $result[] = $item;
+            }
         }
 
         return dd($result);
