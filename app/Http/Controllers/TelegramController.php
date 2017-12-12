@@ -28,6 +28,7 @@ class TelegramController extends Controller
 
         set_time_limit(0);
 
+        $this->set_Steams_task(1);
 
         $tasks = Task::with('item')->with('steams')->where('pattern', '!=', null)->get();
 
@@ -35,9 +36,9 @@ class TelegramController extends Controller
 
     }
 
-    private function set_Steams_task()
+    private function set_Steams_task($id)
     {
-        $tasks = Task::with('item')->where('site_id', '=', '7')
+        $tasks = Task::with('item')->where('site_id', '=', $id)
             ->where('pattern','!=', '')->get();
 
         foreach ($tasks as $task){
