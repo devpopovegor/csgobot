@@ -29,7 +29,7 @@ class TelegramController extends Controller
         set_time_limit(0);
 
 
-        $tasks = Task::with('item')->with('steams')->get();
+        $tasks = Task::with('item')->with('steams')->where('pattern', '!=', null)->get();
 
         dd($tasks[10]);
 
