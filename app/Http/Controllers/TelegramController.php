@@ -31,7 +31,7 @@ class TelegramController extends Controller
 
         $tasks = Task::with('item')->with('steams')->where('pattern', '!=', null)->get();
 
-        dd($tasks[10]->steams->toArray());
+        dd($tasks[10]->steams->pluck('steam_id')->toArray());
 
     }
 
