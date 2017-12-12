@@ -16,8 +16,8 @@ class CreateSteamTable extends Migration
 	    Schema::create('steams', function (Blueprint $table) {
 		    $table->increments('id');
 		    $table->string('steam_id');
-		    $table->integer('site_id')->unsigned();
-		    $table->foreign('site_id')->references('id')->on('sites');
+		    $table->integer('task_id')->unsigned();
+		    $table->foreign('task_id')->references('id')->on('tasks');
 		    $table->timestamps();
 	    });
     }
