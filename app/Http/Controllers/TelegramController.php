@@ -24,6 +24,13 @@ class TelegramController extends Controller
 
     public function test(){
 
+
+//        $curl = curl_init();
+//        curl_setopt($curl, CURLOPT_URL, "https://cstrade.gg/loadBotInventory");
+//        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+//        $curl_response = json_decode(curl_exec($curl));
+//        dd($curl_response->inventory[1500]);
+
         dd("SUCK MY DICK\r\nLICK MY ASS");
 
         set_time_limit(0);

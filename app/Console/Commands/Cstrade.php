@@ -49,145 +49,57 @@ class Cstrade extends Command
         curl_setopt($curl, CURLOPT_URL, $site->get_data);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         $items = json_decode(curl_exec($curl));
-        $items = collect($items->inventory);
+        $items_cstrade = collect($items->inventory);
         Log::info(count($items));
 
-        $tasks = Task::with('item')->where('site_id', '=', 4)->get();
+        $tasks = Task::with('item')->with('steams')->where('site_id', '=', 4)->get();
         foreach ($tasks as $task){
-            $itemss = $items->where('market_hash_name', '=', $task->item->full_name);
-            if (count($itemss)){
-                foreach ($itemss as $item) {
-                    $float = null;
-                    $pattern = null;
-                    $url_metjm = '';
-                    $data_metjm = null;
-                    try {
-                        $float = $item->wear;
-                    } catch (\Exception $exception) {
-                        $data_metjm = $this->getDataMetjm($item);
-                        $float = $data_metjm['float'];
-                        $pattern = $data_metjm['pattern'];
-                        $url_metjm = $data_metjm['url_metjm'];
-                    }
 
-                    if ($task->float && !$task->pattern) {
-                        if ($float && $float <= $task->float) {
-                            Telegram::sendMessage([
-                                'chat_id' => $task->chat_id,
-                                'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$float}\r\n<a href='{$url_metjm}'>metjm</a>",
-                                'parse_mode' => 'HTML'
-                            ]);
-                            Report::create([
-                                'item_id' => $task->item_id,
-                                'site_id' => $task->site_id,
-                                'float' => $task->float,
-                                'pattern' => $task->pattern,
-                                'client' => $task->client,
-                            ]);
-                            $task->delete();
+            $items = $items_cstrade->where('market_hash_name', '=', $task->item->full_name);
+            if ($task->float) $items = $items->where('wear', '<=', $task->float);
+
+            if (count($items)){
+
+                if ($task->pattern) {
+                    foreach ($items as $item) {
+                        if (in_array($item->id, $task->steams->pluck('steam_id')->toArray())) {
+                            $inspectUrl = explode('%20', $item->inspect_link)[1];
+                            $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
+                            $this->send_message($task, $site->url, $item->wear, $url_metjm);
                             break;
                         }
                     }
-                    elseif (!$task->float && $task->pattern) {
-                        if (!$pattern) {
-                            $data_metjm = $this->getDataMetjm($item);
-                            $pattern = $data_metjm['pattern'];
-                            $url_metjm = $data_metjm['url_metjm'];
-                        }
-                        $patterns = $task->item->patterns->where('name', '=', $task->pattern)->where('value', '=', $pattern)->first();
-                        if ($patterns) {
-                            Telegram::sendMessage([
-                                'chat_id' => $task->chat_id,
-                                'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$float}\r\n{$task->pattern}\r\n<a href='{$url_metjm}'>metjm</a>",
-                                'parse_mode' => 'HTML'
-                            ]);
-                            Report::create([
-                                'item_id' => $task->item_id,
-                                'site_id' => $task->site_id,
-                                'float' => $task->float,
-                                'pattern' => $task->pattern,
-                                'client' => $task->client,
-                            ]);
-                            $task->delete();
-                            break;
-                        }
-                    }
-                    elseif ($task->float && $task->pattern) {
-                        if ($float && $float <= $task->float) {
-                            if (!$pattern) {
-                                $data_metjm = $this->getDataMetjm($item);
-                                $pattern = $data_metjm['pattern'];
-                                $url_metjm = $data_metjm['url_metjm'];
-                            }
-                            $patterns = $task->item->patterns->where('name', '=', $task->pattern)->where('value', '=', $pattern)->first();
-                            if ($patterns) {
-                                Telegram::sendMessage([
-                                    'chat_id' => $task->chat_id,
-                                    'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$float}\r\n{$task->pattern}\r\n<a href='{$url_metjm}'>metjm</a>",
-                                    'parse_mode' => 'HTML'
-                                ]);
-                                Report::create([
-                                    'item_id' => $task->item_id,
-                                    'site_id' => $task->site_id,
-                                    'float' => $task->float,
-                                    'pattern' => $task->pattern,
-                                    'client' => $task->client,
-                                ]);
-                                $task->delete();
-                                break;
-                            }
-                        }
-                    }
-                    elseif (!$task->float && !$task->pattern) {
-                        if (!$pattern) {
-                            $data_metjm = $this->getDataMetjm($item);
-                            $pattern = $data_metjm['pattern'];
-                            $url_metjm = $data_metjm['url_metjm'];
-                        }
-                        Telegram::sendMessage([
-                            'chat_id' => $task->chat_id,
-                            'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$float}\r\n<a href='{$url_metjm}'>metjm</a>",
-                            'parse_mode' => 'HTML'
-                        ]);
-                        Report::create([
-                            'item_id' => $task->item_id,
-                            'site_id' => $task->site_id,
-                            'float' => $task->float,
-                            'pattern' => $task->pattern,
-                            'client' => $task->client,
-                        ]);
-                        $task->delete();
-                        break;
-                    }
+                } else {
+                    $item = $items->first();
+                    $inspectUrl = explode('%20', $item->inspect_link)[1];
+                    $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
+                    $this->send_message($task, $site->url, $item->wear, $url_metjm);
                 }
+
             }
         }
 
         Log::info('end check cstrade');
     }
 
-    private function getDataMetjm($item)
+    private function send_message($task, $url, $float, $metj)
     {
-        $url = "https://metjm.net/shared/screenshots-v5.php?cmd=request_new_link&inspect_link={$item->inspect_link}";
-        $inspectUrl = explode('%20', $item->inspect_link)[1];
-        $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL, $url);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        $response = curl_exec($curl);
-        curl_close($curl);
-        $response = json_decode($response);
-        $pattern = null;
-        $url_metjm = null;
-        $float = null;
-        try {
-            $pattern = $response->result->item_paintseed;
-            $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
-            $float = $response->result->item_floatvalue;
-        } catch (\Exception $exception) {
-            $pattern = null;
-            $float = null;
-            $url_metjm = null;
+        Telegram::sendMessage([
+            'chat_id' => $task->chat_id,
+            'text' => "{$task->item->name}\r\n{$url}\r\n{$task->item->phase}\r\n{$float}\r\n{$task->pattern}\r\n<a href='$metj'>metjm</a>",
+            'parse_mode' => 'HTML'
+        ]);
+        Report::create([
+            'item_id' => $task->item_id,
+            'site_id' => $task->site_id,
+            'float' => $task->float,
+            'pattern' => $task->pattern,
+            'client' => $task->client,
+        ]);
+        foreach ($task->steams as $steam) {
+            $steam->delete();
         }
-        return ['float' => $float, 'pattern' => $pattern, 'url_metjm' => $url_metjm];
+        $task->delete();
     }
+
 }

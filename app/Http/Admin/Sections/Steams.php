@@ -55,7 +55,7 @@ class Steams extends Section implements Initializable
             ->setHtmlAttribute('class', 'table-primary')
             ->setColumns(
                 AdminColumn::text('steam_id', 'Steam id'),
-                AdminColumn::text('task_id', 'id задачи')
+                AdminColumn::text('task_id', 'id поиска')
             )->setDisplaySearch(true)->paginate(100);
     }
 
@@ -135,7 +135,7 @@ class Steams extends Section implements Initializable
 
     public function getTitle()
     {
-        return 'Поиски - team id';
+        return 'Поиски - steam id';
     }
 
 }

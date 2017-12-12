@@ -50,34 +50,34 @@ class Raffletrades extends Command
         curl_setopt($curl, CURLOPT_URL, $site->get_data);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         $items = json_decode(curl_exec($curl));
-        $items = collect($items->response);
+        $items_raffle = collect($items->response);
         Log::info(count($items));
 
         $tasks = Task::with('item')->with('steams')->where('site_id', '=', $site_id)->get();
 
         foreach ($tasks as $task) {
 
-            $items = $items->where('custom_market_name', '=', $task->item->full_name);
+            $items = $items_raffle->where('custom_market_name', '=', $task->item->full_name);
             if ($task->float) $items = $items->where('float', '<=', $task->float);
 
             if (count($items)) {
-                    if ($task->pattern) {
-                        foreach ($items as $item) {
-                            if (in_array($item->id, $task->steams->pluck('steam_id')->toArray())){
-                                $inspectUrl = explode('%20', $item->inspect_link)[1];
-                                $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
-                                $this->send_message($task, $site->url, $item->float, $url_metjm);
-                                break;
-                            }
+                if ($task->pattern) {
+                    foreach ($items as $item) {
+                        if (in_array($item->id, $task->steams->pluck('steam_id')->toArray())) {
+                            $inspectUrl = explode('%20', $item->inspect_link)[1];
+                            $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
+                            $this->send_message($task, $site->url, $item->float, $url_metjm);
+                            break;
                         }
-                    } else {
-                        $item = $items->first();
-                        $inspectUrl = explode('%20', $item->inspect_link)[1];
-                        $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
-                        $this->send_message($task, $site->url, $item->float, $url_metjm);
                     }
+                } else {
+                    $item = $items->first();
+                    $inspectUrl = explode('%20', $item->inspect_link)[1];
+                    $url_metjm = "https://metjm.net/csgo/#{$inspectUrl}";
+                    $this->send_message($task, $site->url, $item->float, $url_metjm);
                 }
             }
+        }
 
         Log::info('end check raffle');
     }
