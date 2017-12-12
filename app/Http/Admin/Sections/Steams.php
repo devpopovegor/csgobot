@@ -26,7 +26,7 @@ use SleepingOwl\Admin\Section;
  *
  * @see http://sleepingowladmin.ru/docs/model_configuration_section
  */
-class Tasks extends Section implements Initializable
+class Steams extends Section implements Initializable
 {
     protected $model;
     /**
