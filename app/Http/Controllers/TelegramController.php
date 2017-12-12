@@ -31,7 +31,7 @@ class TelegramController extends Controller
 
         $tasks = Task::with('item')->with('steams')->get();
 
-        dd($tasks[0]);
+        dd($tasks[10]);
 
     }
 
