@@ -25,11 +25,11 @@ class TelegramController extends Controller
     public function test(){
 
 
-        $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL, "https://api.raffletrades.com/v1/inventory/");
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        $curl_response = json_decode(curl_exec($curl));
-        dd($curl_response->response);
+//        $curl = curl_init();
+//        curl_setopt($curl, CURLOPT_URL, "https://api.raffletrades.com/v1/inventory/");
+//        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+//        $curl_response = json_decode(curl_exec($curl));
+//        dd($curl_response->response);
 
         dd("SUCK MY DICK\r\nLICK MY ASS");
 

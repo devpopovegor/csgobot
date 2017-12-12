@@ -50,7 +50,7 @@ class Cstrade extends Command
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         $items = json_decode(curl_exec($curl));
         $items_cstrade = collect($items->inventory);
-        Log::info(count($items));
+        Log::info(count($items_cstrade));
 
         $tasks = Task::with('item')->with('steams')->where('site_id', '=', 4)->get();
         foreach ($tasks as $task){
