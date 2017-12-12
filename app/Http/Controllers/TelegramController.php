@@ -7,6 +7,7 @@ use App\Item;
 use App\Paintseed;
 use App\Pattern;
 use App\Site;
+use App\Steam;
 use App\Task;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -31,16 +32,15 @@ class TelegramController extends Controller
         $tasks = Task::with('item')->where('site_id', '=', '7')
             ->where('pattern','!=', '')->get();
 
-        $result = [];
         foreach ($tasks as $task){
             $arr = array_unique($task->item->patterns->where('name', '=', $task->pattern)->pluck('value')->toArray());
             $arr = $task->item->paintseeds->whereIn('value', $arr)->pluck('item_id')->toArray();
             foreach ($arr as $item){
-                $result[] = $item;
+                Steam::create(['steam_id' => $item, 'task_id' => $task->id]);
             }
         }
 
-        return dd($result);
+        return dd('ok');
 
     }
 
