@@ -60,8 +60,7 @@ class CsMoney extends Command
         if (count($csmoney_items) > 0) { //проверка на то что cs.money вернула предметы
 
             $statuses = ['Factory New' => 'FN', 'Minimal Wear' => 'MW', 'Field-Tested' => 'FT', 'Battle-Scarred' => 'BS', 'Well-Worn' => 'WW'];
-            $tasks = Task::with('item')->where('site_id', '=', 7)->get();
-            $steams = $this->get_steam($tasks);
+            $tasks = Task::with('item')->with('steams')->where('site_id', '=', 7)->get();
 
             foreach ($tasks as $task) { //перебор задач
 
@@ -78,7 +77,7 @@ class CsMoney extends Command
 
 	                if ($task->pattern){
 		                foreach ($items as $item){
-			                if (in_array($item->id[0], $steams)){
+			                if (in_array($item->id[0], $task->steams->pluck('steam_id')->toArray())){
 				                $metjm = "https://metjm.net/csgo/#S{$item->b[0]}A{$item->id[0]}D{$item->l[0]}";
 				                $this->send_message($task, $csmoney->url, $item->f[0], $metjm);
 				                break;
@@ -117,15 +116,4 @@ class CsMoney extends Command
 		$task->delete();
 	}
 
-	private function get_steam($tasks){
-        $tasks = $tasks->where('pattern', '!=', '');
-        $result = [];
-        foreach ($tasks as $task){
-            $arr = array_unique($task->item->patterns->where('name', '=', $task->pattern)->pluck('value')->toArray());
-            $arr = $task->item->paintseeds->whereIn('value', $arr)->pluck('item_id')->toArray();
-            $result = array_merge($result, $arr);
-        }
-
-        return $result;
-	}
 }
