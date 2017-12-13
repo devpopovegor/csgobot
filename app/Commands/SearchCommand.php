@@ -872,45 +872,51 @@ class SearchCommand extends Command
 
         $items = collect($curl_response);
         $items = $items->where('market_hash_name', '=', $name);
-        if ($obj->float) $items = $items->where('descriptions.0.aFloat', '<=', $obj->float);
-        if (count($items)){
-            if ($obj->pattern){
-                foreach ($items as $item){
-                    $url_metj = "https://metjm.net/shared/screenshots-v5.php?cmd=request_new_link&inspect_link={$item->descriptions[0]->inspectURL}";
-                    $curl = curl_init();
-                    curl_setopt($curl, CURLOPT_URL, $url_metj);
-                    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-                    $response = curl_exec($curl);
-                    curl_close($curl);
-                    $response = json_decode($response);
-                    $pattern = null;
-                    $link_metjm = '';
-                    try {
-                        if ($response->success) {
-                            $pattern = $response->result->item_paintseed;
-                            $link_metjm = "https://metjm.net/csgo/#" . explode('%20', $item->descriptions[0]->inspectURL)[1];
+        try {
+            if ($obj->float) $items = $items->where('descriptions.0.aFloat', '<=', $obj->float);
+            if (count($items)){
+                if ($obj->pattern){
+                    foreach ($items as $item){
+                        $url_metj = "https://metjm.net/shared/screenshots-v5.php?cmd=request_new_link&inspect_link={$item->descriptions[0]->inspectURL}";
+                        $curl = curl_init();
+                        curl_setopt($curl, CURLOPT_URL, $url_metj);
+                        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+                        $response = curl_exec($curl);
+                        curl_close($curl);
+                        $response = json_decode($response);
+                        $pattern = null;
+                        $link_metjm = '';
+                        try {
+                            if ($response->success) {
+                                $pattern = $response->result->item_paintseed;
+                                $link_metjm = "https://metjm.net/csgo/#" . explode('%20', $item->descriptions[0]->inspectURL)[1];
+                            }
+                        } catch (\Exception $exception) {
+                            continue;
                         }
-                    } catch (\Exception $exception) {
-                        continue;
-                    }
-                    $need_item = Item::find($obj->id);
-                    $patterns = $need_item->patterns->where('name', '=', $obj->pattern)->where('value', '=', $pattern)->first();
-                    if ($patterns) {
-                        $this->replyWithChatAction(['action' => Actions::TYPING]);
-                        $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}\r\n{$item->descriptions[0]->aFloat}\r\n{$obj->pattern}\r\n<a href='{$link_metjm}'>metjm</a>",
-                            'parse_mode' => 'HTML']);
-                        return true;
+                        $need_item = Item::find($obj->id);
+                        $patterns = $need_item->patterns->where('name', '=', $obj->pattern)->where('value', '=', $pattern)->first();
+                        if ($patterns) {
+                            $this->replyWithChatAction(['action' => Actions::TYPING]);
+                            $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}\r\n{$item->descriptions[0]->aFloat}\r\n{$obj->pattern}\r\n<a href='{$link_metjm}'>metjm</a>",
+                                'parse_mode' => 'HTML']);
+                            return true;
+                        }
                     }
                 }
+                else {
+                    $item = $items->first();
+                    $metj = "https://metjm.net/csgo/#" . explode('%20', $item->descriptions[0]->inspectURL)[1];
+                    $this->replyWithChatAction(['action' => Actions::TYPING]);
+                    $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}\r\n{$item->descriptions[0]->aFloat}\r\n<a href='{$metj}'>metjm</a>",
+                        'parse_mode' => 'HTML']);
+                    return true;
+                }
             }
-            else {
-                $item = $items->first();
-                $metj = "https://metjm.net/csgo/#" . explode('%20', $item->descriptions[0]->inspectURL)[1];
-                $this->replyWithChatAction(['action' => Actions::TYPING]);
-                $this->replyWithMessage(['text' => "{$obj->name}\r\n{$obj->url}\r\n{$obj->phase}\r\n{$item->descriptions[0]->aFloat}\r\n<a href='{$metj}'>metjm</a>",
-                    'parse_mode' => 'HTML']);
-                return true;
-            }
+
+        }catch (\Exception $exception){
+            Log::info($exception->getMessage());
+            return false;
         }
         return false;
     }
