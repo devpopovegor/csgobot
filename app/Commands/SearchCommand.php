@@ -74,7 +74,7 @@ class SearchCommand extends Command
                         }
                     }
 
-                    if ($mSite = Site::find($site)) {
+                    if ($mSite = Site::where('active', '=', true)->where('id', '=', $site)->first()) {
                         $mItem = !$phase ? Item::where('name', '=', "{$item}")->first() : Item::where([
                             ['name', '=', "{$item}"],
                             ['phase', '=', "{$phase}"]
