@@ -72,71 +72,52 @@ class Csgosell extends Command
         $items = collect(json_decode($curl_exec));
         Log::info(count($items));
 
-        $tasks = Task::with('item')->where('site_id', '=', 13)->get();
+        $tasks = Task::with('item')->with('steams')->where('site_id', '=', 13)->get();
         foreach ($tasks as $task){
             $full_name = $task->item->full_name;
             if (strpos($task->item->full_name, '\'') !== false) $full_name = str_replace('\'', '%27', $task->item->full_name);
             $current_items = $items->where('h', '=', $full_name);
             if ($task->float) $current_items = $current_items->where('f', '<=', $task->float);
+
             if (count($current_items)){
                 if ($task->pattern){
                     foreach ($current_items as $item){
-                        $url_metjm = "https://metjm.net/shared/screenshots-v5.php?cmd=request_new_link&inspect_link=steam://rungame/730/76561202255233023/+csgo_econ_action_preview%20S{$item->i}";
-                        $curl = curl_init();
-                        curl_setopt($curl, CURLOPT_URL, $url_metjm);
-                        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-                        $response = curl_exec($curl);
-                        curl_close($curl);
-                        $response = json_decode($response);
-                        $pattern = null;
-                        $link_metjm = '';
-                        try {
-                            if ($response->success) {
-                                $pattern = $response->result->item_paintseed;
-                                $link_metjm = "https://metjm.net/csgo/#S{$item->i}";
-                            }
-                        } catch (\Exception $exception) {
-                            continue;
-                        }
-                        $patterns = $task->item->patterns->where('name', '=', $task->pattern)->where('value', '=', $pattern)->first();
-                        if ($patterns) {
-                            Telegram::sendMessage([
-                                'chat_id' => $task->chat_id,
-                                'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$item->f}\r\n{$task->pattern}\r\n<a href='$link_metjm'>metjm</a>",
-                                'parse_mode' => 'HTML'
-                            ]);
-                            Report::create([
-                                'item_id' => $task->item_id,
-                                'site_id' => $task->site_id,
-                                'float' => $task->float,
-                                'pattern' => $task->pattern,
-                                'client' => $task->client,
-                            ]);
-                            $task->delete();
+                        $steam_id = explode('A', $item->i)[1];
+                        $steam_id = explode('D', $steam_id)[0];
+                        if (in_array($steam_id, $task->steams->pluck('steam_id')->toArray())){
+                            $metjm = "https://metjm.net/csgo/#S{$item->i}";
+                            $this->send_message($task, $site->url, $item->f, $metjm);
                             break;
                         }
                     }
                 }
                 else {
                     $item = $current_items->first();
-                    $link_metjm = "https://metjm.net/csgo/#S{$item->i}";
-                    Telegram::sendMessage([
-                        'chat_id' => $task->chat_id,
-                        'text' => "{$task->item->name}\r\n{$site->url}\r\n{$task->item->phase}\r\n{$item->f}\r\n<a href='$link_metjm'>metjm</a>",
-                        'parse_mode' => 'HTML'
-                    ]);
-                    Report::create([
-                        'item_id' => $task->item_id,
-                        'site_id' => $task->site_id,
-                        'float' => $task->float,
-                        'pattern' => $task->pattern,
-                        'client' => $task->client,
-                    ]);
-                    $task->delete();
-                    break;
+                    $metjm = "https://metjm.net/csgo/#S{$item->i}";
+                    $this->send_message($task, $site->url, $item->f, $metjm);
                 }
             }
         }
         Log::info('csgosell end');
     }
+
+    private function send_message($task, $url, $float, $metj){
+        Telegram::sendMessage([
+            'chat_id' => $task->chat_id,
+            'text' => "{$task->item->name}\r\n{$url}\r\n{$task->item->phase}\r\n{$float}\r\n{$task->pattern}\r\n<a href='$metj'>metjm</a>",
+            'parse_mode' => 'HTML'
+        ]);
+        Report::create([
+            'item_id' => $task->item_id,
+            'site_id' => $task->site_id,
+            'float' => $task->float,
+            'pattern' => $task->pattern,
+            'client' => $task->client,
+        ]);
+        foreach ($task->steams as $steam){
+            $steam->delete();
+        }
+        $task->delete();
+    }
+
 }
