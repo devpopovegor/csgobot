@@ -74,7 +74,8 @@ class SearchCommand extends Command
                         }
                     }
 
-                    if ($mSite = Site::where('active', '=', true)->where('id', '=', $site)->first()) {
+                    if ($mSite = Site::where('active', '=', true)
+                        ->where('id', '=', $site)->first()) {
                         $mItem = !$phase ? Item::where('name', '=', "{$item}")->first() : Item::where([
                             ['name', '=', "{$item}"],
                             ['phase', '=', "{$phase}"]
@@ -285,7 +286,8 @@ class SearchCommand extends Command
                             $this->replyWithChatAction(['action' => Actions::TYPING]);
                             $this->replyWithMessage(['text' => $message]);
                         }
-                    } else {
+                    }
+                    else {
                         $message = "Сайт {$site} не существует.";
                         $this->replyWithChatAction(['action' => Actions::TYPING]);
                         $this->replyWithMessage(['text' => $message]);
@@ -645,9 +647,10 @@ class SearchCommand extends Command
             $status = $statuses[$status];
             $obj_name = trim(substr($obj_name, 0, $pos));
         }
-        $find_items = $items->where('n', '=', $obj_name);
-        if ($status) $find_items = $find_items->where('e', '=', $status);
-        $find_item = $find_items->first();
+
+        $items = $items->where('n', '=', $obj_name);
+        if ($status) $items = $items->where('e', '=', $status);
+        $find_item = $items->first();
 
         if ($find_item) {
             foreach ($find_item->u as $item) {
