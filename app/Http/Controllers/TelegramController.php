@@ -33,9 +33,9 @@ class TelegramController extends Controller
             '★ Karambit | Marble Fade(Factory New)',
             '★ StatTrak™ Karambit | Marble Fade(Factory New)'
         ];
-        $item = Item::where('name', '=', '★ StatTrak™ Karambit | Marble Fade (Factory New)')->get()->first();
-        $pss = Paintseed::where('name', '=', '★ StatTrak™ Karambit | Marble Fade(Factory New)')->update([
-            'name' => '★ StatTrak™ Karambit | Marble Fade (Factory New)',
+        $item = Item::where('name', '=', '★ Karambit | Marble Fade (Factory New)')->get()->first();
+        Paintseed::where('name', '=', '★ Karambit | Marble Fade (Factory New)')->update([
+//            'name' => '★ StatTrak™ Karambit | Marble Fade (Factory New)',
             'steam_id' => $item->id
         ]);
 
