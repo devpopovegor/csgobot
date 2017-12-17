@@ -29,11 +29,11 @@ class TelegramController extends Controller
 
         set_time_limit(0);
 
-        $item = Item::where('name', '=', '★ StatTrak™ Karambit | Marble Fade (Minimal Wear)')->get()->first();
-        Paintseed::where('name', '=', '★ StatTrak™ Karambit | Marble Fade(Minimal Wear)')->update([
-            'name' => '★ StatTrak™ Karambit | Marble Fade (Minimal Wear)',
-            'steam_id' => $item->id
-        ]);
+//        $item = Item::where('name', '=', '★ StatTrak™ Karambit | Marble Fade (Minimal Wear)')->get()->first();
+//        Paintseed::where('name', '=', '★ StatTrak™ Karambit | Marble Fade(Minimal Wear)')->update([
+//            'name' => '★ StatTrak™ Karambit | Marble Fade (Minimal Wear)',
+//            'steam_id' => $item->id
+//        ]);
 
         dd("SUCK MY DICK\r\nLICK MY ASS");
 
