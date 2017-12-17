@@ -84,9 +84,9 @@ class ApiController extends Controller
 //        dd(key($ids));
 
         foreach ($ids as $id){
-            $n = key($id);
-            dd($n);
-            Paintseed::where('name', '=', $id->name)->update(['steam_id' => $id->id]);
+            $n = key($ids);
+            var_dump($n);
+//            Paintseed::where('name', '=', $id->name)->update(['steam_id' => $id->id]);
         }
 //        dd($ids);
 
