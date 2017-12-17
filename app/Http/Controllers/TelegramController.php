@@ -26,15 +26,12 @@ class TelegramController extends Controller
 
 
 
-//        dd("SUCK MY DICK\r\nLICK MY ASS");
+        dd("SUCK MY DICK\r\nLICK MY ASS");
 
         set_time_limit(0);
 
 //        $this->set_Steams_task(4);
 
-        $pss = Paintseed::all();
-        foreach ($pss as $item) $item->delete();
-        dd('deleted');
     }
 
     private function set_Steams_task($id)
