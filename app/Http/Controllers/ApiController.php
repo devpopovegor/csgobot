@@ -84,8 +84,8 @@ class ApiController extends Controller
 //        dd($ids);
 
         while ($item_name = current($ids)) {
-            echo key($ids) . "\r\n";
-            echo $item_name . "\r\n";
+            echo key($ids) . "<br>";
+            echo $item_name . "<br>";
             next($ids);
         }
 
