@@ -30,8 +30,8 @@ class TelegramController extends Controller
         set_time_limit(0);
 
         $item = Item::where('name', '=', '★ Karambit | Marble Fade (Minimal Wear)')->get()->first();
-        Paintseed::where('name', '=', '★ Karambit | Marble Fade (Minimal Wear)')->update([
-//            'name' => '★ Karambit | Marble Fade (Minimal Wear)',
+        Paintseed::where('name', '=', '★ Karambit | Marble Fade(Minimal Wear)')->update([
+            'name' => '★ Karambit | Marble Fade (Minimal Wear)',
             'steam_id' => $item->id
         ]);
 
