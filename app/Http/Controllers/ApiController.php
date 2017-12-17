@@ -81,7 +81,7 @@ class ApiController extends Controller
 
         $name = Paintseed::get()->pluck('name')->distinct()->toArray();
         $ids = Item::whereIn('naem', $name)->pluck('id')->toArray();
-
+        dd($ids);
 
         return 'OK';
     }
