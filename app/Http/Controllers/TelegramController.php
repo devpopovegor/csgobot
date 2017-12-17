@@ -32,7 +32,7 @@ class TelegramController extends Controller
 
 //        $this->set_Steams_task(4);
 
-        Paintseed::all()->delete();
+        Paintseed::delete();
         dd('deleted');
     }
 
