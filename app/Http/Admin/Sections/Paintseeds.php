@@ -62,7 +62,8 @@ class Paintseeds extends Section implements Initializable
 			                   AdminColumn::text('item_id', 'steam id'),
 			                   AdminColumn::text('value', 'Паттерн')->setOrderable('value'),
 			                   AdminColumn::text('name', 'Название'),
-			                   AdminColumn::text('steam_id', 'Предмет')
+			                   AdminColumn::text('steam_id', 'Предмет'),
+			                   AdminColumn::text('float', 'Флоат')
 		                   )->setDisplaySearch(true)->paginate(100);
 	}
 
