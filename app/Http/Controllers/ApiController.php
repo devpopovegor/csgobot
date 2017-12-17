@@ -81,7 +81,8 @@ class ApiController extends Controller
 
         $name = Paintseed::get()->pluck('name')->toArray();
         $ids = Item::whereIn('name', $name)->pluck('id', 'name')->toArray();
-        dd($ids);
+        dd(key($ids[0]));
+
         foreach ($ids as $id){
             Paintseed::where('name', '=', $id->name)->update(['steam_id' => $id->id]);
         }
