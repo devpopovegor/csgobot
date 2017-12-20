@@ -37,9 +37,9 @@ class ApiController extends Controller
     public function getList()
     {
 
-        $tasks = Task::with('item')->where('site_id', '=', '7')
+        $tasks = Task::with('item')->with('steams')->where('site_id', '=', '7')
             ->where('client','=', 'ska4an')->get(['float','pattern']);
-        dd($tasks->count(), $tasks);
+        dd($tasks->count(), $tasks[15]);
         $result = [];
         foreach ($tasks as $task){
             $arr = [];
