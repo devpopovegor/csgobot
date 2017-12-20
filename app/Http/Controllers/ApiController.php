@@ -36,10 +36,10 @@ class ApiController extends Controller
 
     public function getList()
     {
-
+        set_time_limit(0);
         $tasks = Task::with('item')->with('steams')->where('site_id', '=', '7')
             ->where('client','=', 'ska4an')->get();
-        dd($tasks->count(), $tasks[15]);
+        dd(json_encode($tasks));
 //        $result = [];
 //        foreach ($tasks as $task){
 //            $arr = [];
