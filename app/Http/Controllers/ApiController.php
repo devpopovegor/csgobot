@@ -38,7 +38,7 @@ class ApiController extends Controller
     {
 
         $tasks = Task::with('item')->with('steams')->where('site_id', '=', '7')
-            ->where('client','=', 'ska4an')->get(['float','pattern']);
+            ->where('client','=', 'ska4an')->get();
         dd($tasks->count(), $tasks[15]);
         $result = [];
         foreach ($tasks as $task){
