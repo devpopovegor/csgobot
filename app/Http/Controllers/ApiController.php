@@ -39,7 +39,7 @@ class ApiController extends Controller
         set_time_limit(0);
         $tasks = Task::with('item')->with('steams')->where('site_id', '=', '7')
             ->where('client','=', 'ska4an')->get();
-        dd(json_encode($tasks[15]));
+        return json_encode($tasks);
 //        $result = [];
 //        foreach ($tasks as $task){
 //            $arr = [];
