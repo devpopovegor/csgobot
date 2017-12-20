@@ -39,7 +39,7 @@ class ApiController extends Controller
 
         $tasks = Task::with('item')->where('site_id', '=', '7')
             ->where('client','=', 'ska4an')->get();
-
+        dd($tasks->count(), $tasks);
         $result = [];
         foreach ($tasks as $task){
             $arr = [];
