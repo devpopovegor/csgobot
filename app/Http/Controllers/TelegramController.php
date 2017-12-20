@@ -28,7 +28,8 @@ class TelegramController extends Controller
 
 
         set_time_limit(0);
-        Steam::all()->delete();
+        $steams = Steam::all();
+        foreach ($steams as $item) $item->delete();
         $this->set_Steams_task(7);
 //        $item = Item::where('name', '=', '★ StatTrak™ Karambit | Marble Fade (Minimal Wear)')->get()->first();
 //        Paintseed::where('name', '=', '★ StatTrak™ Karambit | Marble Fade(Minimal Wear)')->update([
