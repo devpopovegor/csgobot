@@ -48,7 +48,7 @@ class ApiController extends Controller
 //            $arr['patterns'] = $task->item->paintseeds->whereIn('value', $arr['patterns'])->pluck('item_id')->toArray();
 //            $result[] = $arr;
 //        }
-//lol
+//lolss
 //        return json_encode($result);
 
     }
