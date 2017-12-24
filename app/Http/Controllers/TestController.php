@@ -67,7 +67,7 @@ class TestController extends Controller
     public function set_patterns($json)
     {
 
-        dd(1);
+//        dd(1);
         set_time_limit(0);
         $patterns = json_decode($json);
         foreach ($patterns as $pattern){
