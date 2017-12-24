@@ -28,7 +28,7 @@ class AdminSectionsServiceProvider extends ServiceProvider
 //        Pattern::class => 'App\Admin\Sections\Patterns',
         Report::class => 'App\Admin\Sections\Reports',
         Paintseed::class => 'App\Admin\Sections\Paintseeds',
-        Steam::class => 'App\Admin\Sections\Steams',
+//        Steam::class => 'App\Admin\Sections\Steams',
     ];
 
     /**
