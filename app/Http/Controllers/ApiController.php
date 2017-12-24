@@ -59,26 +59,6 @@ class ApiController extends Controller
 	    return json_encode('ok');
     }
 
-    public function setPatterns()
-    {
-        set_time_limit(0);
-        $patterns = json_decode('');
-        foreach ($patterns as $pattern){
-                Paintseed::create(['item_id' => $pattern->steam_id, 'value' => $pattern->paintseed,
-                    'name' => $pattern->name, 'float' => $pattern->float]);
-        }
-
-        $name = Paintseed::get()->pluck('name')->toArray();
-        $ids = Item::whereIn('name', $name)->pluck('id', 'name')->toArray();
-
-        while ($item_id = current($ids)) {
-            Paintseed::where('name', '=', key($ids))->update(['steam_id' => $item_id]);
-            next($ids);
-        }
-
-        return 'OK';
-    }
-
     public function getSteam()
     {
         $tasks = Task::with('item')->where('client', '=', 'ska4an')
