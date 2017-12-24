@@ -49,9 +49,9 @@ class ApiController extends Controller
             $result[$task->id] = $paintseeds;
         }
 
-        dd($result);
+//        dd($result);
 
-        return json_encode($tasks);
+        return json_encode($result);
     }
 
     public function getPatterns()
