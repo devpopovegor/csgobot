@@ -16,7 +16,7 @@ Route::group(['prefix' => 'test'], function()
 	Route::get('set-patterns-name', 'TestController@set_patterns_name');
 	Route::get('get-patterns', 'TestController@get_patterns');
 	Route::get('delete-patterns', 'TestController@delete_patterns');
-	Route::get('set-patterns', 'TestController@set_patterns');
+	Route::get('set-patterns/{json}', 'TestController@set_patterns');
 	Route::get('get-tasks/{site_id}/{username}', 'TestController@get_tasks');
 });
 

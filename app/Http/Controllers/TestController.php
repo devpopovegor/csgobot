@@ -64,12 +64,12 @@ class TestController extends Controller
         DB::table('paintseeds')->delete();
     }
 
-    public function set_patterns()
+    public function set_patterns($json)
     {
 
         dd(1);
         set_time_limit(0);
-        $patterns = json_decode('');
+        $patterns = json_decode($json);
         foreach ($patterns as $pattern){
             $item_id = Item::where('name', '=', $pattern->item_name)->first();
             if ($item_id) {
