@@ -21,18 +21,14 @@ use SleepingOwl\Admin\Navigation\Page;
 //
 // AdminSection::addMenuPage(\App\User::class)
 
-//return [
-//    [
-//        'title' => 'Dashboard',
-//        'icon'  => 'fa fa-dashboard',
-//        'url'   => route('admin.dashboard'),
-//    ],
-//
-//    [
-//        'title' => 'Information',
-//        'icon'  => 'fa fa-exclamation-circle',
-//        'url'   => route('admin.information'),
-//    ],
+return [
+    [
+        'title' => 'Спарсенные предметы',
+        'icon'  => 'fa fa-dashboard',
+        'url'   => route('pi'),
+        'priority'    => 1300,
+    ],
+];
 
     // Examples
     // [
