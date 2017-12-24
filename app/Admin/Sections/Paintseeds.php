@@ -52,7 +52,7 @@ class Paintseeds extends Section implements Initializable
                            }))
 		                   ->setHtmlAttribute('class', 'table-primary')
 		                   ->setColumns(
-			                   AdminColumn::text('item.full_name', 'Предмет'),
+			                   AdminColumn::relatedLink('item.full_name', 'Предмет'),
 			                   AdminColumn::text('steam', 'Steam'),
 			                   AdminColumn::text('float', 'Флоат'),
                                AdminColumn::text('value', 'Паттерн')->setOrderable('value'),
