@@ -87,4 +87,24 @@ class TestController extends Controller
         return 'OK';
     }
 
+    public function get_tasks($site_id, $username)
+    {
+        set_time_limit(0);
+        $tasks = Task::with('item.paintseeds')->where('site_id', '=', $site_id)
+            ->where('client','=', $username)->get();
+
+        $result = [];
+        foreach ($tasks as $task) {
+            $paintseeds = $task->item->paintseeds;
+            if ($task->float) $paintseeds = $paintseeds->where('float', '<=', $task->float);
+            if ($task->pattern) $paintseeds = $paintseeds->where('pattern_name', '=', $task->pattern);
+            $paintseeds = $paintseeds->pluck('steam')->toArray();
+            $result[$task->id] = $paintseeds;
+        }
+
+        dd($result);
+
+//        return json_encode($result);
+    }
+
 }
