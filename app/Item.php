@@ -32,11 +32,11 @@ class Item extends Model
         return $this->hasMany(Task::class);
     }
 
-    public function patterns(){
-        return $this->hasMany(Pattern::class);
+    public function paintseeds(){
+        return $this->hasMany(Paintseed::class, 'item_id');
     }
 
-    public function paintseeds(){
-        return $this->hasMany(Paintseed::class, 'steam_id');
+    public function patterns(){
+        return $this->hasMany(Pattern::class, 'item_id');
     }
 }

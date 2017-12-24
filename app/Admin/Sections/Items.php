@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Admin\Sections;
+namespace App\Admin\Sections;
 
 use App\Dealer;
-use App\Site;
+use App\Item;
 use App\User;
 use AdminDisplay;
 use AdminColumn;
-use AdminColumnEditable;
+use AdminColumnFilter;
 use AdminForm;
 use AdminFormElement;
 use Illuminate\Support\Facades\Auth;
@@ -24,7 +24,7 @@ use SleepingOwl\Admin\Section;
  *
  * @see http://sleepingowladmin.ru/docs/model_configuration_section
  */
-class Sites extends Section implements Initializable
+class Items extends Section implements Initializable
 {
 	protected $model;
 	/**
@@ -53,10 +53,10 @@ class Sites extends Section implements Initializable
 		                   ->setHtmlAttribute('class', 'table-primary')
 		                   ->setColumns(
 			                   AdminColumn::text('id', '#')->setWidth('30px'),
-			                   AdminColumn::link('url', 'Ссылка'),
-			                   AdminColumn::text('get_data', 'Ссылка получения данных'),
-			                   AdminColumnEditable::checkbox( 'active', 'Да', 'Нет', 'Активность' )
-		                   )->paginate(20);
+			                   AdminColumn::link('name', 'Название'),
+			                   AdminColumn::text('phase', 'Фаза'),
+			                   AdminColumn::text('full_name', 'Полное название')
+		                   )->setDisplaySearch(true)->paginate(100);
 	}
 
 	/**
@@ -67,9 +67,9 @@ class Sites extends Section implements Initializable
 	public function onEdit($id)
 	{
 		return AdminForm::panel()->addBody([
-			AdminFormElement::text('url', 'Ссылка'),
-			AdminFormElement::text('get_data', 'Ссылка получения данных'),
-			AdminFormElement::checkbox('active', 'Активность'),
+			AdminFormElement::text('name', 'Название'),
+			AdminFormElement::text('phase', 'Фаза'),
+			AdminFormElement::text('full_name', 'Полное название')
 		]);
 	}
 
@@ -123,28 +123,28 @@ class Sites extends Section implements Initializable
 	public function initialize()
 	{
 		$this->addToNavigation($priority = 500, function() {
-			return Site::count();
+			return Item::count();
 		});
 	}
 
 	public function getIcon()
 	{
-		return 'fa fa-globe';
+		return 'fa fa-list-ul';
 	}
 
 	public function getTitle()
 	{
-		return 'Сайты';
+		return 'Предметы';
 	}
 
 	public function getCreateTitle()
 	{
-		return 'Добавление сайта';
+		return 'Добавление предмета';
 	}
 
 	public function getEditTitle()
 	{
-		return 'Редактирование сайта';
+		return 'Редактирование предмета';
 	}
 
 }

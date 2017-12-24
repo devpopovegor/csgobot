@@ -1,14 +1,10 @@
 <?php
 
-namespace App\Http\Admin\Sections;
+namespace App\Admin\Sections;
 
-use App\Dealer;
-use App\Item;
-use App\Pattern;
 use App\User;
 use AdminDisplay;
 use AdminColumn;
-use AdminColumnFilter;
 use AdminForm;
 use AdminFormElement;
 use Illuminate\Support\Facades\Auth;
@@ -25,7 +21,7 @@ use SleepingOwl\Admin\Section;
  *
  * @see http://sleepingowladmin.ru/docs/model_configuration_section
  */
-class Patterns extends Section implements Initializable
+class Users extends Section implements Initializable
 {
     protected $model;
     /**
@@ -50,14 +46,13 @@ class Patterns extends Section implements Initializable
      */
     public function onDisplay()
     {
-        return AdminDisplay::datatables()
+        return AdminDisplay::table()
             ->setHtmlAttribute('class', 'table-primary')
             ->setColumns(
-//                AdminColumn::text('id', '#')->setWidth('30px'),
-                AdminColumn::relatedLink('item.full_name', 'Номер предмета'),
-                AdminColumn::text('name', 'Название'),
-                AdminColumn::text('value', 'Паттерн')
-            )->setDisplaySearch(true)->paginate(100);
+                AdminColumn::text('id', '#')->setWidth('30px'),
+                AdminColumn::link('name', 'Имя'),
+                AdminColumn::text('email', 'E-mail')
+            )->paginate(20);
     }
 
     /**
@@ -68,9 +63,9 @@ class Patterns extends Section implements Initializable
     public function onEdit($id)
     {
         return AdminForm::panel()->addBody([
-            AdminFormElement::text('item_id', 'Номер предмета'),
-            AdminFormElement::text('name', 'Название'),
-            AdminFormElement::text('value', 'Паттерн')
+            AdminFormElement::text('name', 'Имя')->required(),
+            AdminFormElement::text('email', 'E-mail')->required(),
+            AdminFormElement::text('password', 'Пароль')->required()
         ]);
     }
 
@@ -84,22 +79,26 @@ class Patterns extends Section implements Initializable
 
     public function isDeletable(\Illuminate\Database\Eloquent\Model $model)
     {
-        return true;
+        if (Auth::user()->hasRole('admin')) return true;
+        else return false;
     }
 
     public function isEditable(\Illuminate\Database\Eloquent\Model $model)
     {
-        return true;
+        if (Auth::user()->hasRole('admin')) return true;
+        else return false;
     }
 
     public function isCreatable()
     {
-        return true;
+        if (Auth::user()->hasRole('admin')) return true;
+        else return false;
     }
 
     public function isDisplayable()
     {
-        return true;
+        if (Auth::user()->hasRole('admin')) return true;
+        else return false;
     }
 
     /**
@@ -124,28 +123,17 @@ class Patterns extends Section implements Initializable
     public function initialize()
     {
         $this->addToNavigation($priority = 500, function() {
-            return Pattern::count();
+            return User::count();
         });
     }
 
     public function getIcon()
     {
-        return 'fa fa-list-ul';
+        return 'fa fa-group';
     }
 
     public function getTitle()
     {
-        return 'Паттерны';
+        return 'Пользователи';
     }
-
-    public function getCreateTitle()
-    {
-        return 'Добавление паттерна';
-    }
-
-    public function getEditTitle()
-    {
-        return 'Редактирование паттерна';
-    }
-
 }

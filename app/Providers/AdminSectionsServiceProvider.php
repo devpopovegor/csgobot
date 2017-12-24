@@ -3,7 +3,6 @@
 namespace App\Providers;
 
 use App\Dealer;
-//use App\Http\Admin\Sections\Reports;
 use App\Item;
 use App\Paintseed;
 use App\Pattern;
@@ -21,15 +20,15 @@ class AdminSectionsServiceProvider extends ServiceProvider
      * @var array
      */
     protected $sections = [
-        User::class => 'App\Http\Admin\Sections\Users',
-        Dealer::class => 'App\Http\Admin\Sections\Dealers',
-        Item::class => 'App\Http\Admin\Sections\Items',
-        Site::class => 'App\Http\Admin\Sections\Sites',
-        Task::class => 'App\Http\Admin\Sections\Tasks',
-        Pattern::class => 'App\Http\Admin\Sections\Patterns',
-        Report::class => 'App\Http\Admin\Sections\Reports',
-        Paintseed::class => 'App\Http\Admin\Sections\Paintseeds',
-        Steam::class => 'App\Http\Admin\Sections\Steams',
+        User::class => 'App\Admin\Sections\Users',
+        Dealer::class => 'App\Admin\Sections\Dealers',
+        Item::class => 'App\Admin\Sections\Items',
+        Site::class => 'App\Admin\Sections\Sites',
+        Task::class => 'App\Admin\Sections\Tasks',
+        Pattern::class => 'App\Admin\Sections\Patterns',
+        Report::class => 'App\Admin\Sections\Reports',
+        Paintseed::class => 'App\Admin\Sections\Paintseeds',
+        Steam::class => 'App\Admin\Sections\Steams',
     ];
 
     /**

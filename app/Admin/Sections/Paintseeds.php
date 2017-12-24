@@ -1,16 +1,13 @@
 <?php
 
-namespace App\Http\Admin\Sections;
+namespace App\Admin\Sections;
 
-use App\Dealer;
-use App\Item;
-use App\User;
+use App\Paintseed;
 use AdminDisplay;
+use AdminDisplayFilter;
 use AdminColumn;
-use AdminColumnFilter;
 use AdminForm;
 use AdminFormElement;
-use Illuminate\Support\Facades\Auth;
 use SleepingOwl\Admin\Contracts\Display\DisplayInterface;
 use SleepingOwl\Admin\Contracts\Form\FormInterface;
 use SleepingOwl\Admin\Contracts\Initializable;
@@ -24,7 +21,7 @@ use SleepingOwl\Admin\Section;
  *
  * @see http://sleepingowladmin.ru/docs/model_configuration_section
  */
-class Items extends Section implements Initializable
+class Paintseeds extends Section implements Initializable
 {
 	protected $model;
 	/**
@@ -50,12 +47,16 @@ class Items extends Section implements Initializable
 	public function onDisplay()
 	{
 		return AdminDisplay::datatables()
+                           ->setFilters(AdminDisplayFilter::custom('custom_filter')->setCallback(function($query, $value) {
+                               $query->where('value', $value);
+                           }))
 		                   ->setHtmlAttribute('class', 'table-primary')
 		                   ->setColumns(
-			                   AdminColumn::text('id', '#')->setWidth('30px'),
-			                   AdminColumn::link('name', 'Название'),
-			                   AdminColumn::text('phase', 'Фаза'),
-			                   AdminColumn::text('full_name', 'Полное название')
+			                   AdminColumn::relatedLink('item.full_name', 'Предмет'),
+			                   AdminColumn::text('steam', 'Steam'),
+			                   AdminColumn::text('float', 'Флоат'),
+                               AdminColumn::text('value', 'Паттерн')->setOrderable('value'),
+                               AdminColumn::text('pattern_name', 'НП')
 		                   )->setDisplaySearch(true)->paginate(100);
 	}
 
@@ -67,9 +68,10 @@ class Items extends Section implements Initializable
 	public function onEdit($id)
 	{
 		return AdminForm::panel()->addBody([
+			AdminFormElement::text('item_id', 'steam id'),
+			AdminFormElement::text('value', 'Паттерн'),
 			AdminFormElement::text('name', 'Название'),
-			AdminFormElement::text('phase', 'Фаза'),
-			AdminFormElement::text('full_name', 'Полное название')
+			AdminFormElement::text('steam_id', 'id предмета')
 		]);
 	}
 
@@ -83,17 +85,17 @@ class Items extends Section implements Initializable
 
 	public function isDeletable(\Illuminate\Database\Eloquent\Model $model)
 	{
-		return true;
+		return false;
 	}
 
 	public function isEditable(\Illuminate\Database\Eloquent\Model $model)
 	{
-		return true;
+		return false;
 	}
 
 	public function isCreatable()
 	{
-		return true;
+		return false;
 	}
 
 	public function isDisplayable()
@@ -123,7 +125,7 @@ class Items extends Section implements Initializable
 	public function initialize()
 	{
 		$this->addToNavigation($priority = 500, function() {
-			return Item::count();
+			return Paintseed::count();
 		});
 	}
 
@@ -134,17 +136,17 @@ class Items extends Section implements Initializable
 
 	public function getTitle()
 	{
-		return 'Предметы';
+		return 'Все паттерны';
 	}
 
 	public function getCreateTitle()
 	{
-		return 'Добавление предмета';
+		return 'Добавление паттерна';
 	}
 
 	public function getEditTitle()
 	{
-		return 'Редактирование предмета';
+		return 'Редактирование паттерна';
 	}
 
 }

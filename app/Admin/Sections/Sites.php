@@ -1,19 +1,13 @@
 <?php
 
-namespace App\Http\Admin\Sections;
+namespace App\Admin\Sections;
 
-use App\Dealer;
-use App\Item;
-use App\Paintseed;
-use App\Pattern;
-use App\User;
+use App\Site;
 use AdminDisplay;
-use AdminDisplayFilter;
 use AdminColumn;
-use AdminColumnFilter;
+use AdminColumnEditable;
 use AdminForm;
 use AdminFormElement;
-use Illuminate\Support\Facades\Auth;
 use SleepingOwl\Admin\Contracts\Display\DisplayInterface;
 use SleepingOwl\Admin\Contracts\Form\FormInterface;
 use SleepingOwl\Admin\Contracts\Initializable;
@@ -27,7 +21,7 @@ use SleepingOwl\Admin\Section;
  *
  * @see http://sleepingowladmin.ru/docs/model_configuration_section
  */
-class Paintseeds extends Section implements Initializable
+class Sites extends Section implements Initializable
 {
 	protected $model;
 	/**
@@ -53,18 +47,13 @@ class Paintseeds extends Section implements Initializable
 	public function onDisplay()
 	{
 		return AdminDisplay::datatables()
-                           ->setFilters(AdminDisplayFilter::custom('custom_filter')->setCallback(function($query, $value) {
-                               $query->where('value', $value);
-                           }))
 		                   ->setHtmlAttribute('class', 'table-primary')
 		                   ->setColumns(
 			                   AdminColumn::text('id', '#')->setWidth('30px'),
-			                   AdminColumn::text('item_id', 'steam id'),
-			                   AdminColumn::text('value', 'Паттерн')->setOrderable('value'),
-			                   AdminColumn::text('name', 'Название'),
-			                   AdminColumn::text('steam_id', 'Предмет'),
-			                   AdminColumn::text('float', 'Флоат')
-		                   )->setDisplaySearch(true)->paginate(100);
+			                   AdminColumn::link('url', 'Ссылка'),
+			                   AdminColumn::text('get_data', 'Ссылка получения данных'),
+			                   AdminColumnEditable::checkbox( 'active', 'Да', 'Нет', 'Активность' )
+		                   )->paginate(20);
 	}
 
 	/**
@@ -75,10 +64,9 @@ class Paintseeds extends Section implements Initializable
 	public function onEdit($id)
 	{
 		return AdminForm::panel()->addBody([
-			AdminFormElement::text('item_id', 'steam id'),
-			AdminFormElement::text('value', 'Паттерн'),
-			AdminFormElement::text('name', 'Название'),
-			AdminFormElement::text('steam_id', 'id предмета')
+			AdminFormElement::text('url', 'Ссылка'),
+			AdminFormElement::text('get_data', 'Ссылка получения данных'),
+			AdminFormElement::checkbox('active', 'Активность'),
 		]);
 	}
 
@@ -132,28 +120,28 @@ class Paintseeds extends Section implements Initializable
 	public function initialize()
 	{
 		$this->addToNavigation($priority = 500, function() {
-			return Paintseed::count();
+			return Site::count();
 		});
 	}
 
 	public function getIcon()
 	{
-		return 'fa fa-list-ul';
+		return 'fa fa-globe';
 	}
 
 	public function getTitle()
 	{
-		return 'Все паттерны';
+		return 'Сайты';
 	}
 
 	public function getCreateTitle()
 	{
-		return 'Добавление паттерна';
+		return 'Добавление сайта';
 	}
 
 	public function getEditTitle()
 	{
-		return 'Редактирование паттерна';
+		return 'Редактирование сайта';
 	}
 
 }

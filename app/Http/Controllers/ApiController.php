@@ -34,23 +34,12 @@ class ApiController extends Controller
         return "OK";
     }
 
-    public function getList()
+    public function getTasks()
     {
         set_time_limit(0);
         $tasks = Task::with('item')->with('steams')->where('site_id', '=', '7')
             ->where('client','=', 'ska4an')->get();
         return json_encode($tasks);
-//        $result = [];
-//        foreach ($tasks as $task){
-//            $arr = [];
-//            $arr['task'] = $task;
-//            $arr['patterns'] = array_unique($task->item->patterns->where('name', '=', $task->pattern)->pluck('value')->toArray());
-//            $arr['patterns'] = $task->item->paintseeds->whereIn('value', $arr['patterns'])->pluck('item_id')->toArray();
-//            $result[] = $arr;
-//        }
-//lolss
-//        return json_encode($result);
-
     }
 
     public function getPatterns()

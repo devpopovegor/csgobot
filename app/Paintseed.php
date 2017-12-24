@@ -23,10 +23,12 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Paintseed whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Paintseed whereValue($value)
  * @mixin \Eloquent
+ * @property string|null $float
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Paintseed whereFloat($value)
  */
 class Paintseed extends Model
 {
-    protected $fillable = ['item_id', 'value', 'name', 'steam_id', 'float'];
+    protected $fillable = ['item_id', 'value', 'pattern_name', 'steam', 'float'];
 
     public function item(){
         return $this->belongsTo(Item::class);

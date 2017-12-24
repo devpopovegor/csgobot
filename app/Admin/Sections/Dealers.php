@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Admin\Sections;
+namespace App\Admin\Sections;
 
+use App\Dealer;
 use App\User;
 use AdminDisplay;
 use AdminColumn;
@@ -21,7 +22,7 @@ use SleepingOwl\Admin\Section;
  *
  * @see http://sleepingowladmin.ru/docs/model_configuration_section
  */
-class Users extends Section implements Initializable
+class Dealers extends Section implements Initializable
 {
     protected $model;
     /**
@@ -50,8 +51,9 @@ class Users extends Section implements Initializable
             ->setHtmlAttribute('class', 'table-primary')
             ->setColumns(
                 AdminColumn::text('id', '#')->setWidth('30px'),
-                AdminColumn::link('name', 'Имя'),
-                AdminColumn::text('email', 'E-mail')
+                AdminColumn::link('username', 'Username'),
+                AdminColumn::datetime('start_subscription', 'Начало подписки')->setFormat('d.m.Y')->setWidth('150px'),
+                AdminColumn::datetime('end_subscription', 'Конец подписки')->setFormat('d.m.Y')->setWidth('150px')
             )->paginate(20);
     }
 
@@ -63,9 +65,12 @@ class Users extends Section implements Initializable
     public function onEdit($id)
     {
         return AdminForm::panel()->addBody([
-            AdminFormElement::text('name', 'Имя')->required(),
-            AdminFormElement::text('email', 'E-mail')->required(),
-            AdminFormElement::text('password', 'Пароль')->required()
+            AdminFormElement::text('first_name', 'Имя'),
+            AdminFormElement::text('last_name', 'Фамилия'),
+            AdminFormElement::text('username', 'Username')->required(),
+            AdminFormElement::checkbox('subscription', 'Подписка'),
+            AdminFormElement::date('start_subscription', 'Начало подписки'),
+            AdminFormElement::date('end_subscription', 'Конец подписки'),
         ]);
     }
 
@@ -79,26 +84,22 @@ class Users extends Section implements Initializable
 
     public function isDeletable(\Illuminate\Database\Eloquent\Model $model)
     {
-        if (Auth::user()->hasRole('admin')) return true;
-        else return false;
+        return true;
     }
 
     public function isEditable(\Illuminate\Database\Eloquent\Model $model)
     {
-        if (Auth::user()->hasRole('admin')) return true;
-        else return false;
+        return true;
     }
 
     public function isCreatable()
     {
-        if (Auth::user()->hasRole('admin')) return true;
-        else return false;
+        return true;
     }
 
     public function isDisplayable()
     {
-        if (Auth::user()->hasRole('admin')) return true;
-        else return false;
+        return true;
     }
 
     /**
@@ -123,7 +124,7 @@ class Users extends Section implements Initializable
     public function initialize()
     {
         $this->addToNavigation($priority = 500, function() {
-            return User::count();
+            return Dealer::count();
         });
     }
 
@@ -134,6 +135,17 @@ class Users extends Section implements Initializable
 
     public function getTitle()
     {
-        return 'Пользователи';
+        return 'Клиенты';
     }
+
+    public function getCreateTitle()
+    {
+        return 'Добавление клиента';
+    }
+
+    public function getEditTitle()
+    {
+        return 'Редактирование клиента';
+    }
+
 }
