@@ -7,6 +7,7 @@ use App\Pattern;
 use App\Steam;
 use App\Task;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class TestController extends Controller
 {
@@ -54,6 +55,11 @@ class TestController extends Controller
         $json = str_replace('\u2605', '★', $json);
         $json = str_replace('\u2122','™', $json);
         return $json;
+    }
+
+    public function delete_patterns()
+    {
+        DB::table('paintseeds')->delete();
     }
 
 }
