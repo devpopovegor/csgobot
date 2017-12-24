@@ -107,4 +107,18 @@ class TestController extends Controller
 //        return json_encode($result);
     }
 
+    public function get_items()
+    {
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, 'https://cs.money/load_bots_inventory');
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        $curl_exec = curl_exec($curl);
+
+        $items = collect(json_decode($curl_exec));
+        $items_id = $items->pluck('id.0')->toArray();
+
+        dd($items_id);
+    }
+
+
 }

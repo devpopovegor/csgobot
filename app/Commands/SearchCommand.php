@@ -63,7 +63,8 @@ class SearchCommand extends Command
                             if (in_array(trim(last($str_request)), $pattern_names)) $pattern = trim(last($str_request));
                             else $phase = trim($str_request[2]);
                         }
-                    } elseif ($count_params == 4) {
+                    }
+                    elseif ($count_params == 4) {
                         if (is_numeric(trim(last($str_request))) && trim(last($str_request)) > 0) {
                             $float = trim(last($str_request));
                             if (in_array(trim($str_request[2]), $pattern_names)) $pattern = trim($str_request[2]);
