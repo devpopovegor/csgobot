@@ -44,7 +44,7 @@ class TestController extends Controller
 					$paintseed->pattern_name =  $pattern->name;
 					$paintseed->save();
 				}
-				$pattern->delete();
+//				$pattern->delete();
 			}
 		}
 	}
