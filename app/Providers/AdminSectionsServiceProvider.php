@@ -25,7 +25,7 @@ class AdminSectionsServiceProvider extends ServiceProvider
         Item::class => 'App\Admin\Sections\Items',
         Site::class => 'App\Admin\Sections\Sites',
         Task::class => 'App\Admin\Sections\Tasks',
-        Pattern::class => 'App\Admin\Sections\Patterns',
+//        Pattern::class => 'App\Admin\Sections\Patterns',
         Report::class => 'App\Admin\Sections\Reports',
         Paintseed::class => 'App\Admin\Sections\Paintseeds',
         Steam::class => 'App\Admin\Sections\Steams',
