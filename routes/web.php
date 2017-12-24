@@ -16,6 +16,7 @@ Route::group(['prefix' => 'test'], function()
 	Route::get('set-patterns-name', 'TestController@set_patterns_name');
 	Route::get('get-patterns', 'TestController@get_patterns');
 	Route::get('delete-patterns', 'TestController@delete_patterns');
+	Route::get('set_patterns', 'TestController@set_patterns');
 });
 
 Route::group(['prefix' => 'api'], function()
