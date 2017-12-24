@@ -25,6 +25,7 @@ Route::group(['prefix' => 'api'], function()
 	Route::get('tasks', 'ApiController@getTasks');
 	Route::get('patterns', 'ApiController@getPatterns');
 	Route::get('set-patterns', 'ApiController@setPatterns');
-	Route::get('steam', 'ApiController@setPatterns');
+	Route::get('steam', 'ApiController@getSteam');
+	Route::get('send', 'ApiController@send');
 
 });

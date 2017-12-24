@@ -61,10 +61,11 @@ class ApiController extends Controller
 
     public function send()
     {
-    	$item = Item::find($_GET['item_id']);
+    	$task = Task::with('item')->where('id', '=', $_GET['task_id'])->first();
+    	$message = "Бот для cs.money отправил оффер на {$task->item->full_name}\r\nфлоат = {$task->float}\r\nпаттерн = {$task->pattern}";
 	    Telegram::sendMessage([
 		    'chat_id' => 222881167,
-		    'text' => "Бот для cs.money отправил оффер на {$item->full_name}",
+		    'text' => $message,
 		    'parse_mode' => 'HTML'
 	    ]);
 
