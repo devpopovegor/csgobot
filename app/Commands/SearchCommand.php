@@ -261,19 +261,9 @@ class SearchCommand extends Command
                                     }
                                     curl_close($curl);
                                     if (!$response) {
-                                        $task = Task::create(['item_id' => $mItem->id, 'site_id' => $mSite->id,
+                                        Task::create(['item_id' => $mItem->id, 'site_id' => $mSite->id,
                                             'float' => $float, 'chat_id' => $oMessage->getChat()->getId(),
                                             'pattern' => $pattern, 'client' => $user->getUsername()]);
-                                        try{
-                                        if ($pattern) {
-                                            $arr = array_unique($task->item->patterns->where('name', '=', $pattern)->pluck('value')->toArray());
-                                            $arr = $task->item->paintseeds->whereIn('value', $arr)->pluck('item_id')->toArray();
-                                            foreach ($arr as $item) {
-                                                Steam::create(['steam_id' => $item, 'task_id' => $task->id]);
-                                            }
-                                        }}catch (\Exception $exception){
-                                            Log::info($exception->getMessage());
-                                        }
                                     }
                                     //---------------------------
                                 } else {

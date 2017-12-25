@@ -20,6 +20,7 @@ Route::group(['prefix' => 'test'], function()
 	Route::get('get-tasks/{site_id}/{username}', 'TestController@get_tasks');
 	Route::get('get-items', 'TestController@get_items');
 	Route::get('insert/{site_id}', 'TestController@insert_paintseed_task');
+	Route::get('delete/{site_id}', 'TestController@delete_paintseed_task');
 });
 
 Route::group(['prefix' => 'api'], function()

@@ -110,7 +110,6 @@ class TestController extends Controller
 
     public function get_items()
     {
-
 //        echo Carbon::now() . "</br>";
 //        $tasks = Task::with('item.paintseeds')->where('site_id', '=', 7)->get();
         echo Carbon::now() . "</br>";
@@ -159,6 +158,16 @@ class TestController extends Controller
             foreach ($paintseeds as $paintseed) {
                 DB::insert('insert into paintseed_task (task_id, paintseed_id) values (?, ?)', [$task->id, $paintseed->id]);
             }
+        }
+        dd(213);
+    }
+
+    public function delete_paintseed_task($site_id)
+    {
+        set_time_limit(0);
+        $tasks = Task::where('site_id', '=', $site_id)->get();
+        foreach ($tasks as $task) {
+            DB::delete('delete from paintseed_task where task_id = ?',[$task->id]);
         }
         dd(213);
     }

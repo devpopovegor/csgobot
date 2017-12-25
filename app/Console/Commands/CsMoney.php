@@ -2,13 +2,10 @@
 
 namespace App\Console\Commands;
 
-use App\Item;
-use App\Pattern;
-use App\Report;
+
 use App\Site;
 use App\Task;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Telegram\Bot\Laravel\Facades\Telegram;
 
@@ -59,55 +56,23 @@ class CsMoney extends Command
 
         if (count($csmoney_items) > 0) { //проверка на то что cs.money вернула предметы
             $items_id = $csmoney_items->pluck('id.0')->toArray();
-//            $statuses = ['Factory New' => 'FN', 'Minimal Wear' => 'MW', 'Field-Tested' => 'FT', 'Battle-Scarred' => 'BS', 'Well-Worn' => 'WW'];
-            $tasks = Task::with('item.paintseeds')->where('site_id', '=', 7)->get();
+            $tasks = Task::with('paintseeds')->where('site_id', '=', 7)->get();
 
             foreach ($tasks as $task) { //перебор задач
-                $paintseeds = $task->item->paintseeds;
-                if ($task->float) $paintseeds = $paintseeds->where('float', '<=', $task->float);
-                if ($task->pattern) $paintseeds = $paintseeds->where('pattern_name', '=', $task->pattern);
-                $paintseeds = $paintseeds->pluck('steam')->toArray();
-                if (count($paintseeds)) {
-                    $intersect = array_intersect($paintseeds, $items_id);
-                    if (count($intersect)) {
-                        foreach ($intersect as $item){
-                            $float = $task->item->paintseeds->where('steam', '=', $item)->first()->float;
-                            $csmoney_item = $csmoney_items->where('id.0', '=', $item)->first();
-                            $metjm = "https://metjm.net/csgo/#S{$csmoney_item->b[0]}A{$csmoney_item->id[0]}D{$csmoney_item->l[0]}";
-                            $this->send_message($task, $csmoney->url, $float, $metjm);
-                        }
-                        $task->delete();
+                $paintseeds = $task->paintseeds->pluck('steam')->toArray();
+                $intersect = array_intersect($paintseeds, $items_id);
+                if (count($intersect)) {
+                    foreach ($intersect as $steam) {
+                        $float = $task->paintseeds->where('steam', '=', $steam)->first()->float;
+                        $csmoney_item = $csmoney_items->where('id.0', '=', $steam)->first();
+                        $metjm = "https://metjm.net/csgo/#S{$csmoney_item->b[0]}A{$csmoney_item->id[0]}D{$csmoney_item->l[0]}";
+                        $this->send_message($task, $csmoney->url, $float, $metjm);
                     }
+                    $task->delete();
                 }
-//                $name_parts = explode(' (', $task->item->full_name);
-//                $name = trim($name_parts[0]);
-//                $status = count($name_parts) > 1 ? trim($statuses[str_replace(')', '', $name_parts[1])]) : null;
-//
-//	            $items = $csmoney_items->where('m', '=', $name);
-//	            if ($status) $items = $items->where('e', '=', $status);
-//	            if ($task->float) $items = $items->where('f.0', '<=', $task->float);
-//
-//
-//                if (count($items)) {
-//
-//	                if ($task->pattern){
-//		                foreach ($items as $item){
-//			                if (in_array($item->id[0], $task->steams->pluck('steam_id')->toArray())){
-//				                $metjm = "https://metjm.net/csgo/#S{$item->b[0]}A{$item->id[0]}D{$item->l[0]}";
-//				                $this->send_message($task, $csmoney->url, $item->f[0], $metjm);
-//				                break;
-//			                }
-//		                }
-//	                }
-//	                else {
-//		                $item = $items->first();
-//		                $metjm = "https://metjm.net/csgo/#S{$item->b[0]}A{$item->id[0]}D{$item->l[0]}";
-//		                $this->send_message($task, $csmoney->url, $item->f[0], $metjm);
-//	                }
-//                }
+
             }
-        }
-        else {
+        } else {
             Log::info($curl_exec);
         }
 
@@ -115,23 +80,13 @@ class CsMoney extends Command
 
     }
 
-	private function send_message($task, $url, $float, $metj){
-		Telegram::sendMessage([
-			'chat_id' => $task->chat_id,
-			'text' => "{$task->item->name}\r\n{$url}\r\n{$task->item->phase}\r\n{$float}\r\n{$task->pattern}\r\n<a href='$metj'>metjm</a>",
-			'parse_mode' => 'HTML'
-		]);
-		Report::create([
-			'item_id' => $task->item_id,
-			'site_id' => $task->site_id,
-			'float' => $task->float,
-			'pattern' => $task->pattern,
-			'client' => $task->client,
-		]);
-//		foreach ($task->steams as $steam){
-//		    $steam->delete();
-//        }
-//		$task->delete();
-	}
+    private function send_message($task, $url, $float, $metj)
+    {
+        Telegram::sendMessage([
+            'chat_id' => $task->chat_id,
+            'text' => "{$task->item->name}\r\n{$url}\r\n{$task->item->phase}\r\n{$float}\r\n{$task->pattern}\r\n<a href='$metj'>metjm</a>",
+            'parse_mode' => 'HTML'
+        ]);
+    }
 
 }
