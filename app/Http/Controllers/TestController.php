@@ -115,7 +115,7 @@ class TestController extends Controller
         echo Carbon::now() . "</br>";
 
         $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL, 'https://dev.csgo.trade/load_bots_inventory');
+        curl_setopt($curl, CURLOPT_URL, 'https://cs.money/load_bots_inventory');
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         $curl_exec = curl_exec($curl);
 
