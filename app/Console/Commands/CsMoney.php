@@ -73,7 +73,7 @@ class CsMoney extends Command
 
             }
         } else {
-            Log::info($curl_exec);
+            Log::info('MANY ERROR');
         }
 
         Log::info('end check csmoney');
