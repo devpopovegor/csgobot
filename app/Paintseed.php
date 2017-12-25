@@ -33,4 +33,9 @@ class Paintseed extends Model
     public function item(){
         return $this->belongsTo(Item::class);
     }
+
+    public function tasks()
+    {
+        return $this->belongsToMany(Task::class, 'paintseed_task', 'paintseed_id', 'task_id');
+    }
 }

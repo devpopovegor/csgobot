@@ -7,6 +7,7 @@ use App\Paintseed;
 use App\Pattern;
 use App\Steam;
 use App\Task;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -109,13 +110,53 @@ class TestController extends Controller
 
     public function get_items()
     {
+
+//        set_time_limit(0);
+//        $tasks = Task::with('item.paintseeds')->where('site_id', '=', 7)->get();
+//        foreach ($tasks as $task){
+//            $paintseeds = $task->item->paintseeds;
+//            if ($task->float) $paintseeds = $paintseeds->where('float', '<=', $task->float);
+//            if ($task->pattern) $paintseeds = $paintseeds->where('pattern_name', '=', $task->pattern);
+//            foreach ($paintseeds as $paintseed){
+//                DB::insert('insert into paintseed_task (task_id, paintseed_id) values (?, ?)', [$task->id, $paintseed->id]);
+//            }
+//        }
+//        dd(213);
+
+
+//        echo Carbon::now() . "</br>";
+//        $tasks = Task::with('item.paintseeds')->where('site_id', '=', 7)->get();
+        echo Carbon::now() . "</br>";
+
         $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL, 'https://cs.money/load_bots_inventory');
+        curl_setopt($curl, CURLOPT_URL, 'https://dev.csgo.trade/load_bots_inventory');
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         $curl_exec = curl_exec($curl);
 
         $items = collect(json_decode($curl_exec));
-        $items_id = $items->pluck('id.0')->toArray();
+        echo Carbon::now() . "</br>";
+        if (count($items) > 0) { //проверка на то что cs.money вернула предметы
+            $items_id = $items->pluck('id.0')->toArray();
+            $tasks = Task::with('paintseeds')->where('site_id', '=', 7)->get();
+
+            echo Carbon::now() . "</br>";
+            foreach ($tasks as $task) { //перебор задач
+                $paintseeds = $task->paintseeds->pluck('steam')->toArray();
+                    $intersect = array_intersect($paintseeds, $items_id);
+                    if (count($intersect)) {
+                        foreach ($intersect as $item){
+                            $float = $task->item->paintseeds->where('steam', '=', $item)->first()->float;
+                            $csmoney_item = $items->where('id.0', '=', $item)->first();
+                            $metjm = "https://metjm.net/csgo/#S{$csmoney_item->b[0]}A{$csmoney_item->id[0]}D{$csmoney_item->l[0]}";
+                        }
+//                        $task->delete();
+                    }
+            }
+        }
+
+//        $items_id = $items->pluck('id.0')->toArray();
+
+        dd(Carbon::now());
 
         dd($items_id);
     }

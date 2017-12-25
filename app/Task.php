@@ -41,4 +41,9 @@ class Task extends Model
     {
         return $this->hasMany(Steam::class);
     }
+
+    public function paintseeds()
+    {
+        return $this->belongsToMany(Paintseed::class, 'paintseed_task', 'task_id', 'paintseed_id');
+    }
 }
