@@ -75,17 +75,17 @@ class CsMoney extends Command
                 if ($task->pattern) {
                     $find = false;
                     foreach ($task->paintseeds as $paintseed) {
-                        $float = round($paintseed->float, 8, PHP_ROUND_HALF_UP);
-                        foreach ($items as $item) {
-                            if ($item->f[0] == $float) {
-                                $metjm = "https://metjm.net/csgo/#S{$item->b[0]}A{$item->id[0]}D{$item->l[0]}";
-                                $this->send_message($task, $csmoney->url, $item->f[0], $metjm);
-                                $task->delete();
-                                $find = true;
-                                break;
-                            }
-                            if ($find) break;
-                        }
+//                        $float = round($paintseed->float, 8, PHP_ROUND_HALF_UP);
+//                        foreach ($items as $item) {
+//                            if ($item->f[0] == $float) {
+//                                $metjm = "https://metjm.net/csgo/#S{$item->b[0]}A{$item->id[0]}D{$item->l[0]}";
+//                                $this->send_message($task, $csmoney->url, $item->f[0], $metjm);
+//                                $task->delete();
+//                                $find = true;
+//                                break;
+//                            }
+//                            if ($find) break;
+//                        }
                     }
                 }
             }
