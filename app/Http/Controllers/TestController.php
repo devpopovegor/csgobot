@@ -134,8 +134,11 @@ class TestController extends Controller
                 elseif ($task->pattern) {
                     foreach ($task->paintseeds as $paintseed){
                         $float =  round($paintseed->float,8,PHP_ROUND_HALF_UP);
-                        $items = $items->where('f.0', '=', $float);
-                        if (count($items)) dd(1);
+                        foreach ($items as $item){
+                            if ($item->f[0] == $float){
+                                dd(1);
+                            }
+                        }
                     }
                 }
             }
