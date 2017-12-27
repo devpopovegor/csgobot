@@ -38,7 +38,7 @@ class ApiController extends Controller
     {
         set_time_limit(0);
 
-        $tasks = Task::with(['paintseeds:float', 'item:name'])
+        $tasks = Task::with('paintseeds:float')->with('item:name')
             ->where('site_id','=','7')
             ->where('client','=','ska4an')
             ->get()
