@@ -65,13 +65,13 @@ class CsMoney extends Command
 
                 $items = $csmoney_items->where('m', '=', $name)->where('e', '=', $status);
                 if ($task->float) $items = $items->where('f.0', '<=', $task->float);
-                if (count($items)) {
-                    $item = $items->first();
-                    $metjm = "https://metjm.net/csgo/#S{$item->b[0]}A{$item->id[0]}D{$item->l[0]}";
-                    $this->send_message($task, $csmoney->url, $item->f[0], $metjm);
-                    $task->delete();
-                    continue;
-                }
+//                if (count($items)) {
+//                    $item = $items->first();
+//                    $metjm = "https://metjm.net/csgo/#S{$item->b[0]}A{$item->id[0]}D{$item->l[0]}";
+//                    $this->send_message($task, $csmoney->url, $item->f[0], $metjm);
+//                    $task->delete();
+//                    continue;
+//                }
                 if ($task->pattern) {
                     $find = false;
                     foreach ($task->paintseeds as $paintseed) {
