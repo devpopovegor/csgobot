@@ -43,7 +43,7 @@ class ApiController extends Controller
             ->where('client','=','ska4an')
             ->get()
             ->toArray();
-        dd($tasks[20]);
+        dd(json_encode($tasks[20]));
     }
 
     public function getPatterns()
