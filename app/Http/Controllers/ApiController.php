@@ -42,7 +42,6 @@ class ApiController extends Controller
             ->where('site_id','=','7')
             ->where('client','=','ska4an')
             ->get()
-            ->pluck('id')
             ->toArray();
         dd(json_encode($tasks[20]));
     }
