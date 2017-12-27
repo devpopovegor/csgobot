@@ -39,7 +39,7 @@ class ApiController extends Controller
         set_time_limit(0);
 
         $tasks = Task::with(['paintseeds:float', 'item:full_name'])->where('site_id','=','7')->get()->toArray();
-        dd($tasks);
+        dd($tasks[20]);
     }
 
     public function getPatterns()
