@@ -74,7 +74,7 @@ class CsMoney extends Command
                         continue;
                     }
                 }
-                if ($task->pattern) {
+                elseif ($task->pattern) {
                     $find = false;
                     foreach ($task->paintseeds as $paintseed) {
                         $float = round($paintseed->float, 8, PHP_ROUND_HALF_UP);
