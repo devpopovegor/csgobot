@@ -37,21 +37,9 @@ class ApiController extends Controller
     public function getTasks()
     {
         set_time_limit(0);
-        $tasks = Task::with('item.paintseeds')->where('site_id', '=', '7')
-            ->where('client','=', 'ska4an')->get();
 
-        $result = [];
-        foreach ($tasks as $task) {
-            $paintseeds = $task->item->paintseeds;
-            if ($task->float) $paintseeds = $paintseeds->where('float', '<=', $task->float);
-            if ($task->pattern) $paintseeds = $paintseeds->where('pattern_name', '=', $task->pattern);
-            $paintseeds = $paintseeds->pluck('steam')->toArray();
-            $result[$task->id] = $paintseeds;
-        }
-
-//        dd($result);
-
-        return json_encode($result);
+        $tasks = Task::with(['paintseeds:float', 'item:full_name'])->get()->toArray();
+        dd($tasks);
     }
 
     public function getPatterns()

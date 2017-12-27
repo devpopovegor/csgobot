@@ -172,4 +172,11 @@ class TestController extends Controller
         dd(213);
     }
 
+    public function delete_user_tasks($username)
+    {
+        Task::where('client', '=','hocston')->delete();
+    }
+
+
+
 }
