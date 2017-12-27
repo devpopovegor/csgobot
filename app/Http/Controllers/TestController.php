@@ -174,7 +174,7 @@ class TestController extends Controller
 
     public function delete_user_tasks($username)
     {
-        Task::where('client', '=','hocston')->delete();
+        Task::where('client', '=',$username)->delete();
     }
 
 
