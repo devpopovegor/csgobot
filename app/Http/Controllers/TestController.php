@@ -110,24 +110,33 @@ class TestController extends Controller
 
     public function get_items()
     {
-//        echo Carbon::now() . "</br>";
-//        $tasks = Task::with('item.paintseeds')->where('site_id', '=', 7)->get();
         echo Carbon::now() . "</br>";
 
         $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL, 'https://cs.money/load_bots_inventory');
+        curl_setopt($curl, CURLOPT_URL, 'https://dev.csgo.trade/load_bots_inventory');
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         $curl_exec = curl_exec($curl);
 
-        $items = collect(json_decode($curl_exec));
+        $csmoney_items = collect(json_decode($curl_exec));
         echo Carbon::now() . "</br>";
-        if (count($items) > 0) { //проверка на то что cs.money вернула предметы
+        if (count($csmoney_items) > 0) { //проверка на то что cs.money вернула предметы
+            $statuses = ['Factory New' => 'FN', 'Minimal Wear' => 'MW', 'Field-Tested' => 'FT', 'Battle-Scarred' => 'BS', 'Well-Worn' => 'WW'];
             $tasks = Task::with(['paintseeds', 'item'])->where('site_id', '=', 7)->get();
 
             echo Carbon::now() . "</br>";
             foreach ($tasks as $task) { //перебор задач
-                foreach ($items as $item){
-//                    if ()
+                $name_parts = explode(' (', $task->item->full_name);
+                $name = trim($name_parts[0]);
+                $status = count($name_parts) > 1 ? trim($statuses[str_replace(')', '', $name_parts[1])]) : null;
+
+                $items = $csmoney_items->where('m', '=', $name)->where('e', '=', $status);
+                if ($task->float) $items = $items->where('f.0', '<=', $task->float);
+                elseif ($task->pattern) {
+                    foreach ($task->paintseeds as $paintseed){
+                        $float =  round($paintseed->float,8,PHP_ROUND_HALF_UP);
+                        $items = $items->where('f.0', '=', $float);
+                        if (count($items)) dd(1);
+                    }
                 }
             }
         }
