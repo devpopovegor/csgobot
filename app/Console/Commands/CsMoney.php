@@ -55,22 +55,39 @@ class CsMoney extends Command
         Log::info(count($csmoney_items));
 
         if (count($csmoney_items) > 0) { //проверка на то что cs.money вернула предметы
-            $items_id = $csmoney_items->pluck('id.0')->toArray();
-            $tasks = Task::with('paintseeds')->where('site_id', '=', 7)->get();
+            $statuses = ['Factory New' => 'FN', 'Minimal Wear' => 'MW', 'Field-Tested' => 'FT', 'Battle-Scarred' => 'BS', 'Well-Worn' => 'WW'];
+            $tasks = Task::with(['paintseeds', 'item'])->where('site_id', '=', 7)->get();
 
             foreach ($tasks as $task) { //перебор задач
-                $paintseeds = $task->paintseeds->pluck('steam')->toArray();
-                $intersect = array_intersect($paintseeds, $items_id);
-                if (count($intersect)) {
-                    foreach ($intersect as $steam) {
-                        $float = $task->paintseeds->where('steam', '=', $steam)->first()->float;
-                        $csmoney_item = $csmoney_items->where('id.0', '=', $steam)->first();
-                        $metjm = "https://metjm.net/csgo/#S{$csmoney_item->b[0]}A{$csmoney_item->id[0]}D{$csmoney_item->l[0]}";
-                        $this->send_message($task, $csmoney->url, $float, $metjm);
-                    }
-                    $task->delete();
-                }
+                $name_parts = explode(' (', $task->item->full_name);
+                $name = trim($name_parts[0]);
+                $status = count($name_parts) > 1 ? trim($statuses[str_replace(')', '', $name_parts[1])]) : null;
 
+                $items = $csmoney_items->where('m', '=', $name)->where('e', '=', $status);
+                if ($task->float) $items = $items->where('f.0', '<=', $task->float);
+                if (count($items)) {
+                    $item = $items->first();
+                    $metjm = "https://metjm.net/csgo/#S{$item->b[0]}A{$item->id[0]}D{$item->l[0]}";
+                    $this->send_message($task, $csmoney->url, $item->f[0], $metjm);
+                    $task->delete();
+                    continue;
+                }
+                if ($task->pattern) {
+                    $find = false;
+                    foreach ($task->paintseeds as $paintseed) {
+                        $float = round($paintseed->float, 8, PHP_ROUND_HALF_UP);
+                        foreach ($items as $item) {
+                            if ($item->f[0] == $float) {
+                                $metjm = "https://metjm.net/csgo/#S{$item->b[0]}A{$item->id[0]}D{$item->l[0]}";
+                                $this->send_message($task, $csmoney->url, $item->f[0], $metjm);
+                                $task->delete();
+                                $find = true;
+                                break;
+                            }
+                            if ($find) break;
+                        }
+                    }
+                }
             }
         } else {
             Log::info('MANY ERROR');
