@@ -122,20 +122,12 @@ class TestController extends Controller
         $items = collect(json_decode($curl_exec));
         echo Carbon::now() . "</br>";
         if (count($items) > 0) { //проверка на то что cs.money вернула предметы
-            $items_id = $items->pluck('id.0')->toArray();
-            $tasks = Task::with('paintseeds')->where('site_id', '=', 7)->get();
+            $tasks = Task::with(['paintseeds', 'item'])->where('site_id', '=', 7)->get();
 
             echo Carbon::now() . "</br>";
             foreach ($tasks as $task) { //перебор задач
-                $paintseeds = $task->paintseeds->pluck('steam')->toArray();
-                $intersect = array_intersect($paintseeds, $items_id);
-                if (count($intersect)) {
-                    foreach ($intersect as $item) {
-                        $float = $task->item->paintseeds->where('steam', '=', $item)->first()->float;
-                        $csmoney_item = $items->where('id.0', '=', $item)->first();
-                        $metjm = "https://metjm.net/csgo/#S{$csmoney_item->b[0]}A{$csmoney_item->id[0]}D{$csmoney_item->l[0]}";
-                    }
-//                        $task->delete();
+                foreach ($items as $item){
+//                    if ()
                 }
             }
         }
@@ -143,8 +135,6 @@ class TestController extends Controller
 //        $items_id = $items->pluck('id.0')->toArray();
 
         dd(Carbon::now());
-
-        dd($items_id);
     }
 
     public function insert_paintseed_task($site_id)
