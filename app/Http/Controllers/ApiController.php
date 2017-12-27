@@ -38,7 +38,7 @@ class ApiController extends Controller
     {
         set_time_limit(0);
 
-        $tasks = Task::with('item:name')
+        $tasks = Task::with(['item' => function($query){ $query->pluck('full_name'); }])
             ->where('site_id','=','7')
             ->where('client','=','ska4an')
             ->get()
