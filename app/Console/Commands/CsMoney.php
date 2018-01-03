@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 
+use App\Report;
 use App\Site;
 use App\Task;
 use Illuminate\Console\Command;
@@ -82,7 +83,16 @@ class CsMoney extends Command
                             if ($item->f[0] == $float) {
                                 $metjm = "https://metjm.net/csgo/#S{$item->b[0]}A{$item->id[0]}D{$item->l[0]}";
                                 $this->send_message($task, $csmoney->url, $item->f[0], $metjm);
-                                $task->delete();
+//                                $task->delete();
+
+                                Report::create([
+                                    'item_id' => $task->item_id,
+                                    'site_id' => $task->site_id,
+                                    'float' => $task->float,
+                                    'pattern' => $task->pattern,
+                                    'client' => $task->client,
+                                ]);
+
                                 $find = true;
                                 break;
                             }

@@ -89,7 +89,7 @@ class Skinsjar extends Command
                                             'pattern' => $task->pattern,
                                             'client' => $task->client,
                                         ]);
-                                        $task->delete();
+//                                        $task->delete();
                                         break;
                                     }
                                 }
@@ -106,7 +106,7 @@ class Skinsjar extends Command
                                         'pattern' => $task->pattern,
                                         'client' => $task->client,
                                     ]);
-                                    $task->delete();
+//                                    $task->delete();
                                     break;
                                 }
                             }
@@ -129,7 +129,7 @@ class Skinsjar extends Command
                                         'pattern' => $task->pattern,
                                         'client' => $task->client,
                                     ]);
-                                    $task->delete();
+//                                    $task->delete();
                                     break;
                                 }
                             } else {
@@ -145,7 +145,7 @@ class Skinsjar extends Command
                                     'pattern' => $task->pattern,
                                     'client' => $task->client,
                                 ]);
-                                $task->delete();
+//                                $task->delete();
                                 break;
                             }
                         }

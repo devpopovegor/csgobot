@@ -113,7 +113,7 @@ class Lootfarm extends Command
                                         'pattern' => $task->pattern,
                                         'client' => $task->client,
                                     ]);
-                                    $task->delete();
+//                                    $task->delete();
                                     break;
                                 }
                             }
@@ -133,7 +133,7 @@ class Lootfarm extends Command
                                         'pattern' => $task->pattern,
                                         'client' => $task->client,
                                     ]);
-                                    $task->delete();
+//                                    $task->delete();
                                     break;
                                 }
                             }
@@ -153,7 +153,7 @@ class Lootfarm extends Command
                                         'pattern' => $task->pattern,
                                         'client' => $task->client,
                                     ]);
-                                    $task->delete();
+//                                    $task->delete();
                                     break;
                                 }
                             }
@@ -171,7 +171,7 @@ class Lootfarm extends Command
                                     'pattern' => $task->pattern,
                                     'client' => $task->client,
                                 ]);
-                                $task->delete();
+//                                $task->delete();
                                 break;
                             }
                         }

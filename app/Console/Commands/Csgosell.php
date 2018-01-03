@@ -114,10 +114,10 @@ class Csgosell extends Command
             'pattern' => $task->pattern,
             'client' => $task->client,
         ]);
-        foreach ($task->steams as $steam){
-            $steam->delete();
-        }
-        $task->delete();
+//        foreach ($task->steams as $steam){
+//            $steam->delete();
+//        }
+//        $task->delete();
     }
 
 }

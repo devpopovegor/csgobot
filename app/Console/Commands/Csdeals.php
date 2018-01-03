@@ -123,7 +123,7 @@ class Csdeals extends Command
                                             'pattern' => $task->pattern,
                                             'client' => $task->client,
                                         ]);
-                                        $task->delete();
+//                                        $task->delete();
                                         break;
                                     }
                                 } else {
@@ -138,7 +138,7 @@ class Csdeals extends Command
                                         'pattern' => $task->pattern,
                                         'client' => $task->client,
                                     ]);
-                                    $task->delete();
+//                                    $task->delete();
                                     break;
                                 }
                             }
@@ -158,7 +158,7 @@ class Csdeals extends Command
                                         'pattern' => $task->pattern,
                                         'client' => $task->client,
                                     ]);
-                                    $task->delete();
+//                                    $task->delete();
                                     break;
                                 }
                             } else {
@@ -173,7 +173,7 @@ class Csdeals extends Command
                                     'pattern' => $task->pattern,
                                     'client' => $task->client,
                                 ]);
-                                $task->delete();
+//                                $task->delete();
                                 break;
                             }
                         }
@@ -197,7 +197,7 @@ class Csdeals extends Command
                                             'pattern' => $task->pattern,
                                             'client' => $task->client,
                                         ]);
-                                        $task->delete();
+//                                        $task->delete();
                                         break;
                                     }
                                 } else {
@@ -212,7 +212,7 @@ class Csdeals extends Command
                                         'pattern' => $task->pattern,
                                         'client' => $task->client,
                                     ]);
-                                    $task->delete();
+//                                    $task->delete();
                                     break;
                                 }
                             }
@@ -232,7 +232,7 @@ class Csdeals extends Command
                                         'pattern' => $task->pattern,
                                         'client' => $task->client,
                                     ]);
-                                    $task->delete();
+//                                    $task->delete();
                                     break;
                                 }
                             } else {
@@ -247,7 +247,7 @@ class Csdeals extends Command
                                     'pattern' => $task->pattern,
                                     'client' => $task->client,
                                 ]);
-                                $task->delete();
+//                                $task->delete();
                                 break;
                             }
                         }

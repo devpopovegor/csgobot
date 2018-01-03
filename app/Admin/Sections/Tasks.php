@@ -65,9 +65,8 @@ class Tasks extends Section implements Initializable
     public function onEdit($id)
     {
         return AdminForm::panel()->addBody([
-            AdminFormElement::text('item_id', 'ID предмета'),
-            AdminFormElement::text('site_id', 'ID сайта'),
-            AdminFormElement::text('float', 'Float')
+            AdminFormElement::text('float', 'Float'),
+            AdminFormElement::text('pattern', 'Паттерн')
         ]);
     }
 
@@ -88,7 +87,7 @@ class Tasks extends Section implements Initializable
 
     public function isEditable(\Illuminate\Database\Eloquent\Model $model)
     {
-        return false;
+        return true;
     }
 
     public function isCreatable()
