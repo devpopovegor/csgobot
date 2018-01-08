@@ -71,7 +71,6 @@ class CsMoney extends Command
                         $item = $items->first();
                         $metjm = "https://metjm.net/csgo/#S{$item->b[0]}A{$item->id[0]}D{$item->l[0]}";
                         $this->send_message($task, $csmoney->url, $item->f[0], $metjm);
-                        $task->delete();
                         continue;
                     }
                 }
@@ -83,16 +82,6 @@ class CsMoney extends Command
                             if ($item->f[0] == $float) {
                                 $metjm = "https://metjm.net/csgo/#S{$item->b[0]}A{$item->id[0]}D{$item->l[0]}";
                                 $this->send_message($task, $csmoney->url, $item->f[0], $metjm);
-//                                $task->delete();
-
-                                Report::create([
-                                    'item_id' => $task->item_id,
-                                    'site_id' => $task->site_id,
-                                    'float' => $task->float,
-                                    'pattern' => $task->pattern,
-                                    'client' => $task->client,
-                                ]);
-
                                 $find = true;
                                 break;
                             }
@@ -115,6 +104,14 @@ class CsMoney extends Command
             'chat_id' => $task->chat_id,
             'text' => "{$task->item->name}\r\n{$url}\r\n{$task->item->phase}\r\n{$float}\r\n{$task->pattern}\r\n<a href='$metj'>metjm</a>",
             'parse_mode' => 'HTML'
+        ]);
+
+        Report::create([
+            'item_id' => $task->item_id,
+            'site_id' => $task->site_id,
+            'float' => $task->float,
+            'pattern' => $task->pattern,
+            'client' => $task->client,
         ]);
     }
 
