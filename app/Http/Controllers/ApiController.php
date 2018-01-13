@@ -76,6 +76,9 @@ class ApiController extends Controller
         $pattern = $_GET['pattern'];
         $metjm = $_GET['metjm'];
         $message = "{$name}\r\nhttps://cs.money/ru\r\n{$float}\r\n{$pattern}\r\n<a href='$metjm'>metjm</a>";
+
+        return $message;
+
         $chat_id = $client == 'ska4an' ? 424791552 : 400699906;
         Telegram::sendMessage([
             'chat_id' => $chat_id,
