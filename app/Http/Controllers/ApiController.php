@@ -6,6 +6,7 @@ use App\Dealer;
 use App\Item;
 use App\Paintseed;
 use App\Pattern;
+use App\Report;
 use App\Task;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
