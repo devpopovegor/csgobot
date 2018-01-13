@@ -19,8 +19,8 @@ class TaskObserver
         }
     }
 
-//    public function deleting(Task $task)
-//    {
+    public function deleting(Task $task)
+    {
 //        Report::create([
 //            'item_id' => $task->item_id,
 //            'site_id' => $task->site_id,
@@ -28,7 +28,7 @@ class TaskObserver
 //            'pattern' => $task->pattern,
 //            'client' => $task->client,
 //        ]);
-//        DB::delete('delete from paintseed_task where task_id = ?',[$task->id]);
-//    }
+        DB::delete('delete from paintseed_task where task_id = ?',[$task->id]);
+    }
 
 }
