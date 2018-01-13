@@ -32,6 +32,6 @@ Route::group(['prefix' => 'api'], function()
 	Route::get('set-patterns', 'ApiController@setPatterns');
 	Route::get('steam', 'ApiController@getSteam');
 	Route::get('send', 'ApiController@send');
-	Route::get('send-telegram/{client}/{name}/{float}/{pattern}/{metjm}', 'ApiController@sendTelegram');
+	Route::get('send-telegram/{client}/{name}/{float}/{pattern}/{metjm}/{item_id}', 'ApiController@sendTelegram');
 
 });
