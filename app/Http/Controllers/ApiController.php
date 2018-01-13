@@ -69,6 +69,7 @@ class ApiController extends Controller
     }
 
     public function sendTelegram(){
+        Log::info('SEND TELEGRAM');
         $client = $_GET['client'];
         $name = $_GET['name'];
         $float = $_GET['float'];
