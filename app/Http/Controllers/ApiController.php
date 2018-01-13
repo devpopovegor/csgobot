@@ -69,7 +69,6 @@ class ApiController extends Controller
     }
 
     public function sendTelegram(){
-//        return '123 LALKA';
         $res [] = $client = $_GET['client'];
         $res [] = $name = $_GET['name'];
         $res [] = $float = $_GET['float'];
@@ -78,7 +77,6 @@ class ApiController extends Controller
 
         $message = "{$name}\r\nhttps://cs.money/ru\r\n{$float}\r\n{$pattern}\r\n<a href='$metjm'>metjm</a>";
 
-        return json_encode($res);
 
         $chat_id = $client == 'ska4an' ? 424791552 : 400699906;
         Telegram::sendMessage([
@@ -94,6 +92,8 @@ class ApiController extends Controller
             'pattern' => $pattern,
             'client' => $client,
         ]);
+
+        return json_encode('ok');
     }
 
     public function getSteam()
