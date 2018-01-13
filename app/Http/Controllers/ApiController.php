@@ -40,7 +40,7 @@ class ApiController extends Controller
 
         $tasks = Task::with(['item', 'paintseeds:float'])
             ->where('site_id','=','7')
-            ->where('client','=','ska4an')
+            ->whereIn('client',['ska4an', 'Alp_at'])
             ->get()
             ->toArray();
         $json = str_replace('\u2605', '★', json_encode($tasks));
