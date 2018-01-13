@@ -69,11 +69,11 @@ class ApiController extends Controller
     }
 
     public function sendTelegram(){
-        $res [] = $client = $_GET['client'];
-        $res [] = $name = $_GET['name'];
-        $res [] = $float = $_GET['float'];
-        $res [] = $pattern = $_GET['pattern'];
-        $res [] = $metjm = $_GET['metjm'];
+        $client = $_GET['client'];
+        $name = $_GET['name'];
+        $float = $_GET['float'];
+        $pattern = $_GET['pattern'];
+        $metjm = $_GET['metjm'];
 
         $message = "{$name}\r\nhttps://cs.money/ru\r\n{$float}\r\n{$pattern}\r\n<a href='$metjm'>metjm</a>";
 
