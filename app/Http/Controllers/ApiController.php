@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Dealer;
 use App\Item;
 use App\Paintseed;
 use App\Pattern;
@@ -64,6 +65,16 @@ class ApiController extends Controller
 	    ]);
 
 	    return json_encode('ok');
+    }
+
+    public function sendTelegram($client, $name, $float, $pattern, $metjm){
+        $message = "{$name}\r\nhttps://cs.money/ru\r\n{$float}\r\n{$pattern}\r\n<a href='$metjm'>metjm</a>";
+        $chat_id = $client == 'ska4an' ? 424791552 : 400699906;
+        Telegram::sendMessage([
+            'chat_id' => $chat_id,
+            'text' => $message,
+            'parse_mode' => 'HTML'
+        ]);
     }
 
     public function getSteam()
