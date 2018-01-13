@@ -70,14 +70,15 @@ class ApiController extends Controller
 
     public function sendTelegram(){
         Log::info('SEND TELEGRAM');
-        $client = $_GET['client'];
-        $name = $_GET['name'];
-        $float = $_GET['float'];
-        $pattern = $_GET['pattern'];
-        $metjm = $_GET['metjm'];
+        $res [] = $client = $_GET['client'];
+        $res [] = $name = $_GET['name'];
+        $res [] = $float = $_GET['float'];
+        $res [] = $pattern = $_GET['pattern'];
+        $res [] = $metjm = $_GET['metjm'];
+
         $message = "{$name}\r\nhttps://cs.money/ru\r\n{$float}\r\n{$pattern}\r\n<a href='$metjm'>metjm</a>";
 
-        return $message;
+        return json_encode($res);
 
         $chat_id = $client == 'ska4an' ? 424791552 : 400699906;
         Telegram::sendMessage([
