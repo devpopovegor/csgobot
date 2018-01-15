@@ -110,9 +110,9 @@ class TestController extends Controller
 
     public function get_items()
     {
-        $tasks = Task::with(['paintseeds' => function($query){
-			return $query->where('float', '0.021840905770659447');
-		}])->get();
+        $tasks = Task::whereHas('paintseeds', function($query){
+			$query->where('float', '0.021840905770659447');
+		})->get();
 		dd($tasks);
     }
 
