@@ -110,10 +110,13 @@ class TestController extends Controller
 
     public function get_items()
     {
-        $tasks = Task::whereHas('paintseeds', function($query){
-			//$query->where('float', '0.021840905770659447');
-			$query->where('value', '12822894553');
-		})->get();
+        set_time_limit(0);
+
+        $tasks = Task::with(['item', 'paintseeds:float'])
+            ->where('site_id','=','7')
+            ->whereIn('client',['ska4an', 'Alp_at'])
+            ->get()
+            ->toArray();
 		dd($tasks);
     }
 
