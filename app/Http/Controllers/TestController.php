@@ -110,43 +110,10 @@ class TestController extends Controller
 
     public function get_items()
     {
-        echo Carbon::now() . "</br>";
-
-        $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL, 'https://dev.csgo.trade/load_bots_inventory');
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        $curl_exec = curl_exec($curl);
-
-        $csmoney_items = collect(json_decode($curl_exec));
-        echo Carbon::now() . "</br>";
-        if (count($csmoney_items) > 0) { //проверка на то что cs.money вернула предметы
-            $statuses = ['Factory New' => 'FN', 'Minimal Wear' => 'MW', 'Field-Tested' => 'FT', 'Battle-Scarred' => 'BS', 'Well-Worn' => 'WW'];
-            $tasks = Task::with(['paintseeds', 'item'])->where('site_id', '=', 7)->get();
-
-            echo Carbon::now() . "</br>";
-            foreach ($tasks as $task) { //перебор задач
-                $name_parts = explode(' (', $task->item->full_name);
-                $name = trim($name_parts[0]);
-                $status = count($name_parts) > 1 ? trim($statuses[str_replace(')', '', $name_parts[1])]) : null;
-
-                $items = $csmoney_items->where('m', '=', $name)->where('e', '=', $status);
-                if ($task->float) $items = $items->where('f.0', '<=', $task->float);
-                elseif ($task->pattern) {
-                    foreach ($task->paintseeds as $paintseed){
-                        $float =  round($paintseed->float,8,PHP_ROUND_HALF_UP);
-                        foreach ($items as $item){
-                            if ($item->f[0] == $float){
-                                dd(1);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-//        $items_id = $items->pluck('id.0')->toArray();
-
-        dd(Carbon::now());
+        $tasks = Task:with(['paintseeds' => function($query){
+			return $query->where('float', '0.021840905770659447');
+		}])->get();
+		dd($tasks);
     }
 
     public function insert_paintseed_task($site_id)
