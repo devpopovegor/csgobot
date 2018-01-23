@@ -79,6 +79,7 @@ class CsMoney extends Command
                     foreach ($task->paintseeds as $paintseed) {
                         $float = round($paintseed->float, 8, PHP_ROUND_HALF_UP);
                         foreach ($items as $item) {
+							try{
                             if ($item->f[0] == $float) {
                                 $metjm = "https://metjm.net/csgo/#S{$item->b[0]}A{$item->id[0]}D{$item->l[0]}";
                                 $this->send_message($task, $csmoney->url, $item->f[0], $metjm);
@@ -86,6 +87,7 @@ class CsMoney extends Command
                                 break;
                             }
                             if ($find) break;
+							}catch(\Exception $ex){ Log::info('NO FLOAT')}
                         }
                     }
                 }
