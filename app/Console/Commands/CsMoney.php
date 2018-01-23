@@ -87,7 +87,7 @@ class CsMoney extends Command
                                 break;
                             }
                             if ($find) break;
-							}catch(\Exception $ex){ Log::info('NO FLOAT')}
+							}catch(\Exception $ex){ Log::info('NO FLOAT');}
                         }
                     }
                 }
