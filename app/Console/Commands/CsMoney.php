@@ -56,7 +56,8 @@ class CsMoney extends Command
         Log::info(count($csmoney_items));
 
         if (count($csmoney_items) > 0) { //проверка на то что cs.money вернула предметы
-            $statuses = ['Factory New' => 'FN', 'Minimal Wear' => 'MW', 'Field-Tested' => 'FT', 'Battle-Scarred' => 'BS', 'Well-Worn' => 'WW'];
+            $statuses = ['Factory New' => 'FN', 'Minimal Wear' => 'MW', 'Field-Tested' => 'FT', 'Battle-Scarred' => 'BS',
+                'Well-Worn' => 'WW'];
             $tasks = Task::with(['paintseeds', 'item'])->where('site_id', '=', 7)->get();
 
             foreach ($tasks as $task) { //перебор задач

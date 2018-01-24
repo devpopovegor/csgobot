@@ -150,6 +150,16 @@ class TestController extends Controller
         Task::where('client', '=',$username)->delete();
     }
 
-
+    public function add_status(){
+        set_time_limit(0);
+        $items = Item::all();
+        foreach ($items as $item){
+            if (strpos($item->name, 'Factory New') !== false) { $item->status = 'FN'; $item->save();}
+            if (strpos($item->name, 'Minimal Wear') !== false) { $item->status = 'MW'; $item->save();}
+            if (strpos($item->name, 'Field-Tested') !== false) { $item->status = 'FT'; $item->save();}
+            if (strpos($item->name, 'Battle-Scarred') !== false) { $item->status = 'BS'; $item->save();}
+            if (strpos($item->name, 'Well-Worn') !== false) { $item->status = 'WW'; $item->save();}
+        }
+    }
 
 }
