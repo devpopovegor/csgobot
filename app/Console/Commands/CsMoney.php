@@ -56,40 +56,34 @@ class CsMoney extends Command
         Log::info(count($csmoney_items));
 
         if (count($csmoney_items) > 0) { //проверка на то что cs.money вернула предметы
-            $statuses = ['Factory New' => 'FN', 'Minimal Wear' => 'MW', 'Field-Tested' => 'FT', 'Battle-Scarred' => 'BS',
-                'Well-Worn' => 'WW'];
-            $tasks = Task::with(['paintseeds', 'item'])->where('site_id', '=', 7)->get();
-
+            $tasks = Task::with(['paintseeds:float', 'item'])->where('site_id', '=', 7)->get();
             foreach ($tasks as $task) { //перебор задач
-                $name_parts = explode(' (', $task->item->full_name);
-                $name = trim($name_parts[0]);
-                $status = count($name_parts) > 1 ? trim($statuses[str_replace(')', '', $name_parts[1])]) : null;
 
-                $items = $csmoney_items->where('m', '=', $name)->where('e', '=', $status);
+                $items = $csmoney_items->where('m', '=', $task->item->shot_name)
+                    ->where('e', '=', $task->item->status);
+
                 if ($task->float) {
-                    $items = $items->where('f.0', '<=', $task->float);
-                    if (count($items)) {
-                        $item = $items->first();
+                    $item = $items->where('f.0', '<=', $task->float)->first();
+                    if ($item) {
                         $metjm = "https://metjm.net/csgo/#S{$item->b[0]}A{$item->id[0]}D{$item->l[0]}";
                         $this->send_message($task, $csmoney->url, $item->f[0], $metjm);
                         continue;
                     }
-                }
-                elseif ($task->pattern) {
+                } elseif ($task->pattern) {
                     $find = false;
                     foreach ($task->paintseeds as $paintseed) {
                         $float = round($paintseed->float, 8, PHP_ROUND_HALF_UP);
                         foreach ($items as $item) {
-							try{
-                            if ($item->f[0] == $float) {
-                                $metjm = "https://metjm.net/csgo/#S{$item->b[0]}A{$item->id[0]}D{$item->l[0]}";
-                                $this->send_message($task, $csmoney->url, $item->f[0], $metjm);
-                                $find = true;
-                                break;
-                            }
-                            if ($find) break;
-							}catch(\Exception $ex){ Log::info('NO FLOAT');}
+                            try {
+                                if ($item->f[0] == $float) {
+                                    $metjm = "https://metjm.net/csgo/#S{$item->b[0]}A{$item->id[0]}D{$item->l[0]}";
+                                    $this->send_message($task, $csmoney->url, $item->f[0], $metjm);
+                                    $find = true;
+                                    break;
+                                }
+                            } catch (\Exception $ex) { Log::info('NO FLOAT'); }
                         }
+                        if ($find) break;
                     }
                 }
             }
