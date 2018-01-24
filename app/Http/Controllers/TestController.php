@@ -103,7 +103,7 @@ class TestController extends Controller
 //            $result[$task->id] = $paintseeds;
 //        }
 
-        dd($tasks, $tasks[0]);
+        dd($tasks, $tasks[0]->paintseeds);
 
 //        return json_encode($result);
     }
