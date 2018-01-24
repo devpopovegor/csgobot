@@ -162,4 +162,14 @@ class TestController extends Controller
         }
     }
 
+    public function add_shot_name(){
+        set_time_limit(0);
+        $items = Item::all();
+        foreach ($items as $item){
+            $name = explode(' (', $item->full_name)[0];
+            $item->shot_name = $name;
+            $item->save();
+        }
+    }
+
 }

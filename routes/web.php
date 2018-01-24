@@ -23,6 +23,7 @@ Route::group(['prefix' => 'test'], function()
 	Route::get('delete/{site_id}', 'TestController@delete_paintseed_task');
 	Route::get('delete-tasks/{username}', 'TestController@delete_user_tasks');
 	Route::get('add-status', 'TestController@add_status');
+	Route::get('add-shot-name', 'TestController@add_shot_name');
 });
 
 Route::group(['prefix' => 'api'], function()
