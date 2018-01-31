@@ -68,10 +68,11 @@ class Paintseeds extends Section implements Initializable
 	public function onEdit($id)
 	{
 		return AdminForm::panel()->addBody([
-			AdminFormElement::text('item_id', 'steam id'),
-			AdminFormElement::text('value', 'Паттерн'),
-			AdminFormElement::text('name', 'Название'),
-			AdminFormElement::text('steam_id', 'id предмета')
+            AdminColumn::text('item_id', 'Предмет'),
+            AdminColumn::text('steam', 'Steam'),
+            AdminColumn::text('float', 'Флоат'),
+            AdminColumn::text('value', 'Паттерн')->setOrderable('value'),
+            AdminColumn::text('pattern_name', 'НП')
 		]);
 	}
 
@@ -95,7 +96,7 @@ class Paintseeds extends Section implements Initializable
 
 	public function isCreatable()
 	{
-		return false;
+		return true;
 	}
 
 	public function isDisplayable()
