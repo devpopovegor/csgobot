@@ -71,7 +71,7 @@ class Paintseeds extends Section implements Initializable
             AdminFormElement::text('item_id', 'Предмет'),
             AdminFormElement::text('steam', 'Steam'),
             AdminFormElement::text('float', 'Флоат'),
-            AdminFormElement::text('value', 'Паттерн')->setOrderable('value'),
+            AdminFormElement::text('value', 'Паттерн'),
             AdminFormElement::text('pattern_name', 'НП')
 		]);
 	}
