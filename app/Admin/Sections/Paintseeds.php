@@ -68,11 +68,11 @@ class Paintseeds extends Section implements Initializable
 	public function onEdit($id)
 	{
 		return AdminForm::panel()->addBody([
-            AdminColumn::text('item_id', 'Предмет'),
-            AdminColumn::text('steam', 'Steam'),
-            AdminColumn::text('float', 'Флоат'),
-            AdminColumn::text('value', 'Паттерн')->setOrderable('value'),
-            AdminColumn::text('pattern_name', 'НП')
+            AdminFormElement::text('item_id', 'Предмет'),
+            AdminFormElement::text('steam', 'Steam'),
+            AdminFormElement::text('float', 'Флоат'),
+            AdminFormElement::text('value', 'Паттерн')->setOrderable('value'),
+            AdminFormElement::text('pattern_name', 'НП')
 		]);
 	}
 
