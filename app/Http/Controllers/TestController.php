@@ -8,6 +8,7 @@ use App\Pattern;
 use App\Steam;
 use App\Task;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -170,6 +171,11 @@ class TestController extends Controller
             $item->shot_name = $name;
             $item->save();
         }
+    }
+
+    public function getSiteItems(){
+        $response = json_decode(file_get_contents('https://csoffer.me/load_all_bots_inventory'));
+        dump($response);
     }
 
 }

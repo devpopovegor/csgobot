@@ -106,7 +106,7 @@ class CsMoney extends Command
         Report::create([
             'item_id' => $task->item_id,
             'site_id' => $task->site_id,
-            'float' => $task->float,
+            'float' => $float,
             'pattern' => $task->pattern,
             'client' => $task->client,
         ]);
